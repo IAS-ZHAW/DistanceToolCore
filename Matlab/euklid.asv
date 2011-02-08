@@ -1,0 +1,11 @@
+function distances=euklid(values)
+
+distances=zeros(length(values));
+
+for i=1:length(values)
+    for j = i:length(values)
+        distances(i,j)=values(i,:)
+    end
+end
+
+end
