@@ -14,6 +14,10 @@ public class AllTests {
 		suite.addTestSuite(TestMatrix.class);
 		suite.addTestSuite(TestAbstractDist.class);
 		suite.addTestSuite(TestOps.class);
+		suite.addTestSuite(TestIo.class);
+		suite.addTestSuite(TestDistanceMethodEnum.class);
+		suite.addTestSuite(TestBhattacharyyaDist.class);
+		suite.addTestSuite(TestWaveHedgesDist.class);
 		//$JUnit-END$
 		return suite;
 	}

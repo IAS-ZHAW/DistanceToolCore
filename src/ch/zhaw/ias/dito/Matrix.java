@@ -116,4 +116,8 @@ public final class Matrix {
 		}
 		return sb.append(')').toString();
 	}
+
+	public boolean isSquare() {
+		return getColCount() == getRowCount();
+	}
 }

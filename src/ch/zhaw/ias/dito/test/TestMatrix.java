@@ -97,4 +97,9 @@ public class TestMatrix extends TestCase {
 	public void testToString() {
 		assertEquals(m.toString(), "((1.0,2.0),(3.0,4.0))");
 	}
+	
+	public void testIsSquare() {
+		assertEquals(m33.isSquare(), true);
+		assertEquals(m23.isSquare(), false);
+	}
 }
