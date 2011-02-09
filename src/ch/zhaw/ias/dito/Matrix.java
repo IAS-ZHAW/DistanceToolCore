@@ -1,9 +1,36 @@
 package ch.zhaw.ias.dito;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import au.com.bytecode.opencsv.CSVReader;
+
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 
 public final class Matrix {
 	private final DVector[] cols;
+	
+	public static Matrix readFromFile(File file) throws IOException {
+		CSVReader reader = new CSVReader(new FileReader(file), ';');
+		String [] nextLine;
+		List<DVector> vectors = new ArrayList<DVector>();
+	    while ((nextLine = reader.readNext()) != null) {
+	    	double[] values = new double[nextLine.length];
+	        for (int i = 0; i < values.length; i++) {
+	        	if (nextLine[i].length() == 0 || nextLine[i].isEmpty() == true || " ".equals(nextLine[i])) {
+	        		values[i] = Float.NaN;
+	        	} else {
+	        		values[i] = Double.parseDouble(nextLine[i]);
+	        	}
+	        }
+	        vectors.add(new DVector(values));
+	    }
+	    return new Matrix(vectors.toArray(new DVector[0]));
+	}
 	
 	public Matrix(DVector... cols) {
 		if (checkLengths(cols) == false) {

@@ -15,15 +15,15 @@ public final class DVector {
 	}
 	
 	public double sum() {
-		return foldl(new AddOp());
+		return foldl1(new AddOp());
 	}
 	
 	public double max() {
-		return foldl(new MaxOp());
+		return foldl1(new MaxOp());
 	}
 	
 	public double min() {
-		return foldl(new MinOp());
+		return foldl1(new MinOp());
 	}	
 	
 	public DVector add(DVector v) {
@@ -62,15 +62,32 @@ public final class DVector {
 		return new DVector(c);
 	}
 	
-	public double foldl(Operation op) {
-		double result;
-		if (values.length > 0) {
-			result = values[0];
-		} else {
-			return 0;
+	public double foldl(Operation op, double initial) {
+		double result = initial;
+
+		for (int i = 0; i < values.length; i++) {
+			if (Double.isNaN(values[i])) {
+				continue; //ignore NaN
+			} else {
+				result = op.execute(result, values[i]);
+			}
 		}
-		for (int i = 1; i < values.length; i++) {
-			result = op.execute(result, values[i]);
+		return result;
+	}
+	
+	public double foldl1(Operation op) {
+		double result = Double.NaN;
+
+		for (int i = 0; i < values.length; i++) {
+			if (Double.isNaN(values[i])) {
+				continue; //ignore NaN
+			} else {
+				if (Double.isNaN(result)) {
+					result = values[i];
+				} else {
+					result = op.execute(result, values[i]);
+				}
+			}
 		}
 		return result;
 	}
@@ -85,5 +102,15 @@ public final class DVector {
 			}
 		}
 		return sb.append(')').toString();
+	}
+
+	public int filteredLength() {
+		return (int) foldl(new Operation() {
+			
+			@Override
+			public double execute(double a, double b) {
+				return a + 1;
+			}
+		}, 0);
 	}
 }

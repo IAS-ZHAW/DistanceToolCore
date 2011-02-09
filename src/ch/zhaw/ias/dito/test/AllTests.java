@@ -18,6 +18,7 @@ public class AllTests {
 		suite.addTestSuite(TestDistanceMethodEnum.class);
 		suite.addTestSuite(TestBhattacharyyaDist.class);
 		suite.addTestSuite(TestWaveHedgesDist.class);
+		suite.addTestSuite(TestComplexMatrix.class);
 		//$JUnit-END$
 		return suite;
 	}

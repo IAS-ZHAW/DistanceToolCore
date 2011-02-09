@@ -74,8 +74,8 @@ public class TestDVector extends TestCase {
 	}
 	
 	public void testFold() {
-		assertEquals(v1.foldl(new ManhattanOp()), 2.0);
-		assertEquals(new DVector(1,2,3,4).foldl(new EuklidOp()), 0.0);
+		assertEquals(v1.foldl1(new ManhattanOp()), 2.0);
+		assertEquals(new DVector(1,2,3,4).foldl1(new EuklidOp()), 0.0);
 	}
 	
 	public void testToString() {
@@ -94,4 +94,22 @@ public class TestDVector extends TestCase {
 		assertEquals(v3.max(), 10.0);
 		assertEquals(new DVector(-3, -1, -2).max(), -1.0);
 	}
+	
+	public void testNan() {
+		DVector nanV = new DVector(3, Double.NaN, 5);
+		assertEquals(nanV.sum(), 8.0);
+		assertEquals(new DVector(Double.NaN, 5, 3).sum(), 8.0);
+		
+		assertEquals(nanV, new DVector(3, Double.NaN, 5));
+		assertEquals(nanV.equals(new DVector(-1, 5, 3)), false);
+		
+		assertEquals(nanV.length(), 3);
+		assertEquals(new DVector(3, Double.NaN, 5).filteredLength(), 2);
+		
+		DVector sum = nanV.zipWith(new DVector(Double.NaN, 5, 3), new AddOp());
+		assertEquals(sum, new DVector(Double.NaN, Double.NaN, 8));
+		
+		assertEquals(nanV.max(), 5.0);
+		assertEquals(nanV.min(), 3.0);
+	} 
 }

@@ -102,4 +102,11 @@ public class TestMatrix extends TestCase {
 		assertEquals(m33.isSquare(), true);
 		assertEquals(m23.isSquare(), false);
 	}
+	
+	public void testNaN() {
+		Matrix nanM = new Matrix(new double[][] {{Double.NaN,4}, {Double.NaN,5}, {3,6}});
+		assertEquals(nanM.transpose(), new Matrix(new double[][] {{Double.NaN, Double.NaN, 3}, {4.0, 5, 6}}));
+		Matrix dist = nanM.calculateDistance(new EuklidianDist());
+		assertEquals(dist, new Matrix(new double[][] {{0.0, 3.0}, {3.0, 0.0}}));
+	}
 }
