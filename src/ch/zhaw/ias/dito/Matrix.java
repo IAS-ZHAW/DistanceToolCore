@@ -14,8 +14,8 @@ import ch.zhaw.ias.dito.dist.DistanceSpec;
 public final class Matrix {
 	private final DVector[] cols;
 	
-	public static Matrix readFromFile(File file) throws IOException {
-		CSVReader reader = new CSVReader(new FileReader(file), ';');
+	public static Matrix readFromFile(File file, char separator) throws IOException {
+		CSVReader reader = new CSVReader(new FileReader(file), separator);
 		String [] nextLine;
 		List<DVector> vectors = new ArrayList<DVector>();
 	    while ((nextLine = reader.readNext()) != null) {

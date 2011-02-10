@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:ditoConfiguration xmlns:ns="http://ias.zhaw.ch/">
+	<input>
+		<filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\rohdaten2003-numeric.csv</filename>
+    <separator>;</separator>
+	</input>
+  <output>
+    <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\rohdaten2003-numeric-distances.csv</filename>
+    <separator>;</separator>
+  </output>  
+  <method>
+    <name>Manhattan</name>
+  </method>
+</ns:ditoConfiguration>

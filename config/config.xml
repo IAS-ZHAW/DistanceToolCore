@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DistanceConfiguration>
+	<Input>
+		<Filename></Filename>
+		<Separator></Separator>
+	</Input>
+	<Output>
+		<Filename></Filename>
+	</Output>
+	<Method>
+	
+	</Method>
+	
+	<QuestionList>
+		<Question>
+			<Id></Id>
+			<Title></Title>
+			<QuestionWeight></QuestionWeight>
+			<DistanceWeight></DistanceWeight>
+			
+		</Question>
+	</QuestionList>
+</DistanceConfiguration>
