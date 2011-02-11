@@ -12,7 +12,7 @@ public class Input {
  
 	private Input() {
 		filename = null;
-		separator = null;
+		separator = ";";
 	}
 	
 	 public Input(String filename, String separator) {

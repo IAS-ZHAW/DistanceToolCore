@@ -1,8 +1,8 @@
 package ch.zhaw.ias.dito.ops;
 
-public class MinOp implements Operation {
-	@Override
+public class ManhattanOp2 implements Operation2 {
 	public double execute(double a, double b) {
-		return Math.min(a, b);
+		return Math.abs((a-b));
 	}
 }
+

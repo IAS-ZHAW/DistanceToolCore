@@ -2,9 +2,10 @@ package ch.zhaw.ias.dito.test;
 
 import junit.framework.TestCase;
 import ch.zhaw.ias.dito.*;
-import ch.zhaw.ias.dito.ops.AddOp;
-import ch.zhaw.ias.dito.ops.EuklidOp;
-import ch.zhaw.ias.dito.ops.ManhattanOp;
+import ch.zhaw.ias.dito.ops.AddOp2;
+import ch.zhaw.ias.dito.ops.EuklidOp2;
+import ch.zhaw.ias.dito.ops.ManhattanOp2;
+import ch.zhaw.ias.dito.ops.Operation1;
 
 public class TestDVector extends TestCase {
 	private DVector v1;
@@ -63,10 +64,10 @@ public class TestDVector extends TestCase {
 	}
 	
 	public void testZipWith() {
-		DVector sum = v1.zipWith(v2, new AddOp());
+		DVector sum = v1.zipWith(v2, new AddOp2());
 		assertEquals(sum, new DVector(5,7,9));
 		try {
-			v1.zipWith(v3, new AddOp());	
+			v1.zipWith(v3, new AddOp2());	
 			fail();
 		} catch (IllegalArgumentException e) {
 			assertTrue(true);
@@ -74,8 +75,8 @@ public class TestDVector extends TestCase {
 	}
 	
 	public void testFold() {
-		assertEquals(v1.foldl1(new ManhattanOp()), 2.0);
-		assertEquals(new DVector(1,2,3,4).foldl1(new EuklidOp()), 0.0);
+		assertEquals(v1.foldl1(new ManhattanOp2()), 2.0);
+		assertEquals(new DVector(1,2,3,4).foldl1(new EuklidOp2()), 0.0);
 	}
 	
 	public void testToString() {
@@ -106,10 +107,21 @@ public class TestDVector extends TestCase {
 		assertEquals(nanV.length(), 3);
 		assertEquals(new DVector(3, Double.NaN, 5).filteredLength(), 2);
 		
-		DVector sum = nanV.zipWith(new DVector(Double.NaN, 5, 3), new AddOp());
+		DVector sum = nanV.zipWith(new DVector(Double.NaN, 5, 3), new AddOp2());
 		assertEquals(sum, new DVector(Double.NaN, Double.NaN, 8));
 		
 		assertEquals(nanV.max(), 5.0);
 		assertEquals(nanV.min(), 3.0);
-	} 
+	}
+	
+	public void testMap() {
+	  DVector twice = v1.map(new Operation1() {
+      
+      @Override
+      public double execute(double a) {
+        return 2*a;
+      }
+    });
+	  assertEquals(twice, new DVector(2, 4, 6));
+	}
 }

@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Method {
   @XmlElement 
-  private final String name;
+  private final String name; 
   
   private Method() {
     name = null;

@@ -3,6 +3,7 @@ package ch.zhaw.ias.dito.test;
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
 import ch.zhaw.ias.dito.dist.EuklidianDist;
+import ch.zhaw.ias.dito.dist.WaveHedgesDist;
 import junit.framework.TestCase;
 
 public class TestMatrix extends TestCase {
@@ -108,5 +109,28 @@ public class TestMatrix extends TestCase {
 		assertEquals(nanM.transpose(), new Matrix(new double[][] {{Double.NaN, Double.NaN, 3}, {4.0, 5, 6}}));
 		Matrix dist = nanM.calculateDistance(new EuklidianDist());
 		assertEquals(dist, new Matrix(new double[][] {{0.0, 3.0}, {3.0, 0.0}}));
+	}
+	
+	public void testRoundedEquals() {
+    Matrix floating = new Matrix(new double[][] {{1.1254,2,3.754}, {4,5,6}});
+    assertEquals(m23.equalsRounded(floating, 0), false);
+    floating = new Matrix(new double[][] {{1.1254,2,3.454}, {4,5,6}});
+    assertEquals(m23.equalsRounded(floating, 0), true);
+    assertEquals(m23.equalsRounded(floating, 1), false);
+	}
+	
+	public void testEqualDimensions() {
+	  assertEquals(m33.equalDimensions(m33), true);
+	  assertEquals(m33.equalDimensions(new Matrix(new double[][]{{0,0,0}, {0,0,0}, {0,0,0}})), true);
+	  assertEquals(m33.equalDimensions(m23), false);
+	  assertEquals(m33.equalDimensions(m), false);
+	}
+	
+	public void testRoundingProblem() {
+	  DVector col2 = new DVector(4,8,16,32,64,128,256,512,1024,2048,4096);
+	  DVector col64 = new DVector(128,256,512,1024,2048,4096,8192,16384,32768,65536,131072);
+	  Matrix m = new Matrix(col2, col64);
+	  Matrix dist = m.transpose().calculateDistance(new WaveHedgesDist());
+	  assertEquals(dist, new Matrix(new double[][]{{0,10.65625}, {10.65625, 0}}));
 	}
 }

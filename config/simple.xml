@@ -6,9 +6,10 @@
 	</input>
   <output>
     <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\rohdaten2003-numeric-distances.csv</filename>
-    <separator>;</separator>
+    <separator>|</separator>
+    <precision>3</precision>
   </output>  
   <method>
-    <name>Manhattan</name>
+    <name>Euklid</name>
   </method>
 </ns:ditoConfiguration>

@@ -2,10 +2,11 @@ package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
 
-import ch.zhaw.ias.dito.ops.AddOp;
-import ch.zhaw.ias.dito.ops.MaxOp;
-import ch.zhaw.ias.dito.ops.MinOp;
-import ch.zhaw.ias.dito.ops.Operation;
+import ch.zhaw.ias.dito.ops.AddOp2;
+import ch.zhaw.ias.dito.ops.MaxOp2;
+import ch.zhaw.ias.dito.ops.MinOp2;
+import ch.zhaw.ias.dito.ops.Operation1;
+import ch.zhaw.ias.dito.ops.Operation2;
 
 public final class DVector {
 	private final double[] values;
@@ -15,19 +16,19 @@ public final class DVector {
 	}
 	
 	public double sum() {
-		return foldl1(new AddOp());
+		return foldl1(new AddOp2());
 	}
 	
 	public double max() {
-		return foldl1(new MaxOp());
+		return foldl1(new MaxOp2());
 	}
 	
 	public double min() {
-		return foldl1(new MinOp());
+		return foldl1(new MinOp2());
 	}	
 	
 	public DVector add(DVector v) {
-		return zipWith(v, new AddOp());
+		return zipWith(v, new AddOp2());
 	}
 	
 	public int length() {
@@ -51,7 +52,7 @@ public final class DVector {
 		return values[index];
 	}
 	
-	public DVector zipWith(DVector v, Operation o) {
+	public DVector zipWith(DVector v, Operation2 o) {
 		if (v.values.length != values.length) {
 			throw new IllegalArgumentException();
 		}
@@ -62,7 +63,7 @@ public final class DVector {
 		return new DVector(c);
 	}
 	
-	public double foldl(Operation op, double initial) {
+	public double foldl(Operation2 op, double initial) {
 		double result = initial;
 
 		for (int i = 0; i < values.length; i++) {
@@ -75,7 +76,7 @@ public final class DVector {
 		return result;
 	}
 	
-	public double foldl1(Operation op) {
+	public double foldl1(Operation2 op) {
 		double result = Double.NaN;
 
 		for (int i = 0; i < values.length; i++) {
@@ -105,12 +106,24 @@ public final class DVector {
 	}
 
 	public int filteredLength() {
-		return (int) foldl(new Operation() {
+		return (int) foldl(new Operation2() {
 			
 			@Override
 			public double execute(double a, double b) {
 				return a + 1;
 			}
 		}, 0);
+	}
+
+	public DVector map(Operation1 op) {
+	  double[] c = new double[values.length];
+    for (int i = 0; i < values.length; i++) {
+      if (Double.isNaN(values[i])) {
+        c[i] = Double.NaN;
+      } else {
+        c[i] = op.execute(component(i));
+      }
+    }
+    return new DVector(c);
 	}
 }

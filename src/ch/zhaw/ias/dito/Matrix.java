@@ -1,9 +1,10 @@
 package ch.zhaw.ias.dito;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,13 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 
+
+/**
+ * A new symmetric attribute could improve performance in comparison functions.
+ * The attribute could be automatically set on new matrixes after distance operations
+ * @author Thomas
+ *
+ */
 public final class Matrix {
 	private final DVector[] cols;
 	
@@ -110,9 +118,9 @@ public final class Matrix {
 			return false;
 		}
 		Matrix m = (Matrix) obj;
-		if (m.getRowCount() != getRowCount() || m.cols.length != cols.length) {
-			return false;
-		}
+    if (equalDimensions(m) == false) {
+      return false;
+    }
 		for (int i = 0; i < cols.length; i++) {
 			if (m.col(i).equals(col(i)) == false) {
 				return false;
@@ -146,5 +154,31 @@ public final class Matrix {
 
 	public boolean isSquare() {
 		return getColCount() == getRowCount();
+	}
+	
+	public boolean equalsRounded(Matrix b, int precision) {
+	  if (equalDimensions(b) == false) {
+	    return false;
+	  }
+	  NumberFormat nf = NumberFormat.getNumberInstance();
+	  nf.setMaximumFractionDigits(precision);
+	  nf.setGroupingUsed(false);
+	  nf.setRoundingMode(RoundingMode.HALF_UP);
+    for (int i = 0; i < getColCount(); i++) {
+      DVector col = col(i);
+      DVector colB = b.col(i);
+      for (int j = 0; j < col.length(); j++) {
+        String s = nf.format(col.component(j));
+        String sB = nf.format(colB.component(j));
+        if (s.equals(sB) == false) {
+          return false;
+        }
+      }
+    }
+    return true;
+	}
+	
+	public boolean equalDimensions(Matrix m) {
+	   return (m.getRowCount() == getRowCount() && m.getColCount() == getColCount());
 	}
 }
