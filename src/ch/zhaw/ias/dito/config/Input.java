@@ -10,7 +10,7 @@ public class Input {
   @XmlElement 
   private final String separator;	
  
-	private Input() {
+	public Input() {
 		filename = null;
 		separator = ";";
 	}

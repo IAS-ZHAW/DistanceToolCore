@@ -2,11 +2,13 @@ package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
 
+import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.MaxOp2;
 import ch.zhaw.ias.dito.ops.MinOp2;
 import ch.zhaw.ias.dito.ops.Operation1;
 import ch.zhaw.ias.dito.ops.Operation2;
+import ch.zhaw.ias.dito.ops.ScaleOp1;
 
 public final class DVector {
 	private final double[] values;
@@ -125,5 +127,21 @@ public final class DVector {
       }
     }
     return new DVector(c);
+	}
+	
+	/*@Override
+	public int hashCode() {
+	  int result = 17;
+	  for (int i = 0; i < values.length; i++) {
+	    //TODO find out what Kent Beck proposes here???
+	    Long f = Double.doubleToLongBits(values[i]);
+	    result = 37 * result + (int) (f^(f>>>32));
+	  }
+	  return result;
+	}*/
+	
+	public DVector rescale(Question q) {
+	  double multiplier = q.getQuestionWeight() / q.getScaling();
+	  return map(new ScaleOp1(multiplier));
 	}
 }

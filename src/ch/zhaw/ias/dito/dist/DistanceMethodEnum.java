@@ -12,6 +12,7 @@ public class DistanceMethodEnum {
 		METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist()));
 		METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist()));
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist()));
+		METHODS.add(new DistanceMethodEnum("Niederberger", new WaveHedgesDist()));
 	}
 	
 	public static DistanceSpec get(String name) {

@@ -2,6 +2,7 @@ package ch.zhaw.ias.dito.test;
 
 import junit.framework.TestCase;
 import ch.zhaw.ias.dito.*;
+import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.EuklidOp2;
 import ch.zhaw.ias.dito.ops.ManhattanOp2;
@@ -106,6 +107,7 @@ public class TestDVector extends TestCase {
 		
 		assertEquals(nanV.length(), 3);
 		assertEquals(new DVector(3, Double.NaN, 5).filteredLength(), 2);
+		assertEquals(new DVector(3, Double.NaN, 5, Double.NaN, 10).filteredLength(), 3);
 		
 		DVector sum = nanV.zipWith(new DVector(Double.NaN, 5, 3), new AddOp2());
 		assertEquals(sum, new DVector(Double.NaN, Double.NaN, 8));
@@ -123,5 +125,12 @@ public class TestDVector extends TestCase {
       }
     });
 	  assertEquals(twice, new DVector(2, 4, 6));
+	}
+	
+	public void testRescale() {
+	  DVector scaled = v1.rescale(new Question(3, "test", 1.0, 2.0, 1.0));
+	  assertEquals(scaled, new DVector(2,4,6));
+	  scaled = v1.rescale(new Question(3, "test", 2.0, 1.0, 1.0));
+	  assertEquals(scaled, new DVector(0.5,1,1.5));
 	}
 }

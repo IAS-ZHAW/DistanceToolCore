@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import ch.zhaw.ias.dito.Matrix;
 import ch.zhaw.ias.dito.dist.CanberraDist;
+import ch.zhaw.ias.dito.dist.EuklidianDist;
 import ch.zhaw.ias.dito.dist.ManhattanDist;
 import ch.zhaw.ias.dito.dist.WaveHedgesDist;
 
@@ -35,4 +36,24 @@ public class TestComplexMatrix extends TestCase {
     Matrix dist = m.transpose().calculateDistance(new WaveHedgesDist());
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m100x10mul-wavehedges.csv"), ','), 4), true);
 	}
+	
+  public void testLargeEuklid() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m200x130rand.csv"), ',');
+    Matrix dist = m.transpose().calculateDistance(new EuklidianDist());
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m200x130rand-euklid.csv"), ','), 4), true);
+  }	
+  
+  public void testLargeManhattanNaN() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m10x10addNaN.csv"), ';');
+    Matrix dist = m.transpose().calculateDistance(new ManhattanDist());
+    assertEquals(dist, Matrix.readFromFile(new File("./testdata/m10x10addNaN-Manhattan.csv"), ';'));
+  } 
+
+  /*public void testSmartvoteEuklid() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m1271x70smartvote.csv"), ',');
+    Matrix dist = m.transpose().calculateDistance(new EuklidianDist());
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m1271x70smartvote-euklid.csv"), ','), 4), true);
+  } */
+  
+  
 }

@@ -6,11 +6,11 @@ public class Method {
   @XmlElement 
   private final String name; 
   
-  private Method() {
+  public Method() {
     name = null;
   }
   
-  private Method(String name) {
+  public Method(String name) {
     this.name = name;
   }
   

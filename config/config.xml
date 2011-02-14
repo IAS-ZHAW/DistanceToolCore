@@ -13,10 +13,11 @@
 	
 	<QuestionList>
 		<Question>
-			<Id></Id>
-			<Title></Title>
-			<QuestionWeight></QuestionWeight>
-			<DistanceWeight></DistanceWeight>
+      <id>10</id>
+      <name>Gretchenfrage</name>
+      <scaling>5</scaling>
+      <questionWeight>3</questionWeight>
+      <distanceWeight>2</distanceWeight>
 			
 		</Question>
 	</QuestionList>

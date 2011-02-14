@@ -7,6 +7,9 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -112,6 +115,48 @@ public final class Matrix {
 	    return new Matrix(distances);
 	}
 	
+  /*public Matrix calculateDistance(DistanceSpec dist) {
+    ExecutorService es = Executors.newCachedThreadPool();
+    double[][] distances = new double[getRowCount()][getRowCount()];
+    Matrix helper = this.transpose();
+    for (int i = 0; i < helper.getColCount(); i++) {
+      //DVector v = helper.col(i);
+      es.execute(new CalcRow(helper, distances, dist, i));
+    }
+    es.shutdown();
+    try {
+      es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+    } catch (InterruptedException e) {
+
+    }
+    return new Matrix(distances);
+  }	
+	
+  class CalcRow implements Runnable {
+    private Matrix helper;
+    private double[][] distances;
+    private DistanceSpec dist;
+    private int startAt;
+    
+    CalcRow(Matrix helper, double[][] distances, DistanceSpec dist, int startAt) {
+      this.helper = helper;
+      this.distances = distances;
+      this.dist = (DistanceSpec) dist.clone();
+      this.startAt = startAt;
+    }
+    
+    @Override
+    public void run() {
+      DVector v = helper.col(startAt);
+      for (int j = startAt; j < helper.getColCount(); j++) {
+        DVector w = helper.col(j);
+        double distance = dist.distance(v, w);
+        distances[startAt][j] = distance;
+        distances[j][startAt] = distance;
+      }
+    }
+  }*/
+  
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Matrix == false) {

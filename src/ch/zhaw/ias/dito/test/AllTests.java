@@ -19,6 +19,8 @@ public class AllTests {
 		suite.addTestSuite(TestBhattacharyyaDist.class);
 		suite.addTestSuite(TestWaveHedgesDist.class);
 		suite.addTestSuite(TestComplexMatrix.class);
+		suite.addTestSuite(TestDivergenceDist.class);
+		suite.addTestSuite(TestDitoConfiguration.class);
 		//$JUnit-END$
 		return suite;
 	}

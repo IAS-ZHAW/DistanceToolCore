@@ -12,7 +12,7 @@ public class Output {
   @XmlElement 
   private final Integer precision;
 	 
-	private Output() {
+	public Output() {
 		filename = null;
 		separator = ";";
 		precision = 2;
