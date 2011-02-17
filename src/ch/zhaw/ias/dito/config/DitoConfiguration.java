@@ -9,9 +9,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import ch.zhaw.ias.dito.DVector;
-import ch.zhaw.ias.dito.Matrix;
-
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
 public class DitoConfiguration { 
@@ -21,6 +18,8 @@ public class DitoConfiguration {
 	private final Output output; 
   @XmlElement  
   private final Method method;
+  @XmlElement  
+  private final QuestionConfig questionConfig;  
   @XmlElementWrapper(name = "questions") 
   @XmlElement(name = "question")
   private final List<Question> questions;
@@ -29,28 +28,32 @@ public class DitoConfiguration {
 	  input = null;
 	  output = null;
 	  method = null;
+	  questionConfig = null;
 	  questions = new ArrayList<Question>();
   }  
   
-  public DitoConfiguration(Input input, Output output, Method method, List<Question> questions) {
+  public DitoConfiguration(Input input, Output output, Method method, QuestionConfig questionConfig, List<Question> questions) {
 	  this.input = input;
 	  this.output = output;
 	  this.method = method;
+	  this.questionConfig = questionConfig;
 	  this.questions = questions;
   }
   
-  public Matrix rescale(Matrix m) {
-    DVector[] rescaled = new DVector[m.getColCount()];
-    for (int i = 0; i < m.getColCount(); i++) {
-      DVector v = m.col(i);
-      Question q = getQuestion(i);
-      rescaled[i] = v.rescale(q);
-    }
-    return new Matrix(rescaled);
+  public QuestionConfig getQuestionConfig() {
+    return questionConfig;
   }
-  
-  public Question getQuestion(int index) {
-    return questions.get(index);
+
+  public Question getQuestion(int column) {
+    for (int i = 0; i < questions.size(); i++) {
+      Question q = questions.get(i);
+      if (q.getColumn() == column) {
+        return q;
+      }
+    }
+    Question q = createDefaultQuestion(column);
+    questions.add(q);
+    return q;
   }
     
   public List<Question> getQuestions() {
@@ -69,5 +72,9 @@ public class DitoConfiguration {
   
   public Method getMethod() {
     return method;
+  }
+  
+  public Question createDefaultQuestion(int column) {
+    return new Question(column, "Question " + column, 1.0, 1.0, 1.0);
   }
 }

@@ -8,6 +8,6 @@ public class NiederbergerDist extends AbstractDist {
 	@Override
 	public double distance(DVector a, DVector b) {
 		DVector dist = a.zipWith(b, new NiederbergerOp2());
-		return Math.log(dist.sum());
+		return Math.log1p(dist.sum());
 	}
 }

@@ -3,6 +3,8 @@
 	<input>
 		<filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric.csv</filename>
     <separator>;</separator>
+    <firstLineHeaders></firstLineHeaders>
+    <columns></columns>
 	</input>
   <output>
     <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
@@ -10,22 +12,28 @@
     <precision>3</precision>
   </output>  
   <method>
-    <name>Euklid</name>
+    <name>Niederberger</name>
   </method>
+  <questionConfig>
+    <enableScale>true</enableScale>
+    <enableQuestionWeight>true</enableQuestionWeight>
+    <enableDistanceWeight>false</enableDistanceWeight>
+    <enableAutoScale>true</enableAutoScale>
+  </questionConfig>
   <questions>
     <question>
-      <id>1</id>
+      <column>1</column>
       <name>Gretchenfrage</name>
       <scaling>5</scaling>
       <questionWeight>3</questionWeight>
       <distanceWeight>2</distanceWeight>      
     </question>
     <question>
-      <id>10</id>
+      <column>10</column>
       <name>Gretchenfrage Nummero 2</name>
       <scaling>5</scaling>
       <questionWeight>3</questionWeight>
       <distanceWeight>2</distanceWeight>      
-    </question>  
+    </question>
   </questions>
 </ns:ditoConfiguration>

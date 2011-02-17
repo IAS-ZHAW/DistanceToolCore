@@ -2,7 +2,6 @@ package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
 
-import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.MaxOp2;
 import ch.zhaw.ias.dito.ops.MinOp2;
@@ -16,6 +15,13 @@ public final class DVector {
 	public DVector(double... values) {
 		this.values = values;
 	}
+	
+  public DVector(Double... values) {
+    this.values = new double[values.length];
+    for (int i = 0; i < values.length; i++) {
+      this.values[i] = values[i];
+    }
+  }	
 	
 	public double sum() {
 		return foldl1(new AddOp2());
@@ -140,8 +146,27 @@ public final class DVector {
 	  return result;
 	}*/
 	
-	public DVector rescale(Question q) {
-	  double multiplier = q.getQuestionWeight() / q.getScaling();
-	  return map(new ScaleOp1(multiplier));
+	public DVector rescale(double multiplier, double offset) {
+	  return map(new ScaleOp1(multiplier, offset));
 	}
+	
+	public DVector autoRescale() {
+	  double max = max();
+	  double min = min();
+	  return rescale(1/(max-min), min);
+	}
+
+  public DVector toBinary() {
+    double[] c = new double[values.length];
+    for (int i = 0; i < values.length; i++) {
+      if (Double.isNaN(values[i]) || values[i] == -1) {
+        c[i] = Double.NaN;
+      } else if (values[i] == 0){
+        c[i] = 0;
+      } else {
+        c[i] = 1;
+      }
+    }
+    return new DVector(c);
+  }
 }

@@ -12,17 +12,19 @@ public class AllTests {
 		suite.addTestSuite(TestManhattanDist.class);
 		suite.addTestSuite(TestDVector.class);
 		suite.addTestSuite(TestMatrix.class);
-		suite.addTestSuite(TestAbstractDist.class);
 		suite.addTestSuite(TestOps.class);
 		suite.addTestSuite(TestIo.class);
 		suite.addTestSuite(TestDistanceMethodEnum.class);
 		suite.addTestSuite(TestBhattacharyyaDist.class);
 		suite.addTestSuite(TestWaveHedgesDist.class);
-		suite.addTestSuite(TestComplexMatrix.class);
+		suite.addTestSuite(TestComplexDoubleMatrix.class);
 		suite.addTestSuite(TestDivergenceDist.class);
-		suite.addTestSuite(TestDitoConfiguration.class);
+		suite.addTestSuite(TestComplexBinaryMatrix.class);
+		suite.addTestSuite(TestDistanceAlgorithm.class);
+		suite.addTestSuite(TestVectorFactory.class);
+		//suite.addTestSuite(TestBVector.class);
+		suite.addTestSuite(TestBinaryDistance.class);
 		//$JUnit-END$
 		return suite;
 	}
-
 }

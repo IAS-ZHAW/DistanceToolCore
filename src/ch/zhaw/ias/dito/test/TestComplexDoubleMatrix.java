@@ -11,41 +11,41 @@ import ch.zhaw.ias.dito.dist.EuklidianDist;
 import ch.zhaw.ias.dito.dist.ManhattanDist;
 import ch.zhaw.ias.dito.dist.WaveHedgesDist;
 
-public class TestComplexMatrix extends TestCase {
+public class TestComplexDoubleMatrix extends TestCase {
 	public void testReadFromFile() throws IOException {
 		Matrix m = Matrix.readFromFile(new File("./testdata/m3x3.csv"), ';');
-		assertEquals(m, new Matrix(new double[][] {{4.0, 5.0, 667}, {4.5, 30.25, 3}, {1.2, Double.NaN, 100.01}}));
+		assertEquals(m, Matrix.createDoubleMatrix(new double[][] {{4.0, 5.0, 667}, {4.5, 30.25, 3}, {1.2, Double.NaN, 100.01}}));
 	}
 	
 	public void testLargeManhattan() throws IOException {
 		Matrix m = Matrix.readFromFile(new File("./testdata/m10x10mul.csv"), ';');
-		assertEquals(m.transpose().calculateDistance(new ManhattanDist()), Matrix.readFromFile(new File("./testdata/m10x10mul-manhattan.csv"), ';'));
+		assertEquals(m.calculateDistance(new ManhattanDist(), false), Matrix.readFromFile(new File("./testdata/m10x10mul-manhattan.csv"), ';'));
 		
 		m = Matrix.readFromFile(new File("./testdata/m10x10add.csv"), ';');
-		assertEquals(m.transpose().calculateDistance(new ManhattanDist()), Matrix.readFromFile(new File("./testdata/m10x10add-manhattan.csv"), ';'));
+		assertEquals(m.calculateDistance(new ManhattanDist(), false), Matrix.readFromFile(new File("./testdata/m10x10add-manhattan.csv"), ';'));
 	}	
 	
 	public void testLargeCanberra() throws IOException {
 	  Matrix m = Matrix.readFromFile(new File("./testdata/m10x10add.csv"), ';');
-    Matrix dist = m.transpose().calculateDistance(new CanberraDist());
+    Matrix dist = m.calculateDistance(new CanberraDist(), false);
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m10x10add-canberra.csv"), ','), 3), true);
 	}
 	
 	public void testLargeWaveHeges() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m100x10mul.csv"), ',');
-    Matrix dist = m.transpose().calculateDistance(new WaveHedgesDist());
+    Matrix dist = m.calculateDistance(new WaveHedgesDist(), false);
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m100x10mul-wavehedges.csv"), ','), 4), true);
 	}
 	
   public void testLargeEuklid() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m200x130rand.csv"), ',');
-    Matrix dist = m.transpose().calculateDistance(new EuklidianDist());
+    Matrix dist = m.calculateDistance(new EuklidianDist(), false);
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m200x130rand-euklid.csv"), ','), 4), true);
   }	
   
   public void testLargeManhattanNaN() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m10x10addNaN.csv"), ';');
-    Matrix dist = m.transpose().calculateDistance(new ManhattanDist());
+    Matrix dist = m.calculateDistance(new ManhattanDist(), false);
     assertEquals(dist, Matrix.readFromFile(new File("./testdata/m10x10addNaN-Manhattan.csv"), ';'));
   } 
 

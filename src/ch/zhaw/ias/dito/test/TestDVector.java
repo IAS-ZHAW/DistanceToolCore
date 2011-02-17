@@ -2,7 +2,6 @@ package ch.zhaw.ias.dito.test;
 
 import junit.framework.TestCase;
 import ch.zhaw.ias.dito.*;
-import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.EuklidOp2;
 import ch.zhaw.ias.dito.ops.ManhattanOp2;
@@ -81,7 +80,7 @@ public class TestDVector extends TestCase {
 	}
 	
 	public void testToString() {
-		assertEquals(new DVector().toString(), "()");
+		assertEquals(new DVector(new double[0]).toString(), "()");
 		assertEquals(v3.toString(), "(4.0,5.0,6.0,9.0,10.0)");
 	}
 	
@@ -128,9 +127,26 @@ public class TestDVector extends TestCase {
 	}
 	
 	public void testRescale() {
-	  DVector scaled = v1.rescale(new Question(3, "test", 1.0, 2.0, 1.0));
+	  DVector scaled = v1.rescale(2.0, 0);
 	  assertEquals(scaled, new DVector(2,4,6));
-	  scaled = v1.rescale(new Question(3, "test", 2.0, 1.0, 1.0));
-	  assertEquals(scaled, new DVector(0.5,1,1.5));
+	  scaled = v1.rescale(0.5, 1);
+	  assertEquals(scaled, new DVector(0.0,0.5,1));
 	}
+	
+  public void testAutoRescale() {
+    DVector v1 = new DVector(0, 10, 5, 2, 4);
+    DVector scaled = v1.autoRescale();
+    assertTrue(scaled.equals(new DVector(0, 1, 0.5, 0.2, 0.4)));
+    v1 = new DVector(1, 11, 5, 2, 5);
+    scaled = v1.autoRescale();
+    assertEquals(scaled, new DVector(0, 1, 0.4, 0.1, 0.4));
+  }
+  
+  public void testToBinary() {
+    v1 = new DVector(0, 1, 0, 0, 1);
+    assertEquals(v1.toBinary(), new DVector(0, 1, 0, 0, 1));
+    
+    v1 = new DVector(0, 1, 2, 0, 3, Double.NaN, -1);
+    assertEquals(v1.toBinary(), new DVector(0, 1, 1, 0, 1, Double.NaN, Double.NaN));    
+  }
 }
