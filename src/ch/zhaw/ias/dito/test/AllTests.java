@@ -22,7 +22,7 @@ public class AllTests {
 		suite.addTestSuite(TestComplexBinaryMatrix.class);
 		suite.addTestSuite(TestDistanceAlgorithm.class);
 		suite.addTestSuite(TestVectorFactory.class);
-		//suite.addTestSuite(TestBVector.class);
+		suite.addTestSuite(TestDitoConfiguration.class);
 		suite.addTestSuite(TestBinaryDistance.class);
 		//$JUnit-END$
 		return suite;

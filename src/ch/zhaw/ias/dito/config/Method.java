@@ -7,7 +7,7 @@ public class Method {
   private final String name; 
   
   public Method() {
-    name = null;
+    name = "";
   }
   
   public Method(String name) {
@@ -16,5 +16,14 @@ public class Method {
   
   public String getName() {
     return name;
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Method == false) {
+      return false;
+    }
+    Method m = (Method) obj;
+    return name.equals(m.name);
   }
 }

@@ -34,16 +34,33 @@ public class Question {
   public int getColumn() {
     return column;
   }
+  
   public String getName() {
     return name;
   }
+  
   public Double getScaling() {
     return scaling;
   }
+  
   public Double getQuestionWeight() {
     return questionWeight;
   }
+  
   public Double getDistanceWeight() {
     return distanceWeight;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Question == false) {
+      return false;
+    }
+    Question q = (Question) obj;
+    return column == q.column 
+      && name.equals(q.name) 
+      && scaling.equals(q.scaling)
+      && questionWeight.equals(q.questionWeight)
+      && distanceWeight.equals(q.distanceWeight);
   }
 }

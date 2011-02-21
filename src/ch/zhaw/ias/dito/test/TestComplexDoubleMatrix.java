@@ -48,6 +48,10 @@ public class TestComplexDoubleMatrix extends TestCase {
     Matrix dist = m.calculateDistance(new ManhattanDist(), false);
     assertEquals(dist, Matrix.readFromFile(new File("./testdata/m10x10addNaN-Manhattan.csv"), ';'));
   } 
+  
+  public void testIrisFlower() throws IOException {
+    
+  }
 
   /*public void testSmartvoteEuklid() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m1271x70smartvote.csv"), ',');

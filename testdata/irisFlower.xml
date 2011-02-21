@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:ditoConfiguration xmlns:ns="http://ias.zhaw.ch/">
+	<input>
+		<filename>C:\java-workspace\DistanceToolCore\testdata\m150x4irisFlower.csv</filename>
+    <separator>;</separator>
+    <firstLineHeaders></firstLineHeaders>
+    <columns></columns>
+	</input>
+  <output>
+    <filename>C:\java-workspace\DistanceToolCore\testdata\m150x4irisFlower-$$METHOD$$.csv</filename>
+    <separator>|</separator>
+    <precision>6</precision>
+  </output>  
+  <method>
+    <name>Euklid</name>
+  </method>
+  <questionConfig>
+    <enableScale>true</enableScale>
+    <enableQuestionWeight>true</enableQuestionWeight>
+    <enableAutoScale>true</enableAutoScale>
+  </questionConfig>
+  <questions>
+    <question>
+      <column>1</column>
+      <name>Sepal Length</name>
+      <questionWeight>2</questionWeight>      
+    </question>
+    <question>
+      <column>2</column>
+      <name>Sepal Width</name>
+      <questionWeight>2</questionWeight>      
+    </question>
+    <question>
+      <column>3</column>
+      <name>Sepal Width</name>      
+    </question>
+    <question>
+      <column>4</column>
+      <name>Sepal Width</name>      
+    </question>
+  </questions>
+</ns:ditoConfiguration>

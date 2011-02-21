@@ -1,8 +1,15 @@
 package ch.zhaw.ias.dito.config;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,6 +30,19 @@ public class DitoConfiguration {
   @XmlElementWrapper(name = "questions") 
   @XmlElement(name = "question")
   private final List<Question> questions;
+  
+  public static DitoConfiguration loadFromFile(String filename) throws JAXBException, FileNotFoundException {
+    JAXBContext context = JAXBContext.newInstance(DitoConfiguration.class);
+    Unmarshaller um = context.createUnmarshaller(); 
+    return (DitoConfiguration) um.unmarshal(new FileReader(filename)); 
+  }
+  
+  public static void saveToFile(String filename, DitoConfiguration config) throws JAXBException {
+    JAXBContext context = JAXBContext.newInstance(DitoConfiguration.class);
+    Marshaller m = context.createMarshaller();
+    m.setProperty("jaxb.formatted.output", true);
+    m.marshal(config, new File(filename));
+  }
   
   private DitoConfiguration() {
 	  input = null;
@@ -76,5 +96,18 @@ public class DitoConfiguration {
   
   public Question createDefaultQuestion(int column) {
     return new Question(column, "Question " + column, 1.0, 1.0, 1.0);
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof DitoConfiguration == false) {
+      return false;
+    }
+    DitoConfiguration cd = (DitoConfiguration) obj;
+    return input.equals(cd.input) 
+      && output.equals(cd.output)
+      && method.equals(cd.method)
+      && questionConfig.equals(cd.questionConfig)
+      && questions.equals(cd.questions);
   }
 }

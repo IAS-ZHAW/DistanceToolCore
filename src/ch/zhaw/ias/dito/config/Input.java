@@ -11,7 +11,7 @@ public class Input {
   private final String separator;	
  
 	public Input() {
-		filename = null;
+		filename = "";
 		separator = ";";
 	}
 	
@@ -29,5 +29,14 @@ public class Input {
 	  //shows that the engineer should be fired
 	  //TODO think of something better
 	  return separator.charAt(0);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	  if (obj instanceof Input == false) {
+	    return false;
+	  }
+	  Input i = (Input) obj;
+	  return filename.equals(i.filename)&& separator.equals(i.separator); 
 	}
 }

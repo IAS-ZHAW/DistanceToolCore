@@ -8,11 +8,11 @@
 	</input>
   <output>
     <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
-    <separator> </separator>
+    <separator>|</separator>
     <precision>3</precision>
   </output>  
   <method>
-    <name>Euklid</name>
+    <name>Niederberger</name>
   </method>
   <questionConfig>
     <enableScale>true</enableScale>

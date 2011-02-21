@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ditoConfiguration xmlns:ns2="http://ias.zhaw.ch/">
+    <input>
+        <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric.csv</filename>
+        <separator>;</separator>
+    </input>
+    <output>
+        <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
+        <separator>|</separator>
+        <precision>3</precision>
+    </output>
+    <method>
+        <name>Niederberger</name>
+    </method>
+    <questionConfig>
+        <enableScale>true</enableScale>
+        <enableQuestionWeight>true</enableQuestionWeight>
+        <enableDistanceWeight>false</enableDistanceWeight>
+        <enableAutoScale>true</enableAutoScale>
+    </questionConfig>
+    <questions>
+        <question>
+            <column>1</column>
+            <name>Gretchenfrage</name>
+            <scaling>5.0</scaling>
+            <questionWeight>3.0</questionWeight>
+            <distanceWeight>2.0</distanceWeight>
+        </question>
+        <question>
+            <column>10</column>
+            <name>Gretchenfrage Nummero 2</name>
+            <scaling>5.0</scaling>
+            <questionWeight>3.0</questionWeight>
+            <distanceWeight>2.0</distanceWeight>
+        </question>
+    </questions>
+</ns2:ditoConfiguration>

@@ -38,4 +38,13 @@ public class Output {
   public int getPrecision() {
     return precision;
   }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Output == false) {
+      return false;
+    }
+    Output o = (Output) obj;
+    return filename.equals(o.filename)&& separator.equals(o.separator) && precision.equals(o.precision); 
+  }  
 }

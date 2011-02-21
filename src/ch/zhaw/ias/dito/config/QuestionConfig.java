@@ -42,4 +42,16 @@ public class QuestionConfig {
   public boolean isEnableAutoScale() {
     return enableAutoScale;
   }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof QuestionConfig == false) {
+      return false;
+    }
+    QuestionConfig qc = (QuestionConfig) obj;
+    return enableScale == qc.enableScale 
+      && enableQuestionWeight == qc.enableQuestionWeight
+      && enableDistanceWeight == qc.enableDistanceWeight
+      && enableAutoScale == qc.enableAutoScale;
+  }
 }

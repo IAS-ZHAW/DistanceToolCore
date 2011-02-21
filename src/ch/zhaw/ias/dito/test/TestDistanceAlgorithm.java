@@ -32,7 +32,7 @@ public class TestDistanceAlgorithm extends TestCase {
   public void testRescale() {
     Matrix m = Matrix.createDoubleMatrix(new double[][] {{1, 2}, {3, 4}});
     algo = new DistanceAlgorithm(m, config);
-    Matrix scaled = algo.rescale();
+    Matrix scaled = algo.getRescaled();
     assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{0.5, 1}, {6, 8}}));
   }
   
