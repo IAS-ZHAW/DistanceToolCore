@@ -46,9 +46,9 @@ public class DistanceMethodEnum {
 	private DistanceSpec spec;
 	private boolean isBinary;
 
-	 private DistanceMethodEnum(String name, DistanceSpec spec) {
-	   this(name, spec, false);
-	  }
+  private DistanceMethodEnum(String name, DistanceSpec spec) {
+   this(name, spec, false);
+  }
 	
 	private DistanceMethodEnum(String name, DistanceSpec spec, boolean isBinary) {
 		this.name = name;

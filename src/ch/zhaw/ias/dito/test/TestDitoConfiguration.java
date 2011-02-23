@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 public class TestDitoConfiguration extends TestCase {
 
   public void testQuestionConfig() throws FileNotFoundException, JAXBException {
-    DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.xml");
+    DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.dito");
     assertTrue(config.getQuestionConfig() != null);
     assertEquals(config.getQuestionConfig().isEnableAutoScale(), true);
     assertEquals(config.getQuestions().size(), 2);
@@ -33,9 +33,9 @@ public class TestDitoConfiguration extends TestCase {
   }
   
   public void testSaveToFile() throws FileNotFoundException, JAXBException {
-    DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.xml");
-    DitoConfiguration.saveToFile("./testdata/simple-copy.xml", config);
-    DitoConfiguration reloadedConfig = DitoConfiguration.loadFromFile("./testdata/simple.xml");
+    DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.dito");
+    DitoConfiguration.saveToFile("./testdata/simple-copy.dito", config);
+    DitoConfiguration reloadedConfig = DitoConfiguration.loadFromFile("./testdata/simple.dito");
     assertEquals(config, reloadedConfig);
     reloadedConfig.getQuestions().clear();
     assertEquals(config.equals(reloadedConfig), false);

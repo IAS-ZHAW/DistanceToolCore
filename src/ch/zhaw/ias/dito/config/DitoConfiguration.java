@@ -16,6 +16,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * This class is NOT threadsafe.
+ * @author Thomas
+ *
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
 public class DitoConfiguration { 
@@ -32,16 +37,24 @@ public class DitoConfiguration {
   private final List<Question> questions;
   
   public static DitoConfiguration loadFromFile(String filename) throws JAXBException, FileNotFoundException {
+    return loadFromFile(new File(filename));
+  }
+  
+  public static DitoConfiguration loadFromFile(File file) throws JAXBException, FileNotFoundException {
     JAXBContext context = JAXBContext.newInstance(DitoConfiguration.class);
     Unmarshaller um = context.createUnmarshaller(); 
-    return (DitoConfiguration) um.unmarshal(new FileReader(filename)); 
-  }
+    return (DitoConfiguration) um.unmarshal(new FileReader(file)); 
+  }  
   
   public static void saveToFile(String filename, DitoConfiguration config) throws JAXBException {
     JAXBContext context = JAXBContext.newInstance(DitoConfiguration.class);
     Marshaller m = context.createMarshaller();
     m.setProperty("jaxb.formatted.output", true);
     m.marshal(config, new File(filename));
+  }
+  
+  public static DitoConfiguration createEmpty() {
+    return new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), new ArrayList<Question>());
   }
   
   private DitoConfiguration() {

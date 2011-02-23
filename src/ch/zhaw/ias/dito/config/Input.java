@@ -1,4 +1,5 @@
 package ch.zhaw.ias.dito.config;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -6,11 +7,11 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Input { 
 	@XmlElement	
-	private final String filename;
+	private String filename;
   @XmlElement 
-  private final String separator;	
- 
-	public Input() {
+  private String separator;	
+
+  public Input() {
 		filename = "";
 		separator = ";";
 	}
@@ -39,4 +40,12 @@ public class Input {
 	  Input i = (Input) obj;
 	  return filename.equals(i.filename)&& separator.equals(i.separator); 
 	}
+	 
+  public void setFilename(String filename) {
+    this.filename = filename;
+  }
+
+  public void setSeparator(char separator) {
+    this.separator = Character.toString(separator);
+  }	
 }

@@ -2,6 +2,8 @@ package ch.zhaw.ias.dito.config;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import ch.zhaw.ias.dito.DVector;
+
 public class Question {
   @XmlElement
 	private final int column;
@@ -13,6 +15,7 @@ public class Question {
 	private final Double questionWeight;
   @XmlElement 
 	private final Double distanceWeight;
+  private DVector data;
 	
   public Question() {
     this.column = -1;
