@@ -3,6 +3,7 @@ package ch.zhaw.ias.dito.config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import ch.zhaw.ias.dito.Matrix;
+
 /**
  * This class is NOT threadsafe.
  * @author Thomas
@@ -23,8 +26,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
-public class DitoConfiguration { 
-	@XmlElement	
+public class DitoConfiguration {
+	private String location;
+  @XmlElement	
   private final Input input;
 	@XmlElement  
 	private final Output output; 
@@ -35,6 +39,7 @@ public class DitoConfiguration {
   @XmlElementWrapper(name = "questions") 
   @XmlElement(name = "question")
   private final List<Question> questions;
+  private Matrix data;
   
   public static DitoConfiguration loadFromFile(String filename) throws JAXBException, FileNotFoundException {
     return loadFromFile(new File(filename));
@@ -122,5 +127,29 @@ public class DitoConfiguration {
       && method.equals(cd.method)
       && questionConfig.equals(cd.questionConfig)
       && questions.equals(cd.questions);
+  }
+  
+  public void loadMatrix() throws IOException {
+    data = Matrix.readFromFile(new File(getInput().getFilename()), getInput().getSeparator());
+    data = data.transpose();
+    for (int i = 0; i < data.getColCount(); i++) {
+      getQuestion(i+1).setDVector(data.col(i));
+    }
+  }
+  
+  public String getLocation() {
+    return location;
+  }
+  
+  public void setLocation(String location) {
+    this.location = location;
+  }
+  
+  public void save() throws JAXBException {
+    saveToFile(location, this);
+  }
+
+  public boolean hasLocation() {
+    return false;
   }
 }

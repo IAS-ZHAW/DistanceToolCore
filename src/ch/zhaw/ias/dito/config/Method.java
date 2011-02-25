@@ -2,8 +2,6 @@ package ch.zhaw.ias.dito.config;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
-
 public class Method {
   @XmlElement 
   private String name;

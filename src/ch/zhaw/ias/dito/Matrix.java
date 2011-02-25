@@ -184,7 +184,7 @@ public final class Matrix {
 	
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("(");
+	  StringBuilder sb = new StringBuilder("(");
 		for (int i = 0; i < cols.size(); i++) {
 			sb.append(cols.get(i).toString());
 			if (i+1 < cols.size()) {

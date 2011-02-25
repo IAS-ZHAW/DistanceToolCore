@@ -21,17 +21,19 @@
     <questions>
         <question>
             <column>1</column>
-            <name>Gretchenfrage</name>
-            <scaling>5.0</scaling>
-            <questionWeight>3.0</questionWeight>
             <distanceWeight>2.0</distanceWeight>
+            <name>Gretchenfrage</name>
+            <questionType>ORDINAL</questionType>
+            <questionWeight>3.0</questionWeight>
+            <scaling>5.0</scaling>
         </question>
         <question>
             <column>10</column>
-            <name>Gretchenfrage Nummero 2</name>
-            <scaling>5.0</scaling>
-            <questionWeight>3.0</questionWeight>
             <distanceWeight>2.0</distanceWeight>
+            <name>Gretchenfrage Nummero 2</name>
+            <questionType>ORDINAL</questionType>
+            <questionWeight>3.0</questionWeight>
+            <scaling>5.0</scaling>
         </question>
     </questions>
 </ns2:ditoConfiguration>

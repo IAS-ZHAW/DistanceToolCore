@@ -1,6 +1,9 @@
 package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.MaxOp2;
@@ -103,7 +106,7 @@ public final class DVector {
 	
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("(");
+	  StringBuilder sb = new StringBuilder("(");
 		for (int i = 0; i < values.length; i++) {
 			sb.append(values[i]);
 			if (i+1 < values.length) {
@@ -168,5 +171,11 @@ public final class DVector {
       }
     }
     return new DVector(c);
+  }
+  
+  public void addValues(Collection<Double> c) {
+    for (int i = 0; i < values.length; i++) {
+      c.add(values[i]);  
+    }
   }
 }
