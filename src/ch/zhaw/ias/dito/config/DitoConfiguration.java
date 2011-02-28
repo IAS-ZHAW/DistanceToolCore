@@ -150,7 +150,7 @@ public class DitoConfiguration {
   }
 
   public boolean hasLocation() {
-    return false;
+    return location != null && location.length() > 0;
   }
   
   public Object getProperty(String key) {
