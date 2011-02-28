@@ -47,7 +47,7 @@ public final class Matrix {
   }
 	
 	public Matrix(ArrayList<DVector> cols) {
-	  this.cols = cols;
+	  this.cols = (List<DVector>) cols.clone();
   }
 
   public static Matrix createDoubleMatrix(double[][] distances) {

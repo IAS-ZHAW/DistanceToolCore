@@ -152,4 +152,8 @@ public class DitoConfiguration {
   public boolean hasLocation() {
     return false;
   }
+  
+  public Object getProperty(String key) {
+    return "Dummy";
+  }
 }

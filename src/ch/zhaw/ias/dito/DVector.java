@@ -2,8 +2,6 @@ package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.MaxOp2;
@@ -16,7 +14,7 @@ public final class DVector {
 	private final double[] values;
 	
 	public DVector(double... values) {
-		this.values = values;
+		this.values = Arrays.copyOf(values, values.length);
 	}
 	
   public DVector(Double... values) {

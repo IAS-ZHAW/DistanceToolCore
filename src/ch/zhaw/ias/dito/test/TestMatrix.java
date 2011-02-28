@@ -1,5 +1,7 @@
 package ch.zhaw.ias.dito.test;
 
+import java.util.ArrayList;
+
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
 import ch.zhaw.ias.dito.dist.EuklidianDist;
@@ -31,10 +33,19 @@ public class TestMatrix extends TestCase {
 	}
 	
 	public void testArrayConstructor() {
-		Matrix m2 = Matrix.createDoubleMatrix(new double[][] {{1,2}, {3,4}});
+	  double[][] values = new double[][] {{1,2}, {3,4}};
+		Matrix m2 = Matrix.createDoubleMatrix(values);
 		assertEquals(m2.col(0), a);
 		assertEquals(m2.col(1), b);
 	}	
+	
+	public void testArrayListConstructor() {
+	  ArrayList<DVector> vecs = new ArrayList<DVector>();
+	  vecs.add(new DVector(1,3,10));
+	  Matrix m = new Matrix(vecs);
+	  vecs.add(new DVector(1,3,10));
+	  assertEquals(m.getColCount(), 1);
+	}
 	
 	public void testCheckLengths() {
 		assertEquals(Matrix.checkLengths(), true);
