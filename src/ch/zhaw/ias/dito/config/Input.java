@@ -4,8 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+import net.jcip.annotations.NotThreadSafe;
+
 @XmlAccessorType(XmlAccessType.NONE)
-public class Input { 
+@NotThreadSafe
+public final class Input { 
 	@XmlElement	
 	private String filename;
   @XmlElement 

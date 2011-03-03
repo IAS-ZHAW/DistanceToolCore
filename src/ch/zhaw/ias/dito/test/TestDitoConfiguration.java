@@ -1,6 +1,8 @@
 package ch.zhaw.ias.dito.test;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
@@ -10,6 +12,7 @@ import ch.zhaw.ias.dito.config.Method;
 import ch.zhaw.ias.dito.config.Output;
 import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.config.QuestionConfig;
+import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 import junit.framework.TestCase;
 
 public class TestDitoConfiguration extends TestCase {
@@ -25,7 +28,6 @@ public class TestDitoConfiguration extends TestCase {
   
   public void testQuestionEquals() {
     Question q = new Question(3, "test", 2.0, 3.0, 4.0);
-    
     assertEquals(q.equals(null), false);
     assertEquals(q.equals("asfd"), false);
     assertEquals(q, q);
@@ -35,19 +37,46 @@ public class TestDitoConfiguration extends TestCase {
   public void testSaveToFile() throws FileNotFoundException, JAXBException {
     DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.dito");
     DitoConfiguration.saveToFile("./testdata/simple-copy.dito", config);
-    DitoConfiguration reloadedConfig = DitoConfiguration.loadFromFile("./testdata/simple.dito");
+    DitoConfiguration reloadedConfig = DitoConfiguration.loadFromFile("./testdata/simple-copy.dito");
     assertEquals(config, reloadedConfig);
     reloadedConfig.getQuestions().clear();
     assertEquals(config.equals(reloadedConfig), false);
   }
   
+  
+  public void testCompleteSave() throws FileNotFoundException, JAXBException {
+    Input i = new Input("c:/asdf", "a");
+    Output o = new Output("c:/bsdf", "b", 10);
+    Method m = new Method(DistanceMethodEnum.get("Canberra"), false, 20);
+    QuestionConfig qc = new QuestionConfig(false, false, true, false);
+    List<Question> qs = new ArrayList<Question>();
+    qs.add(new Question(100, "name", 100.0, 50.0, 30.0));
+    
+    DitoConfiguration config = new DitoConfiguration(i, o, m, qc, qs);
+    DitoConfiguration.saveToFile("./testdata/simple-copy.dito", config);
+    DitoConfiguration reloadedConfig = DitoConfiguration.loadFromFile("./testdata/simple-copy.dito");
+    assertEquals(reloadedConfig.getInput(), i);
+    assertEquals(reloadedConfig.getMethod(), m);
+    assertEquals(reloadedConfig.getOutput(), o);    
+    assertEquals(config, reloadedConfig);
+    reloadedConfig.getQuestions().clear();
+    assertEquals(config.equals(reloadedConfig), false);
+    reloadedConfig.getQuestions().add(new Question(100, "name", 100.0, 50.0, 30.0));
+    assertEquals(config.equals(reloadedConfig), true);
+    reloadedConfig.getQuestions().clear();
+    reloadedConfig.getQuestions().add(new Question(100, "name2", 100.0, 50.0, 30.0));
+    assertEquals(config.equals(reloadedConfig), false);
+  }
+  
   public void testMethodEquals() {
-    Method m = new Method("Euklid");
+    Method m = new Method(DistanceMethodEnum.get("Euklid"));
     assertEquals(m.equals(null), false);
     assertEquals(m.equals("something"), false);
     assertEquals(m.equals(m), true);
-    assertEquals(m.equals(new Method("Bla, bla")), false);
-    assertEquals(m.equals(new Method("Euklid")), true);
+    assertEquals(m.equals(new Method(DistanceMethodEnum.get("Canberra"))), false);
+    assertEquals(m.equals(new Method(DistanceMethodEnum.get("Euklid"))), true);
+    assertEquals(m.equals(new Method(DistanceMethodEnum.get("Euklid"), true, 10)), false);
+    assertEquals(m.equals(new Method(DistanceMethodEnum.get("Euklid"), true, 5)), true);
   }
 
   public void testOutputEquals() {

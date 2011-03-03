@@ -2,7 +2,10 @@ package ch.zhaw.ias.dito.config;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class QuestionConfig {
+import net.jcip.annotations.NotThreadSafe;
+
+@NotThreadSafe
+public final class QuestionConfig {
   @XmlElement
 	private final boolean enableScale;
   @XmlElement 

@@ -40,10 +40,12 @@ class TextConsole implements RMainLoopCallbacks {
 				(newFile == 0) ? FileDialog.LOAD : FileDialog.SAVE);
 		fd.show();
 		String res = null;
-		if (fd.getDirectory() != null)
+		if (fd.getDirectory() != null) {
 			res = fd.getDirectory();
-		if (fd.getFile() != null)
+		}
+		if (fd.getFile() != null) {
 			res = (res == null) ? fd.getFile() : (res + fd.getFile());
+		}
 		return res;
 	}
 

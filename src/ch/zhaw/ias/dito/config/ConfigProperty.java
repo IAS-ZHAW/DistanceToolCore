@@ -1,14 +1,17 @@
 package ch.zhaw.ias.dito.config;
 
+import net.jcip.annotations.Immutable;
+
+@Immutable
 public enum ConfigProperty {
   INPUT_FILENAME("s1.lb.file"),
   INPUT_SEPARATOR("s1.lb.separator"),
   METHOD_NAME("s3.lb.method"),
-  OUTPUT_FILENAME("s4.lb.file"),
-  OUTPUT_SEPARATOR("s4.lb.separator"),
-  OUTPUT_PRECISION("s4.lb.precision");
+  OUTPUT_FILENAME("s5.lb.file"),
+  OUTPUT_SEPARATOR("s5.lb.separator"),
+  OUTPUT_PRECISION("s5.lb.precision");
   
-  private String key;
+  private final String key;
   
   private ConfigProperty(String key) {
     this.key = key;

@@ -4,6 +4,12 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+
+import net.jcip.annotations.NotThreadSafe;
+
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.QuestionType;
 
@@ -12,13 +18,15 @@ import ch.zhaw.ias.dito.QuestionType;
  * @author Thomas
  *
  */
-public class Question {
+@NotThreadSafe
+public final class Question {
 	private int column;
 	private String name;
 	private Double scaling;
 	private Double questionWeight;
 	private Double distanceWeight;
   private QuestionType questionType;
+
   private DVector data;
 	
   public Question() {
@@ -113,8 +121,13 @@ public class Question {
     return data.max();
   }
 
-  public void setDVector(DVector data) {
+  public void setData(DVector data) {
     this.data = data;
+  }
+  
+  @XmlTransient
+  public DVector getData() {
+    return data;
   }
   
   public int getColumn() {

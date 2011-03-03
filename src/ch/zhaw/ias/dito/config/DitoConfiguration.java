@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -17,16 +18,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import ch.zhaw.ias.dito.Matrix;
 
-/**
- * This class is NOT threadsafe.
- * @author Thomas
- *
- */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
-public class DitoConfiguration {
+@NotThreadSafe
+public final class DitoConfiguration {
 	private String location;
   @XmlElement	
   private final Input input;
@@ -130,10 +129,28 @@ public class DitoConfiguration {
   }
   
   public void loadMatrix() throws IOException {
+    clearVectorData();
     data = Matrix.readFromFile(new File(getInput().getFilename()), getInput().getSeparator());
     data = data.transpose();
     for (int i = 0; i < data.getColCount(); i++) {
-      getQuestion(i+1).setDVector(data.col(i));
+      getQuestion(i+1).setData(data.col(i));
+    }
+    removeEmptyQuestions();
+  }
+  
+  private void clearVectorData() {
+    for (Question q : questions) {
+      q.setData(null);
+    }
+  }
+  
+  private void removeEmptyQuestions() {
+    Iterator<Question> i = questions.iterator();
+    while (i.hasNext()) {
+      Question q = i.next();
+      if (q.getData() == null) {
+        i.remove();  
+      }
     }
   }
   
@@ -153,7 +170,11 @@ public class DitoConfiguration {
     return location != null && location.length() > 0;
   }
   
-  public Object getProperty(String key) {
-    return "Dummy";
+  public Matrix getData() {
+    return data;
+  }
+  
+  public void setData(Matrix data) {
+    this.data = data;
   }
 }

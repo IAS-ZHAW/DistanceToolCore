@@ -156,4 +156,10 @@ public class TestMatrix extends TestCase {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 1, Double.NaN}, {0.5, 3, -1}});
     assertEquals(m.toBinary(), Matrix.createDoubleMatrix(new double[][] {{0, 1, Double.NaN}, {1, 1, Double.NaN}}));
   }
+  
+  public void testExtremum() {
+    m = Matrix.createDoubleMatrix(new double[][] {{0, 1, -2}, {0, Double.NaN, 4}});
+    assertEquals(m.extremum(true), 4.0);
+    assertEquals(m.extremum(false), -2.0);
+  }
 }

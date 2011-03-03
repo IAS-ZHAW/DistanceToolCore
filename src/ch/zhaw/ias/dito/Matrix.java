@@ -2,13 +2,20 @@ package ch.zhaw.ias.dito;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import net.jcip.annotations.Immutable;
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 
@@ -18,6 +25,7 @@ import ch.zhaw.ias.dito.dist.DistanceSpec;
  * @author Thomas
  *
  */
+@Immutable
 public final class Matrix {
 	private final List<DVector> cols;
 	
@@ -38,6 +46,36 @@ public final class Matrix {
 	    }
 	    return new Matrix(vectors.toArray(new DVector[0]));
 	}
+	
+  public static void writeToFile(Matrix dist, String outputFilename, char separator, int precision) throws IOException {
+    System.out.println("writing results to output-file: " + outputFilename);
+    long start = System.currentTimeMillis();
+    FileWriter fw = new FileWriter(outputFilename);
+    //BufferedWriter bw = new BufferedWriter(fw, 8192);
+    CSVWriter writer = new CSVWriter(fw, separator, CSVWriter.NO_ESCAPE_CHARACTER, CSVWriter.NO_QUOTE_CHARACTER);
+    
+    NumberFormat nf = NumberFormat.getNumberInstance();
+    nf.setMaximumFractionDigits(precision);
+    nf.setGroupingUsed(false);
+    nf.setRoundingMode(RoundingMode.HALF_UP);
+    for (int i = 0; i < dist.getColCount(); i++) {
+      DVector col = dist.col(i);
+      //StringBuffer sb = new StringBuffer(col.length()*10);
+      String[] line = new String[col.length()];
+      for (int j = 0; j < col.length(); j++) {
+        line[j] = nf.format(col.component(j));
+        //sb.append(nf.format(col.component(j)));
+        //nf.format();
+        //bw.write(Double.toString(col.component(j)));
+      }
+      //sb.append("\r\n");
+      //bw.write("\r\n");
+      writer.writeNext(line);
+    }
+    System.out.println("writing output finished after " + (System.currentTimeMillis() - start) + " ms");
+    //bw.close();
+    fw.close();
+  }
 	
   public Matrix(DVector... cols) {
     if (checkLengths(cols) == false) {
@@ -115,13 +153,12 @@ public final class Matrix {
 	    return createDoubleMatrix(distances);
 	}
 	
-  /*public Matrix calculateDistance(DistanceSpec dist) {
-    ExecutorService es = Executors.newCachedThreadPool();
-    double[][] distances = new double[getRowCount()][getRowCount()];
-    Matrix helper = this.transpose();
-    for (int i = 0; i < helper.getColCount(); i++) {
+  /*public Matrix calculateDistance(DistanceSpec dist, boolean isBinary) {
+    ExecutorService es = Executors.newFixedThreadPool(5);//CachedThreadPool();
+    double[][] distances = new double[getColCount()][getColCount()];
+    for (int i = 0; i < getColCount(); i++) {
       //DVector v = helper.col(i);
-      es.execute(new CalcRow(helper, distances, dist, i));
+      es.execute(new CalcRow(this, distances, dist, i));
     }
     es.shutdown();
     try {
@@ -129,7 +166,7 @@ public final class Matrix {
     } catch (InterruptedException e) {
 
     }
-    return new Matrix(distances);
+    return createDoubleMatrix(distances);
   }	
 	
   class CalcRow implements Runnable {
@@ -240,5 +277,26 @@ public final class Matrix {
       binary[i] = v.toBinary();
     }
     return new Matrix(binary);
-  }  
+  }
+  
+  public double extremum(boolean max) {
+    double extremum;
+    if (max) {
+      extremum = Double.MIN_VALUE;
+    } else {
+      extremum = Double.MAX_VALUE;
+    }
+    for (int i = 0; i < getColCount(); i++) {
+      DVector v = col(i);
+      double value;
+      if (max) {
+        value = v.max();
+        extremum = Math.max(extremum, value);
+      } else {
+        value = v.min();
+        extremum = Math.min(extremum, value);
+      }
+    }
+    return extremum;
+  }
 }

@@ -1,5 +1,8 @@
 package ch.zhaw.ias.dito.config;
 
+import net.jcip.annotations.Immutable;
+
+@Immutable
 public enum TableColumn {
   NUMBER(0, false),
   NAME(1, true),
@@ -20,8 +23,8 @@ public enum TableColumn {
     return null;
   }
   
-  private int id;
-  private boolean editable;
+  private final int id;
+  private final boolean editable;
   
   private TableColumn(int id, boolean editable) {
     this.id = id;

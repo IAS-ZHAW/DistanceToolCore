@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:ditoConfiguration xmlns:ns2="http://ias.zhaw.ch/">
     <input>
-        <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric.csv</filename>
-        <separator>;</separator>
+        <filename>c:/asdf</filename>
+        <separator>a</separator>
     </input>
     <output>
-        <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
-        <separator>|</separator>
-        <precision>3</precision>
+        <filename>c:/bsdf</filename>
+        <precision>10</precision>
+        <separator>98</separator>
     </output>
     <method>
-        <name>Niederberger</name>
+        <name>Canberra</name>
+        <numberOfThreads>20</numberOfThreads>
+        <parallel>false</parallel>
+        <sampleSize>1000</sampleSize>
+        <useRandomSample>false</useRandomSample>
     </method>
     <questionConfig>
-        <enableScale>true</enableScale>
-        <enableQuestionWeight>true</enableQuestionWeight>
-        <enableDistanceWeight>false</enableDistanceWeight>
-        <enableAutoScale>true</enableAutoScale>
+        <enableScale>false</enableScale>
+        <enableQuestionWeight>false</enableQuestionWeight>
+        <enableDistanceWeight>true</enableDistanceWeight>
+        <enableAutoScale>false</enableAutoScale>
     </questionConfig>
     <questions>
         <question>
-            <column>1</column>
-            <distanceWeight>2.0</distanceWeight>
-            <name>Gretchenfrage</name>
+            <column>100</column>
+            <distanceWeight>30.0</distanceWeight>
+            <name>name</name>
             <questionType>ORDINAL</questionType>
-            <questionWeight>3.0</questionWeight>
-            <scaling>5.0</scaling>
-        </question>
-        <question>
-            <column>10</column>
-            <distanceWeight>2.0</distanceWeight>
-            <name>Gretchenfrage Nummero 2</name>
-            <questionType>ORDINAL</questionType>
-            <questionWeight>3.0</questionWeight>
-            <scaling>5.0</scaling>
+            <questionWeight>50.0</questionWeight>
+            <scaling>100.0</scaling>
         </question>
     </questions>
 </ns2:ditoConfiguration>

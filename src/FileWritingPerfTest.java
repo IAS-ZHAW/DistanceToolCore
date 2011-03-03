@@ -63,7 +63,7 @@ private static void writeBuffered(List<String> records, int bufSize) throws IOEx
 
 private static void write(List<String> records, Writer writer) throws IOException {
     long start = System.currentTimeMillis();
-    for (String record: records) {
+    for (String record : records) {
         writer.write(record);
     }
     writer.flush();

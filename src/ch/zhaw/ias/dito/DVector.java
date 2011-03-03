@@ -3,6 +3,8 @@ package ch.zhaw.ias.dito;
 import java.util.Arrays;
 import java.util.Collection;
 
+import net.jcip.annotations.Immutable;
+
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.MaxOp2;
 import ch.zhaw.ias.dito.ops.MinOp2;
@@ -10,6 +12,7 @@ import ch.zhaw.ias.dito.ops.Operation1;
 import ch.zhaw.ias.dito.ops.Operation2;
 import ch.zhaw.ias.dito.ops.ScaleOp1;
 
+@Immutable
 public final class DVector {
 	private final double[] values;
 	
@@ -107,7 +110,7 @@ public final class DVector {
 	  StringBuilder sb = new StringBuilder("(");
 		for (int i = 0; i < values.length; i++) {
 			sb.append(values[i]);
-			if (i+1 < values.length) {
+			if ((i + 1) < values.length) {
 				sb.append(',');
 			}
 		}
@@ -154,7 +157,7 @@ public final class DVector {
 	public DVector autoRescale() {
 	  double max = max();
 	  double min = min();
-	  return rescale(1/(max-min), min);
+	  return rescale(1 / (max - min), min);
 	}
 
   public DVector toBinary() {
@@ -162,7 +165,7 @@ public final class DVector {
     for (int i = 0; i < values.length; i++) {
       if (Double.isNaN(values[i]) || values[i] == -1) {
         c[i] = Double.NaN;
-      } else if (values[i] == 0){
+      } else if (values[i] == 0) {
         c[i] = 0;
       } else {
         c[i] = 1;
@@ -175,5 +178,9 @@ public final class DVector {
     for (int i = 0; i < values.length; i++) {
       c.add(values[i]);  
     }
+  }
+
+  public double[] getValues() {
+    return Arrays.copyOf(values, values.length);
   }
 }

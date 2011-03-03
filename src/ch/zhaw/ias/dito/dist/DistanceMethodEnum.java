@@ -32,7 +32,17 @@ public class DistanceMethodEnum {
       }
     }, true));    
 	}
-	
+
+  public static List<DistanceMethodEnum> getList(boolean binary) {
+    List<DistanceMethodEnum> methods = new ArrayList<DistanceMethodEnum>();
+    for (DistanceMethodEnum method : METHODS) {
+      if (method.isBinary == binary) {
+        methods.add(method);
+      }
+    }
+    return methods;
+  }
+
 	public static DistanceMethodEnum get(String name) {
 		for (DistanceMethodEnum method : METHODS) {
 			if (method.getName().equals(name)) {
@@ -66,5 +76,10 @@ public class DistanceMethodEnum {
 	
 	public boolean isBinary() {
 	  return isBinary;
+	}
+	
+	@Override
+	public String toString() {
+	  return name;
 	}
 }

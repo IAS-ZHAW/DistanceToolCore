@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns:ditoConfiguration xmlns:ns="http://ias.zhaw.ch/">
 	<input>
-		<filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric.csv</filename>
+		<filename>C:\daten\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric.csv</filename>
     <separator>;</separator>
     <firstLineHeaders></firstLineHeaders>
     <columns></columns>
 	</input>
   <output>
-    <filename>C:\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
+    <filename>C:\daten\java-workspace\DistanceToolCore\Daten\Smartvote\kandidaten_grossratswahlen-BE_2010-numeric-$$METHOD$$.csv</filename>
     <separator>|</separator>
     <precision>3</precision>
   </output>  

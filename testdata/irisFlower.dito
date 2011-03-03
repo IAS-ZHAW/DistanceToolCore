@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:ditoConfiguration xmlns:ns2="http://ias.zhaw.ch/">
     <input>
-        <filename>C:\java-workspace\DistanceToolCore\testdata\m150x4irisFlower.csv</filename>
+        <filename>C:\daten\java-workspace\DistanceToolCore\testdata\m150x4irisFlower.csv</filename>
         <separator>;</separator>
     </input>
     <output>
-        <filename>C:\java-workspace\DistanceToolCore\testdata\m150x4irisFlower-$$METHOD$$.csv</filename>
+        <filename>C:\daten\java-workspace\DistanceToolCore\testdata\m150x4irisFlower-$$METHOD$$.csv</filename>
         <separator>|</separator>
         <precision>6</precision>
     </output>
