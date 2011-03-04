@@ -25,16 +25,16 @@ import ch.zhaw.ias.dito.Matrix;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
 @NotThreadSafe
-public final class DitoConfiguration {
+public final class DitoConfiguration implements PropertyListener {
 	private String location;
   @XmlElement	
-  private final Input input;
+  private Input input;
 	@XmlElement  
-	private final Output output; 
+	private Output output; 
   @XmlElement  
-  private final Method method;
+  private Method method;
   @XmlElement  
-  private final QuestionConfig questionConfig;  
+  private QuestionConfig questionConfig;  
   @XmlElementWrapper(name = "questions") 
   @XmlElement(name = "question")
   private final List<Question> questions;
@@ -176,5 +176,35 @@ public final class DitoConfiguration {
   
   public void setData(Matrix data) {
     this.data = data;
+  }
+  
+  @Override
+  public boolean listensTo(ConfigProperty prop) {
+    return prop == ConfigProperty.INPUT_FILENAME;
+  }
+  
+  @Override
+  public void propertyChanged(ConfigProperty prop, Object oldValue,
+      Object newValue) {
+    try {
+      loadMatrix();
+    } catch (IOException e) {
+      // TODO Error-Handling
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Method to reduce problems with memory leaks
+   * after the method has been called this instance of DitoConfiguration can't be used anymore
+   * All further method calls will lead to undefined behaviour.  
+   */
+  public void kill() {
+    input = null;
+    method = null;
+    output = null;
+    questionConfig = null;
+    questions.clear();
+    data = null;
   }
 }

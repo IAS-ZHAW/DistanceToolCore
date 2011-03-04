@@ -12,6 +12,11 @@ import ch.zhaw.ias.dito.ops.Operation1;
 import ch.zhaw.ias.dito.ops.Operation2;
 import ch.zhaw.ias.dito.ops.ScaleOp1;
 
+/**
+ * In respect of possible concurrent calculation this class is immutable.
+ * It's absolutely necessary that this class is immutable
+ * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
+ */
 @Immutable
 public final class DVector {
 	private final double[] values;

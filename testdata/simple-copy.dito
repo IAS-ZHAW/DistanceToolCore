@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:ditoConfiguration xmlns:ns2="http://ias.zhaw.ch/">
     <input>
-        <filename>c:/asdf</filename>
-        <separator>a</separator>
+        <filename>c:\asdf</filename>
+        <separator>97</separator>
     </input>
     <output>
         <filename>c:/bsdf</filename>
@@ -26,6 +26,7 @@
         <question>
             <column>100</column>
             <distanceWeight>30.0</distanceWeight>
+            <enabled>true</enabled>
             <name>name</name>
             <questionType>ORDINAL</questionType>
             <questionWeight>50.0</questionWeight>

@@ -1,11 +1,5 @@
 package ch.zhaw.ias.dito;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-
-import au.com.bytecode.opencsv.CSVWriter;
 import ch.zhaw.ias.dito.config.DitoConfiguration;
 import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
@@ -25,11 +19,11 @@ public class DistanceAlgorithm {
     for (int i = 0; i < inputM.getColCount(); i++) {
       DVector v = inputM.col(i);
       Question q = config.getQuestion(i+1);
-      //double multiplier = q.getQuestionWeight()/q.getScaling();
-      //rescaled[i] = v.rescale(multiplier, 0);
+      double multiplier = q.getQuestionWeight()/q.getScaling();
+      rescaled[i] = v.rescale(multiplier, 0);
       
       //TODO use configured scaling
-      rescaled[i] = v.autoRescale();
+      //rescaled[i] = v.autoRescale();
     }
     return new Matrix(rescaled);
   }

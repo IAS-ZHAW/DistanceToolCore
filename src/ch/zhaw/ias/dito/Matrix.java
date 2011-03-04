@@ -20,10 +20,11 @@ import au.com.bytecode.opencsv.CSVWriter;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 
 /**
- * A new symmetric attribute could improve performance in comparison functions.
+ * In respect of possible concurrent calculation this class is immutable.
+ * It's absolutely necessary that this class is immutable
+ * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
+ * TODO A new symmetric attribute could improve performance in comparison functions.
  * The attribute could be automatically set on new matrixes after distance operations
- * @author Thomas
- *
  */
 @Immutable
 public final class Matrix {

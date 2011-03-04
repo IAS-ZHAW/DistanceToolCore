@@ -14,7 +14,7 @@ import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.QuestionType;
 
 /**
- * it should be considered to cache the values of min, max and values for performance reasons
+ * TODO it should be considered to cache the values of min, max and values for performance reasons
  * @author Thomas
  *
  */
@@ -26,16 +26,12 @@ public final class Question {
 	private Double questionWeight;
 	private Double distanceWeight;
   private QuestionType questionType;
+  private Boolean enabled;
 
   private DVector data;
 	
   public Question() {
-    this.column = -1;
-    this.name = "";
-    this.scaling = 1.0;
-    this.questionWeight = 1.0;
-    this.distanceWeight = 1.0;
-    this.questionType = QuestionType.ORDINAL;
+    this(-1, "", 1.0, 1.0, 1.0);
   }
 	
 	public Question(Integer column, String name, Double scaling, Double questionWeight,
@@ -46,6 +42,7 @@ public final class Question {
     this.questionWeight = questionWeight;
     this.distanceWeight = distanceWeight;
     this.questionType = QuestionType.ORDINAL;
+    this.enabled = true;
   }
 
   @Override
@@ -58,7 +55,8 @@ public final class Question {
       && name.equals(q.name) 
       && scaling.equals(q.scaling)
       && questionWeight.equals(q.questionWeight)
-      && distanceWeight.equals(q.distanceWeight);
+      && distanceWeight.equals(q.distanceWeight)
+      && enabled.equals(q.enabled);
   }
 
   public Object values() {
@@ -176,5 +174,13 @@ public final class Question {
   
   public void setColumn(int column) {
     this.column = column;
+  }
+  
+  public Boolean getEnabled() {
+    return enabled;
+  }
+  
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
   }
 }

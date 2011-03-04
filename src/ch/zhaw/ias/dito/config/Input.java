@@ -1,34 +1,35 @@
 package ch.zhaw.ias.dito.config;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import java.io.File;
+
+import javax.xml.bind.annotation.XmlTransient;
 
 import net.jcip.annotations.NotThreadSafe;
 
-@XmlAccessorType(XmlAccessType.NONE)
 @NotThreadSafe
 public final class Input { 
-	@XmlElement	
-	private String filename;
-  @XmlElement 
+	private File file;
   private String separator;	
 
   public Input() {
-		filename = "";
+		file = new File("");
 		separator = ";";
 	}
 	
-	 public Input(String filename, String separator) {
-	     this.filename = filename;
+  public Input(String file, String separator) {
+    this(new File(file), separator);
+  }
+  
+	 public Input(File file, String separator) {
+	     this.file = file;
 	     this.separator = separator;
 	 }
 	
 	public String getFilename() {
-		return filename;
+		return file.getAbsolutePath();
 	}
 	
-	public char getSeparator() {
+	public Character getSeparator() {
 	  //very good idea to just access index 0
 	  //shows that the engineer should be fired
 	  //TODO think of something better
@@ -41,14 +42,21 @@ public final class Input {
 	    return false;
 	  }
 	  Input i = (Input) obj;
-	  return filename.equals(i.filename)&& separator.equals(i.separator); 
+	  return file.equals(i.file)&& separator.equals(i.separator); 
 	}
-	 
+
+	@XmlTransient
+	public File getFile() {
+	  return file;
+	}
+	
   public void setFilename(String filename) {
-    this.filename = filename;
+    this.file = new File(filename);
   }
 
-  public void setSeparator(char separator) {
+  public void setSeparator(Character separator) {
     this.separator = Character.toString(separator);
   }	
+  
+  
 }
