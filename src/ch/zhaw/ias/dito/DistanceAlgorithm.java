@@ -2,8 +2,11 @@ package ch.zhaw.ias.dito;
 
 import ch.zhaw.ias.dito.config.DitoConfiguration;
 import ch.zhaw.ias.dito.config.Question;
+import ch.zhaw.ias.dito.config.QuestionConfig;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
+import ch.zhaw.ias.dito.ops.MultiplyOp1;
+import ch.zhaw.ias.dito.ops.Operation1;
 
 public class DistanceAlgorithm {
   private DitoConfiguration config;
@@ -14,16 +17,24 @@ public class DistanceAlgorithm {
   }
     
   public Matrix getRescaled() {
+    QuestionConfig qc = config.getQuestionConfig();
     Matrix inputM = config.getData();
+    if (qc.isEnableScale() == false) {
+      return inputM;
+    }
     DVector[] rescaled = new DVector[inputM.getColCount()];
     for (int i = 0; i < inputM.getColCount(); i++) {
       DVector v = inputM.col(i);
       Question q = config.getQuestion(i+1);
-      double multiplier = q.getQuestionWeight()/q.getScaling();
-      rescaled[i] = v.rescale(multiplier, 0);
-      
-      //TODO use configured scaling
-      //rescaled[i] = v.autoRescale();
+      if (qc.isEnableAutoScale()) {
+        rescaled[i] = v.autoRescale();
+      } else {
+        double multiplier = 1/q.getScaling();        
+        rescaled[i] = v.rescale(multiplier, 0);
+      }
+      if (qc.isEnableQuestionWeight()) {
+        rescaled[i] = rescaled[i].map(new MultiplyOp1(q.getQuestionWeight()));
+      }
     }
     return new Matrix(rescaled);
   }

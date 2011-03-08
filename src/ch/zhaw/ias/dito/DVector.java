@@ -143,18 +143,7 @@ public final class DVector {
     }
     return new DVector(c);
 	}
-	
-	/*@Override
-	public int hashCode() {
-	  int result = 17;
-	  for (int i = 0; i < values.length; i++) {
-	    //TODO find out what Kent Beck proposes here???
-	    Long f = Double.doubleToLongBits(values[i]);
-	    result = 37 * result + (int) (f^(f>>>32));
-	  }
-	  return result;
-	}*/
-	
+		
 	public DVector rescale(double multiplier, double offset) {
 	  return map(new ScaleOp1(multiplier, offset));
 	}

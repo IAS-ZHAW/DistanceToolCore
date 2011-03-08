@@ -1,19 +1,13 @@
 package ch.zhaw.ias.dito.config;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import net.jcip.annotations.NotThreadSafe;
 
 @NotThreadSafe
 public final class QuestionConfig {
-  @XmlElement
-	private final boolean enableScale;
-  @XmlElement 
-	private final boolean enableQuestionWeight;
-  @XmlElement 
-	private final boolean enableDistanceWeight;
-  @XmlElement 
-	private final boolean enableAutoScale;
+	private boolean enableScale;
+	private boolean enableQuestionWeight;
+	private boolean enableDistanceWeight;
+	private boolean enableAutoScale;
 	
   public QuestionConfig() {
     this.enableScale = true;
@@ -56,5 +50,21 @@ public final class QuestionConfig {
       && enableQuestionWeight == qc.enableQuestionWeight
       && enableDistanceWeight == qc.enableDistanceWeight
       && enableAutoScale == qc.enableAutoScale;
+  }
+ 
+  public void setEnableScale(boolean enableScale) {
+    this.enableScale = enableScale;
+  }
+  
+  public void setEnableAutoScale(boolean enableAutoScale) {
+    this.enableAutoScale = enableAutoScale;
+  }
+  
+  public void setEnableDistanceWeight(boolean enableDistanceWeight) {
+    this.enableDistanceWeight = enableDistanceWeight;
+  }
+  
+  public void setEnableQuestionWeight(boolean enableQuestionWeight) {
+    this.enableQuestionWeight = enableQuestionWeight;
   }
 }

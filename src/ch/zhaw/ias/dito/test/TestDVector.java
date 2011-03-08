@@ -5,6 +5,7 @@ import ch.zhaw.ias.dito.*;
 import ch.zhaw.ias.dito.ops.AddOp2;
 import ch.zhaw.ias.dito.ops.EuklidOp2;
 import ch.zhaw.ias.dito.ops.ManhattanOp2;
+import ch.zhaw.ias.dito.ops.MultiplyOp1;
 import ch.zhaw.ias.dito.ops.Operation1;
 
 public class TestDVector extends TestCase {
@@ -155,5 +156,10 @@ public class TestDVector extends TestCase {
     v1 = new DVector(values);
     values[0] = 100;
     assertEquals(v1, new DVector(0, 1, 0, 0, 1));
+  }
+  
+  public void testMultiplyOp() {
+    DVector v = new DVector(-2, 0, Double.NaN, 2).map(new MultiplyOp1(2.0));
+    assertEquals(v, new DVector(-4, 0, Double.NaN, 4));
   }
 }

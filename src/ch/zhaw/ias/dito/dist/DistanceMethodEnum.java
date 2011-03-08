@@ -7,12 +7,16 @@ public class DistanceMethodEnum {
 
 	private static List<DistanceMethodEnum> METHODS = new ArrayList<DistanceMethodEnum>();
 	static {
-		METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist()));
+    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist()));
+    METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist()));
+	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist()));
+	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist()));
+	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist()));
 		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist()));
-		METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist()));
-		METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist()));
+		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist()));
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist()));
 		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist()));
+		
 		METHODS.add(new DistanceMethodEnum("Kulzynski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {

@@ -40,7 +40,7 @@ public final class Matrix {
 	        	if (nextLine[i].length() == 0 || nextLine[i].isEmpty() == true || " ".equals(nextLine[i])) {
 	        		values[i] = Float.NaN;
 	        	} else {
-	        		values[i] = Double.parseDouble(nextLine[i]);
+	        	  values[i] = Double.parseDouble(nextLine[i]);
 	        	}
 	        }
 	        vectors.add(new DVector(values));

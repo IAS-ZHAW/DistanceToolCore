@@ -17,10 +17,10 @@
         <useRandomSample>false</useRandomSample>
     </method>
     <questionConfig>
-        <enableScale>false</enableScale>
-        <enableQuestionWeight>false</enableQuestionWeight>
-        <enableDistanceWeight>true</enableDistanceWeight>
         <enableAutoScale>false</enableAutoScale>
+        <enableDistanceWeight>true</enableDistanceWeight>
+        <enableQuestionWeight>false</enableQuestionWeight>
+        <enableScale>false</enableScale>
     </questionConfig>
     <questions>
         <question>
