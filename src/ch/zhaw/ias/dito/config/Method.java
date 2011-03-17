@@ -1,5 +1,7 @@
 package ch.zhaw.ias.dito.config;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import net.jcip.annotations.NotThreadSafe;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 
@@ -50,6 +52,15 @@ public final class Method {
   
   public void setName(String name) {
     method = DistanceMethodEnum.get(name);
+  }
+  
+  @XmlTransient
+  public DistanceMethodEnum getMethod() {
+    return method;
+  }
+  
+  public void setMethod(DistanceMethodEnum method) {
+    this.method = method;
   }
   
   public void setNumberOfThreads(int numberOfThreads) {

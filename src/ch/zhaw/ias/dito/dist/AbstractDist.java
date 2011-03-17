@@ -1,7 +1,5 @@
 package ch.zhaw.ias.dito.dist;
 
-import ch.zhaw.ias.dito.DVector;
-
 public abstract class AbstractDist implements DistanceSpec, Cloneable {
 		
 	@Override

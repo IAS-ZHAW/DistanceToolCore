@@ -3,6 +3,8 @@ package ch.zhaw.ias.dito.dist;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.zhaw.ias.dito.Coding;
+
 public class DistanceMethodEnum {
 
 	private static List<DistanceMethodEnum> METHODS = new ArrayList<DistanceMethodEnum>();
@@ -22,30 +24,20 @@ public class DistanceMethodEnum {
       public double distance(double a, double b, double c, double d) {
         return a/(b+c);
       }
-    }, true));
+    }, Coding.BINARY));
     METHODS.add(new DistanceMethodEnum("Jaccard", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/(a+b+c);
       }
-    }, true));
+    }, Coding.BINARY));
     METHODS.add(new DistanceMethodEnum("Simple", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return (a+d)/(a+b+c+d);
       }
-    }, true));    
+    }, Coding.BINARY));
 	}
-
-  public static List<DistanceMethodEnum> getList(boolean binary) {
-    List<DistanceMethodEnum> methods = new ArrayList<DistanceMethodEnum>();
-    for (DistanceMethodEnum method : METHODS) {
-      if (method.isBinary == binary) {
-        methods.add(method);
-      }
-    }
-    return methods;
-  }
 
 	public static DistanceMethodEnum get(String name) {
 		for (DistanceMethodEnum method : METHODS) {
@@ -56,18 +48,28 @@ public class DistanceMethodEnum {
 		throw new IllegalArgumentException("no such distance-method: " + name);
 	}
 	
-	private String name;
-	private DistanceSpec spec;
-	private boolean isBinary;
+	public static List<DistanceMethodEnum> get(Coding c) {
+    List<DistanceMethodEnum> methods = new ArrayList<DistanceMethodEnum>();
+	  for (DistanceMethodEnum method : METHODS) {
+      if (method.getCoding() == c) {
+        methods.add(method);
+      }
+    }
+    return methods;
+  }  
+	
+	private final String name;
+	private final DistanceSpec spec;
+	private final Coding coding;
 
   private DistanceMethodEnum(String name, DistanceSpec spec) {
-   this(name, spec, false);
+   this(name, spec, Coding.REAL);
   }
 	
-	private DistanceMethodEnum(String name, DistanceSpec spec, boolean isBinary) {
+	private DistanceMethodEnum(String name, DistanceSpec spec, Coding coding) {
 		this.name = name;
 		this.spec = spec;
-		this.isBinary = isBinary;
+		this.coding = coding;
 	}
 	
 	public String getName() {
@@ -78,8 +80,8 @@ public class DistanceMethodEnum {
 		return spec;
 	}
 	
-	public boolean isBinary() {
-	  return isBinary;
+	public Coding getCoding() {
+	  return coding;
 	}
 	
 	@Override

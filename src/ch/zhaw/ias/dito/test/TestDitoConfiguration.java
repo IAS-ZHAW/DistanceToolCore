@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import ch.zhaw.ias.dito.DVector;
+import ch.zhaw.ias.dito.QuestionType;
 import ch.zhaw.ias.dito.config.DitoConfiguration;
 import ch.zhaw.ias.dito.config.Input;
 import ch.zhaw.ias.dito.config.Method;
@@ -23,15 +25,7 @@ public class TestDitoConfiguration extends TestCase {
     assertEquals(config.getQuestionConfig().isEnableAutoScale(), true);
     assertEquals(config.getQuestions().size(), 2);
     
-    assertEquals(config.getQuestion(3), config.createDefaultQuestion(3));
-  }
-  
-  public void testQuestionEquals() {
-    Question q = new Question(3, "test", 2.0, 3.0, 4.0);
-    assertEquals(q.equals(null), false);
-    assertEquals(q.equals("asfd"), false);
-    assertEquals(q, q);
-    assertEquals(q, new Question(3, "test", 2.0, 3.0, 4.0));
+    assertEquals(config.getQuestion(3), null);
   }
   
   public void testSaveToFile() throws FileNotFoundException, JAXBException {
@@ -50,7 +44,7 @@ public class TestDitoConfiguration extends TestCase {
     Method m = new Method(DistanceMethodEnum.get("Canberra"), false, 20);
     QuestionConfig qc = new QuestionConfig(false, false, true, false);
     List<Question> qs = new ArrayList<Question>();
-    qs.add(new Question(100, "name", 100.0, 50.0, 30.0));
+    qs.add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
     
     DitoConfiguration config = new DitoConfiguration(i, o, m, qc, qs);
     DitoConfiguration.saveToFile("./testdata/simple-copy.dito", config);
@@ -61,10 +55,10 @@ public class TestDitoConfiguration extends TestCase {
     assertEquals(config, reloadedConfig);
     reloadedConfig.getQuestions().clear();
     assertEquals(config.equals(reloadedConfig), false);
-    reloadedConfig.getQuestions().add(new Question(100, "name", 100.0, 50.0, 30.0));
+    reloadedConfig.getQuestions().add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
     assertEquals(config.equals(reloadedConfig), true);
     reloadedConfig.getQuestions().clear();
-    reloadedConfig.getQuestions().add(new Question(100, "name2", 100.0, 50.0, 30.0));
+    reloadedConfig.getQuestions().add(new Question(100, "name2", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
     assertEquals(config.equals(reloadedConfig), false);
   }
   
@@ -104,5 +98,27 @@ public class TestDitoConfiguration extends TestCase {
     assertEquals(qc.equals(qc), true);
     assertEquals(qc.equals(new QuestionConfig(true, true, true, false)), false);
     assertEquals(qc.equals(new QuestionConfig(true, false, true, false)), true);
-  }  
+  }
+  
+  public void testCreateDefaultQuestion() throws FileNotFoundException, JAXBException {
+    DitoConfiguration config = DitoConfiguration.loadFromFile("./testdata/simple.dito");
+    Question q = config.createDefaultQuestion(3, new DVector(3, 3, 1));
+    assertEquals(q.getQuestionType(), QuestionType.ORDINAL);
+    
+    q = config.createDefaultQuestion(3, new DVector(-3.1, 3, 1));
+    assertEquals(q.getQuestionType(), QuestionType.METRIC);
+    
+    q = config.createDefaultQuestion(3, new DVector(1, 0, 0, 1));
+    assertEquals(q.getQuestionType(), QuestionType.BINARY);
+    
+    q = config.createDefaultQuestion(3, new DVector(1, 0, 0, 1, 1.1));
+    assertEquals(q.getQuestionType(), QuestionType.METRIC);
+    
+    q = config.createDefaultQuestion(3, new DVector(1, 0, 0, 1, 3));
+    assertEquals(q.getQuestionType(), QuestionType.ORDINAL);
+    
+    q = config.createDefaultQuestion(3, new DVector(1, 0, 0, 1, Double.NaN));
+    assertEquals(q.getQuestionType(), QuestionType.BINARY);
+    assertTrue(q.getData() != null);
+  }
 }

@@ -20,7 +20,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
+import ch.zhaw.ias.dito.QuestionType;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
@@ -88,9 +90,7 @@ public final class DitoConfiguration implements PropertyListener {
         return q;
       }
     }
-    Question q = createDefaultQuestion(column);
-    questions.add(q);
-    return q;
+    return null;
   }
     
   public List<Question> getQuestions() {
@@ -111,8 +111,10 @@ public final class DitoConfiguration implements PropertyListener {
     return method;
   }
   
-  public Question createDefaultQuestion(int column) {
-    return new Question(column, "Question " + column, 1.0, 1.0, 1.0);
+  public Question createDefaultQuestion(int column, DVector data) {
+    Question q = new Question(column, "Question " + column, data.getDefaultQuestionType(), 1.0, 1.0, 1.0);
+    q.setData(data);
+    return q;
   }
   
   @Override
@@ -130,17 +132,14 @@ public final class DitoConfiguration implements PropertyListener {
   
   public void loadMatrix() throws IOException {
     clearVectorData();
-    data = Matrix.readFromFile(new File(getInput().getFilename()), getInput().getSeparator());
-    data = data.transpose();
-    for (int i = 0; i < data.getColCount(); i++) {
-      getQuestion(i+1).setData(data.col(i));
-    }
-    removeEmptyQuestions();
+    Matrix m = Matrix.readFromFile(new File(getInput().getFilename()), getInput().getSeparator());
+    m = m.transpose();
+    setData(m);
   }
   
   private void clearVectorData() {
     for (Question q : questions) {
-      q.setData(null);
+      q.clearData();
     }
   }
   
@@ -176,6 +175,19 @@ public final class DitoConfiguration implements PropertyListener {
   
   public void setData(Matrix data) {
     this.data = data;
+    for (int i = 0; i < data.getColCount(); i++) {
+      Question q = getQuestion(i+1);
+      DVector v = data.col(i);
+      
+      //question doesn't exist yet -> create default
+      if (q == null) {
+        q = createDefaultQuestion(i, v);
+        questions.add(q);        
+      } else {
+        q.setData(v);  
+      }
+    }
+    removeEmptyQuestions();
   }
   
   @Override

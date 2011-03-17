@@ -147,8 +147,8 @@ public class TestDVector extends TestCase {
     v1 = new DVector(0, 1, 0, 0, 1);
     assertEquals(v1.toBinary(), new DVector(0, 1, 0, 0, 1));
     
-    v1 = new DVector(0, 1, 2, 0, 3, Double.NaN, -1);
-    assertEquals(v1.toBinary(), new DVector(0, 1, 1, 0, 1, Double.NaN, Double.NaN));    
+    v1 = new DVector(0, 1, 2, 0, 3, Double.NaN, -1, -2.514);
+    assertEquals(v1.toBinary(), new DVector(0, 1, 1, 0, 1, Double.NaN, Double.NaN, Double.NaN));    
   }
   
   public void testImmutableArray() {

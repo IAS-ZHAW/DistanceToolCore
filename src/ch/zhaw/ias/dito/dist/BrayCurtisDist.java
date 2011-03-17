@@ -14,6 +14,6 @@ public class BrayCurtisDist extends AbstractDist {
       throw new IllegalStateException("filtered length of both vectors should be the same but isnt. Values " + n.filteredLength() + " !=" + m.filteredLength());
     }
     double relation = n.sum()/m.sum();
-    return relation/n.filteredLength();
+    return relation/n.length();
   }
 }

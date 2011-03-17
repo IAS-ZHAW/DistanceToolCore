@@ -23,9 +23,11 @@ public class AllTests {
 		suite.addTestSuite(TestDistanceAlgorithm.class);
 		suite.addTestSuite(TestVectorFactory.class);
 		suite.addTestSuite(TestDitoConfiguration.class);
+		suite.addTestSuite(TestQuestion.class);
 		suite.addTestSuite(TestBinaryDistance.class);
 		suite.addTestSuite(TestBrayCurtisDist.class);
 		suite.addTestSuite(TestSoergelDist.class);
+		suite.addTestSuite(TestCoding.class);
 		//$JUnit-END$
 		return suite;
 	}

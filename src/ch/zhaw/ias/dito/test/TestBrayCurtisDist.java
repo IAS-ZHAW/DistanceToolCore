@@ -20,7 +20,7 @@ public class TestBrayCurtisDist extends TestCase {
     
     v1 = new DVector(1,Double.NaN, 9, 11);
     v2 = new DVector(4, 7, 11, Double.NaN);
-    assertEquals(dist.distance(v1, v2), 0.1);
+    assertEquals(dist.distance(v1, v2), 0.05);
     
     v1 = new DVector(-5, 10);
     v2 = new DVector(10, 5);
@@ -33,6 +33,15 @@ public class TestBrayCurtisDist extends TestCase {
     
     Matrix m = new Matrix(v1, v2);
     Matrix distM = m.calculateDistance(dist, true);
-    assertEquals(distM, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.1}, {0.1, 0.0}}));
+    assertEquals(distM, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.05}, {0.05, 0.0}}));
+  }
+  
+  public void testZeroValues() {
+    DVector v1 = new DVector(0,Double.NaN, 9, 11);
+    DVector v2 = new DVector(0, 7, 11, Double.NaN);
+    
+    Matrix m = new Matrix(v1, v2);
+    Matrix distM = m.calculateDistance(dist, true);
+    assertEquals(distM, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.025}, {0.025, 0.0}}));    
   }
 }

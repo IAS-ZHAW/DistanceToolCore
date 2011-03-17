@@ -9,7 +9,9 @@ public enum ConfigProperty {
   METHOD_NAME("s3.lb.method"),
   OUTPUT_FILENAME("s5.lb.file"),
   OUTPUT_SEPARATOR("s5.lb.separator"),
-  OUTPUT_PRECISION("s5.lb.precision");
+  OUTPUT_PRECISION("s5.lb.precision"),
+  QUESTION_NUMBER("misc.lb.questionNumber"),
+  INPUT_SIZE("misc.lb.inputSize");
   
   private final String key;
   

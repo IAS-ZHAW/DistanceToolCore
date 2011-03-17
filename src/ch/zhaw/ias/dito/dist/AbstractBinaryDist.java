@@ -23,7 +23,7 @@ public abstract class AbstractBinaryDist implements DistanceSpec {
       } else if (vA == 0.0 && vB == 0.0) {
         d++;
       } else {
-        throw new IllegalStateException("value " + vA + " or " + vB + " is not allowed");
+        throw new IllegalArgumentException("value " + vA + " or " + vB + " is not allowed");
       }
     }
     return distance(a, b, c, d);

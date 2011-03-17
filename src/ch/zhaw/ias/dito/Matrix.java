@@ -147,6 +147,10 @@ public final class Matrix {
 	    	for (int j = i; j < getColCount(); j++) {
 	    	  DVector w = col(j);
 	    		double distance = dist.distance(v, w);
+	    		//Map NaN Values to 0
+	    		if (Double.isNaN(distance)) {
+	    		  distance = 0;
+	    		}
 	    		distances[i][j] = distance;
 	    		distances[j][i] = distance;
 	    	}

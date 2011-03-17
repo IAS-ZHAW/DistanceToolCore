@@ -25,13 +25,6 @@ public final class DVector {
 		this.values = Arrays.copyOf(values, values.length);
 	}
 	
-  public DVector(Double... values) {
-    this.values = new double[values.length];
-    for (int i = 0; i < values.length; i++) {
-      this.values[i] = values[i];
-    }
-  }	
-	
 	public double sum() {
 		return foldl1(new AddOp2());
 	}
@@ -154,10 +147,17 @@ public final class DVector {
 	  return rescale(1 / (max - min), min);
 	}
 
+	/**
+	 * Converts this vector into a binary vector
+	 * NaN and negative values will result in NaN
+	 * 0 will result in 0
+	 * all remaining values will result in 1
+	 * @return
+	 */
   public DVector toBinary() {
     double[] c = new double[values.length];
     for (int i = 0; i < values.length; i++) {
-      if (Double.isNaN(values[i]) || values[i] == -1) {
+      if (Double.isNaN(values[i]) || values[i] < 0) {
         c[i] = Double.NaN;
       } else if (values[i] == 0) {
         c[i] = 0;
@@ -168,7 +168,7 @@ public final class DVector {
     return new DVector(c);
   }
   
-  public void addValues(Collection<Double> c) {
+  public void addValuesToCollection(Collection<Double> c) {
     for (int i = 0; i < values.length; i++) {
       c.add(values[i]);  
     }
@@ -176,5 +176,20 @@ public final class DVector {
 
   public double[] getValues() {
     return Arrays.copyOf(values, values.length);
+  }
+  
+  public QuestionType getDefaultQuestionType() {
+    QuestionType type = QuestionType.BINARY;
+    for (int i = 0; i < values.length; i++) {
+      if (Double.isNaN(values[i])) {
+        continue;
+      }
+      if (values[i] - ((int) values[i]) != 0.0) {
+        return QuestionType.METRIC;
+      } else if (values[i] != 0 && values[i] != 1) {
+        type = QuestionType.ORDINAL;
+      }
+    }
+    return type;
   }
 }

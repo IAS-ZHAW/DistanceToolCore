@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
+import ch.zhaw.ias.dito.dist.DivergenceDist;
 import ch.zhaw.ias.dito.dist.EuklidianDist;
 import ch.zhaw.ias.dito.dist.WaveHedgesDist;
 import junit.framework.TestCase;
@@ -161,5 +162,11 @@ public class TestMatrix extends TestCase {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 1, -2}, {0, Double.NaN, 4}});
     assertEquals(m.extremum(true), 4.0);
     assertEquals(m.extremum(false), -2.0);
+  }
+  
+  public void testCompareZeroVectors() {
+    m = Matrix.createDoubleMatrix(new double[][] {{0, 0}, {Double.NaN, 4}});
+    Matrix dist = m.calculateDistance(new DivergenceDist(), false);
+    assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0, 0.5}, {0.5, 0}}));
   }
 }

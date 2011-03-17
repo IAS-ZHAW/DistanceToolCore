@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import ch.zhaw.ias.dito.Coding;
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.QuestionType;
 
@@ -31,17 +32,17 @@ public final class Question {
   private DVector data;
 	
   public Question() {
-    this(-1, "", 1.0, 1.0, 1.0);
+    this(-1, "", QuestionType.ORDINAL, 1.0, 1.0, 1.0);
   }
 	
-	public Question(Integer column, String name, Double scaling, Double questionWeight,
+	public Question(Integer column, String name, QuestionType questionType, Double scaling, Double questionWeight,
       Double distanceWeight) {
     this.column = column;
     this.name = name;
     this.scaling = scaling;
     this.questionWeight = questionWeight;
     this.distanceWeight = distanceWeight;
-    this.questionType = QuestionType.ORDINAL;
+    this.questionType = questionType;
     this.enabled = true;
   }
 
@@ -59,9 +60,9 @@ public final class Question {
       && enabled.equals(q.enabled);
   }
 
-  public Object values() {
+  public Object getDistinctValues() {
     Set<Double> values = new TreeSet<Double>();
-    data.addValues(values);
+    data.addValuesToCollection(values);
     
     StringBuilder sb = new StringBuilder();
     Iterator<Double> i = values.iterator();
@@ -80,13 +81,13 @@ public final class Question {
     } else if (col == TableColumn.NAME) {
       return getName();
     } else if (col == TableColumn.VALUES) {
-      return values();
+      return getDistinctValues();
     } else if (col == TableColumn.MIN) {
       return min();
     } else if (col == TableColumn.MAX) {
       return max();
     } else if (col == TableColumn.TYPE) {
-      return questionType.name();
+      return questionType;
     } else if (col == TableColumn.DISTANCE_WEIGHT) {
       return getDistanceWeight();
     } else if (col == TableColumn.QUESTION_WEIGHT) {
@@ -106,6 +107,8 @@ public final class Question {
       questionWeight = Double.parseDouble(value.toString());
     } else if (col == TableColumn.SCALING) {
       scaling = Double.parseDouble(value.toString());
+    } else if (col == TableColumn.TYPE) {
+      questionType = (QuestionType) value;
     } else {
       throw new IllegalArgumentException("column " + col + " is not editable");
     }
@@ -121,6 +124,17 @@ public final class Question {
 
   public void setData(DVector data) {
     this.data = data;
+    QuestionType type = data.getDefaultQuestionType();
+    // set new type if QuestionType is Binary or Metric
+    if (type == QuestionType.BINARY || type == QuestionType.METRIC) {
+      setQuestionType(type);
+    } else if (questionType == QuestionType.BINARY || questionType == QuestionType.METRIC) {
+      setQuestionType(type);
+    }
+  }
+  
+  public void clearData() {
+    this.data = null;
   }
   
   @XmlTransient
@@ -182,5 +196,50 @@ public final class Question {
   
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
+  }
+  
+  private DVector[] splitUpCoding() {
+    int min = (int) data.min();
+    int max = (int) data.max();
+    int length = max - min + 1;
+    double[][] values = new double[length][data.length()];
+    for (int i = 0; i < data.length(); i++) {
+      double value = data.component(i);
+      for (int j = 0; j < length; j++) {
+        if (Double.isNaN(value)) {
+          values[j][i] = Double.NaN;
+        } else if (((int) value) == (j + min)) {
+          values[j][i] = 1;
+        } else {
+          values[j][i] = 0;
+        }
+      }
+    }
+    DVector[] vecs = new DVector[length];
+    for (int j = 0; j < length; j++) {
+      vecs[j] = new DVector(values[j]);
+    }
+    return vecs;
+  }
+
+  public DVector[] recode(Coding coding) {
+    if (coding == Coding.BINARY) {
+      if (questionType == QuestionType.BINARY) {
+        return new DVector[] {data.toBinary()};
+      } else if (questionType == QuestionType.NOMINAL || questionType == QuestionType.ORDINAL) {
+        return splitUpCoding();
+      }
+      throw new IllegalStateException("not implemented yet");
+    } else if (coding == Coding.REAL){
+      if (questionType == QuestionType.METRIC || questionType == QuestionType.ORDINAL) {
+        return new DVector[] {data}; //no recoding necessary
+      } else if (questionType == QuestionType.BINARY) {
+        return new DVector[] {data.toBinary()};
+      } else if (questionType == QuestionType.NOMINAL) {
+        return splitUpCoding();
+      }
+      throw new IllegalStateException("not implemented yet");
+    }
+    throw new IllegalArgumentException("unsupported coding " + coding);
   }
 }
