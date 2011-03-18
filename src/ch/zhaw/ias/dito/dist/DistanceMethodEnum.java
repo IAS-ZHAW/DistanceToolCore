@@ -19,6 +19,33 @@ public class DistanceMethodEnum {
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist()));
 		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist()));
 		
+		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY));
+		METHODS.add(new DistanceMethodEnum("Braun, Blanque", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return a/Math.max(a+b, a+c);
+      }
+    }, Coding.BINARY));
+    METHODS.add(new DistanceMethodEnum("Czekanowski", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return 2*a/(2*a + b + c);
+      }
+    }, Coding.BINARY));
+    METHODS.add(new DistanceMethodEnum("Hamman", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return (a - (b + c) + d)/(a + b + c + d);
+      }
+    }, Coding.BINARY));    
+    METHODS.add(new DistanceMethodEnum("Michael", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        double n = 4*(a*d - b*c);
+        double m = (a + d)*(a + d) + (b + c)*(b + c);
+        return n/m;
+      }
+    }, Coding.BINARY));    
 		METHODS.add(new DistanceMethodEnum("Kulzynski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {

@@ -28,6 +28,7 @@ public class AllTests {
 		suite.addTestSuite(TestBrayCurtisDist.class);
 		suite.addTestSuite(TestSoergelDist.class);
 		suite.addTestSuite(TestCoding.class);
+		suite.addTestSuite(TestUniversalBinaryDist.class);
 		//$JUnit-END$
 		return suite;
 	}

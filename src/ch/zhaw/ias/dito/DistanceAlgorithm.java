@@ -1,8 +1,11 @@
 package ch.zhaw.ias.dito;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ch.zhaw.ias.dito.config.DitoConfiguration;
+import ch.zhaw.ias.dito.config.Method;
 import ch.zhaw.ias.dito.config.Question;
 import ch.zhaw.ias.dito.config.QuestionConfig;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
@@ -15,25 +18,13 @@ public class DistanceAlgorithm {
   
   public DistanceAlgorithm(DitoConfiguration config) {
     this.config = config;
-    DistanceMethodEnum method = config.getMethod().getMethod();
-    if (isCompatible(config.getQuestions(), method) == false) {
-      throw new IllegalArgumentException("questions and method don't match");
-    }
-  }
-    
-  public static boolean isCompatible(List<Question> questions, DistanceMethodEnum method) {
-    if (method.getCoding() == Coding.REAL) {
-      return true;
-    }
-    for (Question q : questions) {
-      if (q.getQuestionType() == QuestionType.METRIC || q. getQuestionType() == QuestionType.ORDINAL) {
-        return false;
-      }
-    }
-    return true;
   }
   
   public Matrix getRescaled() {
+    Method m = config.getMethod();
+    if (m.getMethod().getCoding() == Coding.BINARY) {
+      throw new IllegalStateException("Binary method -> no rescaling allowed!");
+    }
     QuestionConfig qc = config.getQuestionConfig();
     Matrix inputM = config.getData();
 
@@ -61,16 +52,31 @@ public class DistanceAlgorithm {
   public Matrix doIt() {
     System.out.println("calculating " + config.getMethod().getName() + " distances");
     long start = System.currentTimeMillis();
-    Matrix scaled = getRescaled();
+    Matrix m;
+    Coding coding = config.getMethod().getMethod().getCoding();
+    if (coding == Coding.REAL) {
+      m = getRescaled();
+
+    } else {
+      m = config.getData();
+    }
+    ArrayList<DVector> vecs = new ArrayList<DVector>();
+    for (int i = 0; i < m.getColCount(); i++) {
+      Question q = config.getQuestions().get(i);
+      DVector[] v = m.col(i).recode(coding, q.getQuestionType());
+      vecs.addAll(Arrays.asList(v));
+    }
+    m = new Matrix(vecs);
+    
     System.out.println("rescaling finished after " + (System.currentTimeMillis() - start) + " ms");
     start = System.currentTimeMillis();
-    scaled = scaled.transpose();
-    System.out.println("transposing finished after " + (System.currentTimeMillis() - start) + " ms");
+    m = m.transpose();
+    System.out.println("transposing finished after " + (System.currentTimeMillis() - start) + " ms");      
+    
     start = System.currentTimeMillis();         
     DistanceSpec spec = DistanceMethodEnum.get(config.getMethod().getName()).getSpec();
-    dist = scaled.calculateDistance(spec, false);
+    dist = m.calculateDistance(spec, false);
     System.out.println("calculations finished after " + (System.currentTimeMillis() - start) + " ms");
-    
     return dist;
   }
 }

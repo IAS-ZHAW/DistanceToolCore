@@ -192,4 +192,82 @@ public final class DVector {
     }
     return type;
   }
+  
+  private DVector[] splitUpCoding() {
+    int min = (int) min();
+    int max = (int) max();
+    int length = max - min + 1;
+    double[][] values = new double[length][length()];
+    for (int i = 0; i < length(); i++) {
+      double value = component(i);
+      for (int j = 0; j < length; j++) {
+        if (Double.isNaN(value)) {
+          values[j][i] = Double.NaN;
+        } else if (((int) value) == (j + min)) {
+          values[j][i] = 1;
+        } else {
+          values[j][i] = 0;
+        }
+      }
+    }
+    DVector[] vecs = new DVector[length];
+    for (int j = 0; j < length; j++) {
+      vecs[j] = new DVector(values[j]);
+    }
+    return vecs;
+  }
+  
+  private DVector[] splitUpCoding(int numOfGroups) {
+    double min = min();
+    double max = max();
+    double step = (max - min)/numOfGroups;
+    double[][] values = new double[numOfGroups][length()];
+    for (int i = 0; i < length(); i++) {
+      double value = component(i);
+
+      for (int j = 0; j < numOfGroups; j++) {
+        double upperBoundary = min + ((j + 1) * step);
+        if (Double.isNaN(value)){
+          values[j][i] = Double.NaN;
+        }
+        // ensure max is not lost due tue rounding problems
+        if (j + 1 == numOfGroups) {
+          upperBoundary = max;
+        }
+        if (value <= upperBoundary) {
+          values[j][i] = 1;
+          break;
+        } 
+      }
+    }
+    
+    DVector[] vecs = new DVector[numOfGroups];
+    for (int j = 0; j < numOfGroups; j++) {
+      vecs[j] = new DVector(values[j]);
+    }
+    return vecs;
+  }
+
+  public DVector[] recode(Coding coding, QuestionType questionType) {
+    if (coding == Coding.BINARY) {
+      if (questionType == QuestionType.BINARY) {
+        return new DVector[] {toBinary()};
+      } else if (questionType == QuestionType.NOMINAL || questionType == QuestionType.ORDINAL) {
+        return splitUpCoding();
+      } else if (questionType == QuestionType.METRIC) {
+        return splitUpCoding(10);
+      }
+      throw new IllegalStateException("not implemented yet");
+    } else if (coding == Coding.REAL){
+      if (questionType == QuestionType.METRIC || questionType == QuestionType.ORDINAL) {
+        return new DVector[] {this}; //no recoding necessary
+      } else if (questionType == QuestionType.BINARY) {
+        return new DVector[] {this.toBinary()};
+      } else if (questionType == QuestionType.NOMINAL) {
+        return splitUpCoding();
+      } 
+      throw new IllegalStateException("not implemented yet");
+    }
+    throw new IllegalArgumentException("unsupported coding " + coding);
+  }
 }

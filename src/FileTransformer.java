@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import au.com.bytecode.opencsv.CSVReader;
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
@@ -11,6 +16,7 @@ import ch.zhaw.ias.dito.Matrix;
 
 public class FileTransformer {
   public static void main(String... args) {
+        
     CSVReader reader;
     try {
       reader = new CSVReader(new FileReader("c:/atizo_k-kiosk-21_02_2011-518.csv"), ',');

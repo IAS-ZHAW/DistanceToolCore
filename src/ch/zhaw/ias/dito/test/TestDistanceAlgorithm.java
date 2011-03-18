@@ -74,14 +74,4 @@ public class TestDistanceAlgorithm extends TestCase {
     Matrix scaled = algo.getRescaled();
     assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{0, 1, 0.25, Double.NaN, 0.5}, {0, 1.5, Double.NaN, 3.0, 2.25}}));    
   }
-  
-  public void testIsCompatible() {
-    config.getMethod().setMethod(DistanceMethodEnum.get("Kulzynski"));
-    try {
-      algo = new DistanceAlgorithm(config);
-      fail();
-    } catch (IllegalArgumentException e) {
-      assertTrue(true);
-    }
-  }
 }

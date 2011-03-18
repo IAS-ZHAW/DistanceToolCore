@@ -197,49 +197,8 @@ public final class Question {
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
   }
-  
-  private DVector[] splitUpCoding() {
-    int min = (int) data.min();
-    int max = (int) data.max();
-    int length = max - min + 1;
-    double[][] values = new double[length][data.length()];
-    for (int i = 0; i < data.length(); i++) {
-      double value = data.component(i);
-      for (int j = 0; j < length; j++) {
-        if (Double.isNaN(value)) {
-          values[j][i] = Double.NaN;
-        } else if (((int) value) == (j + min)) {
-          values[j][i] = 1;
-        } else {
-          values[j][i] = 0;
-        }
-      }
-    }
-    DVector[] vecs = new DVector[length];
-    for (int j = 0; j < length; j++) {
-      vecs[j] = new DVector(values[j]);
-    }
-    return vecs;
-  }
 
   public DVector[] recode(Coding coding) {
-    if (coding == Coding.BINARY) {
-      if (questionType == QuestionType.BINARY) {
-        return new DVector[] {data.toBinary()};
-      } else if (questionType == QuestionType.NOMINAL || questionType == QuestionType.ORDINAL) {
-        return splitUpCoding();
-      }
-      throw new IllegalStateException("not implemented yet");
-    } else if (coding == Coding.REAL){
-      if (questionType == QuestionType.METRIC || questionType == QuestionType.ORDINAL) {
-        return new DVector[] {data}; //no recoding necessary
-      } else if (questionType == QuestionType.BINARY) {
-        return new DVector[] {data.toBinary()};
-      } else if (questionType == QuestionType.NOMINAL) {
-        return splitUpCoding();
-      }
-      throw new IllegalStateException("not implemented yet");
-    }
-    throw new IllegalArgumentException("unsupported coding " + coding);
+    return data.recode(coding, questionType);
   }
 }

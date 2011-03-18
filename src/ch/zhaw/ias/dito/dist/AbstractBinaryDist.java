@@ -29,6 +29,15 @@ public abstract class AbstractBinaryDist implements DistanceSpec {
     return distance(a, b, c, d);
   }
   
+  /**
+   * All parameters could be passed as integer, however double was chosen because this ensures
+   * that all calculations are executed using double precision.
+   * @param a Number of Components where aVec==1 and bVec==1
+   * @param b Number of Components where aVec==1 and bVec==0
+   * @param c Number of Components where aVec==0 and bVec==1
+   * @param d Number of Components where aVec==0 and bVec==0
+   * @return
+   */
   public abstract double distance(double a, double b, double c, double d);
   
   @Override

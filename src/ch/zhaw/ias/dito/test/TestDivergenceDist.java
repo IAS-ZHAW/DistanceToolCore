@@ -24,7 +24,6 @@ public class TestDivergenceDist extends TestCase {
     assertEquals(dist.distance(v1, v2), 0.0925);		
 	}
 	
-  
   public void testZeroValues() {
     DVector v1 = new DVector(0,Double.NaN, 9, 11);
     DVector v2 = new DVector(0, 7, 11, Double.NaN);
