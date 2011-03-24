@@ -1,0 +1,71 @@
+1. smallset.isis.dat
+Set of 2197 records with 135 key values each. Eac key value is an integer number
+
+Format:
+record_id number_of_non_zero_descriptors descriptor_id1 descriptor_value1 descriptor_id2 descriptor_value2 ...
+
+all not explicitly mentioned descriptors have the value 0
+Example:
+-----------------------------------------------------------------------------------
+173892  45 32 1 33 1 63 1 67 1 70 1 71 1 75 2 83 1 85 1 88 1 90 1 91 2 92 1 94 2 95 2 96 1 100 1 102 1 104 3 108 1 110 1 111 3 115 1 117 1 118 2 119 1 121 2 122 1 123 1 124 2 128 1 131 1 137 2 139 1 140 4 141 1 142 2 148 1 150 1 153 2 154 2 155 1 156 2 157 1 158 3
+-----------------------------------------------------------------------------------
+
+2. bigset.isis.dat
+Same as 1., but with 9240 records
+
+3. smallset.unityfp.dat
+Set of  2131 records having each 992 binary descriptors. Contains the same molecules than smallset.isis.dat, 
+with execption of some molecules without structures gives
+
+Format:
+meaningless_number meaningless_number record_id sln_which_is_of_no_meaning_for_clustering_purpose
+bitstring_part1
+bitstring_part2
+bitstring_part3
+bitstring_part4
+bitstring_part5
+bitstring_part6
+bitstring_part7
+bitstring_part8
+bitstring_part9
+bitstring_part10
+bitstring_part11
+bitstring_part12
+bitstring_part13
+row_with_meaning_less_stuff
+
+-------------------------------------------------------------------------------
+2094 0 304421   S[1](C[2]HN(CH2CH2@1)C(CH@2NHC(=O)CH(NHC(=O)OCH2C[28]:CH:CH:CH:CH:CH:@28)CH2C[42]:CH:CH:CH:CH:CH:@42)=O)(=O)=O
+00001000000000000000000000100000001000000000000100000000000000000000001010001000
+00000000000010010000001000000000100001000000110000010001000000000000000000011000
+00000001000000000011011010001010010001000010111000010000001101000000000101010000
+00000100000101101010011000000000110000000001010010010101010110100001000011011000
+00001011001100101100000010000000001100101110001000001010001010100010000011010001
+10001110000101011010001000100010000100000110000100011010010000001010010000011100
+00101010000100010110100000010010100110010011000010001001001001100000001000010100
+11110011000011001000000010000000000100000001000100000010011000011001000001000000
+11011100000110100101111000000111101001001001110000010011001100001010001000010010
+10110001000010001010000000000110010110100000011100000000000010000001100001010100
+01010110100010110100001110011100000010000100000010001110001000000000000001011100
+10000001010000010010000000000000000101000001011111111100111000100000000000000000
+00000111111111111000100110000000
+0.280    0
+
+-------------------------------------------------------------------------------
+
+4. bigset.unityfp.dat
+sames 3. but with 9032 records. Contains the same molecules than bigset.isis.dat, 
+with execption of some molecules without structures gives
+
+
+5. smallset.activity
+Gives the information about the biolical targets and their classification for each record in smallset
+Each record is associated with one or mor biological targets, which is classified in hierarchical target classification system
+Format:
+record_id\ttarget1:[target_class1:[target_superclass1]...][\ttarget2:[target_class2:[target_superclass2]...]]...
+Example:
+---------------------------------------------------------------------------------------------
+140614	neprilysin: metalloendopeptidase: peptidase: hydrolase: enzyme:		peptidyl-dipeptidase a: peptidyl-dipeptidase: peptidase: hydrolase: enzyme: 
+---------------------------------------------------------------------------------------------
+
+6.bigset.activity

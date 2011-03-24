@@ -1,11 +1,13 @@
 package ch.zhaw.ias.dito.config;
 
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import net.jcip.annotations.NotThreadSafe;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 
 @NotThreadSafe
+@XmlType(propOrder={"name", "useRandomSample" , "sampleSize", "parallel", "numberOfThreads"})
 public final class Method {
   private DistanceMethodEnum method; 
   private boolean parallel;

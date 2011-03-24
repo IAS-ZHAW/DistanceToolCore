@@ -158,11 +158,12 @@ public final class Matrix {
 	    return createDoubleMatrix(distances);
 	}
 	
-  /*public Matrix calculateDistance(DistanceSpec dist, boolean isBinary) {
-    ExecutorService es = Executors.newFixedThreadPool(5);//CachedThreadPool();
+  public Matrix calculateDistanceParallel(DistanceSpec dist, boolean isBinary, int numberOfThreads) {
+    ExecutorService es = Executors.newFixedThreadPool(numberOfThreads);//CachedThreadPool();
     double[][] distances = new double[getColCount()][getColCount()];
     for (int i = 0; i < getColCount(); i++) {
       //DVector v = helper.col(i);
+      //this is not save: the distances-array could be modified in parallel and introduce race-conditions
       es.execute(new CalcRow(this, distances, dist, i));
     }
     es.shutdown();
@@ -197,7 +198,7 @@ public final class Matrix {
         distances[j][startAt] = distance;
       }
     }
-  }*/
+  }
   
 	@Override
 	public boolean equals(Object obj) {

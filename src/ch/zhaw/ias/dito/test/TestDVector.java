@@ -162,4 +162,12 @@ public class TestDVector extends TestCase {
     DVector v = new DVector(-2, 0, Double.NaN, 2).map(new MultiplyOp1(2.0));
     assertEquals(v, new DVector(-4, 0, Double.NaN, 4));
   }
+  
+  public void testExclude() {
+    DVector v = new DVector(-1, 0, 3, 10, -1, 5);
+    DVector filtered = v.exclude(-1);
+    assertEquals(filtered, new DVector(Double.NaN, 0, 3, 10, Double.NaN, 5));
+    filtered = v.exclude(-1, 0, 5);
+    assertEquals(filtered, new DVector(Double.NaN, Double.NaN, 3, 10, Double.NaN, Double.NaN));    
+  }
 }

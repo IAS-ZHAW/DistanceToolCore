@@ -2,6 +2,10 @@ package ch.zhaw.ias.dito.dist;
 
 import ch.zhaw.ias.dito.DVector;
 
+/**
+ * It is an essential requirement that all implementation classes are threadsafe.  
+ * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
+ */
 public interface DistanceSpec {
 	
   /**
@@ -10,7 +14,7 @@ public interface DistanceSpec {
    * @param a
    * @param b
    * @return Distance between the two vectors. In case both vectors are zero-vectors the function is allowed to return NaN.
-   * NaN values will be mapped to 0
+   * NaN values will be mapped to a zero distance
    */
 	public double distance(DVector a, DVector b);
 	

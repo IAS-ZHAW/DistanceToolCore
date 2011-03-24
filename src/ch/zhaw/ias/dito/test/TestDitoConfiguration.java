@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import ch.zhaw.ias.dito.DVector;
+import ch.zhaw.ias.dito.Matrix;
 import ch.zhaw.ias.dito.QuestionType;
 import ch.zhaw.ias.dito.config.DitoConfiguration;
 import ch.zhaw.ias.dito.config.Input;
@@ -44,7 +45,7 @@ public class TestDitoConfiguration extends TestCase {
     Method m = new Method(DistanceMethodEnum.get("Canberra"), false, 20);
     QuestionConfig qc = new QuestionConfig(false, false, true, false);
     List<Question> qs = new ArrayList<Question>();
-    qs.add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
+    qs.add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0, new double[] {3.31, 2.20, 1.0}));
     
     DitoConfiguration config = new DitoConfiguration(i, o, m, qc, qs);
     DitoConfiguration.saveToFile("./testdata/simple-copy.dito", config);
@@ -55,10 +56,10 @@ public class TestDitoConfiguration extends TestCase {
     assertEquals(config, reloadedConfig);
     reloadedConfig.getQuestions().clear();
     assertEquals(config.equals(reloadedConfig), false);
-    reloadedConfig.getQuestions().add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
+    reloadedConfig.getQuestions().add(new Question(100, "name", QuestionType.ORDINAL, 100.0, 50.0, 30.0, new double[] {3.31, 2.20, 1.0}));
     assertEquals(config.equals(reloadedConfig), true);
     reloadedConfig.getQuestions().clear();
-    reloadedConfig.getQuestions().add(new Question(100, "name2", QuestionType.ORDINAL, 100.0, 50.0, 30.0));
+    reloadedConfig.getQuestions().add(new Question(100, "name2", QuestionType.ORDINAL, 100.0, 50.0, 30.0, new double[0]));
     assertEquals(config.equals(reloadedConfig), false);
   }
   
@@ -120,5 +121,13 @@ public class TestDitoConfiguration extends TestCase {
     q = config.createDefaultQuestion(3, new DVector(1, 0, 0, 1, Double.NaN));
     assertEquals(q.getQuestionType(), QuestionType.BINARY);
     assertTrue(q.getData() != null);
+  }
+  
+  public void testIndexError() {
+    DitoConfiguration config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), new ArrayList<Question>());
+    config.getQuestions().add(config.createDefaultQuestion(1, new DVector()));
+    config.setData(Matrix.createDoubleMatrix(new double[][] {{1,2}, {3,4}}));
+    Question q = config.getQuestion(2);
+    assertTrue(q != null);
   }
 }

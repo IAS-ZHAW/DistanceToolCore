@@ -1,8 +1,11 @@
 package ch.zhaw.ias.dito.config;
 
+import javax.xml.bind.annotation.XmlType;
+
 import net.jcip.annotations.NotThreadSafe;
 
 @NotThreadSafe
+@XmlType(propOrder={"enableScale", "enableAutoScale" , "enableQuestionWeight", "enableDistanceWeight"})
 public final class QuestionConfig {
 	private boolean enableScale;
 	private boolean enableQuestionWeight;

@@ -17,16 +17,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import net.jcip.annotations.NotThreadSafe;
 
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
-import ch.zhaw.ias.dito.QuestionType;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
 @NotThreadSafe
+@XmlType(propOrder={"input", "output" , "method", "questionConfig", "questions"})
 public final class DitoConfiguration implements PropertyListener {
 	private String location;
   @XmlElement	
@@ -112,7 +113,8 @@ public final class DitoConfiguration implements PropertyListener {
   }
   
   public Question createDefaultQuestion(int column, DVector data) {
-    Question q = new Question(column, "Question " + column, data.getDefaultQuestionType(), 1.0, 1.0, 1.0);
+    //TODO it should be considered to use a calculated default value for the scaling
+    Question q = new Question(column, "Question " + column, data.getDefaultQuestionType(), 1.0, 1.0, 1.0, new double[0]);
     q.setData(data);
     return q;
   }
@@ -143,6 +145,9 @@ public final class DitoConfiguration implements PropertyListener {
     }
   }
   
+  /**
+   * Removes all questions without a data vector for consistancy reasons
+   */
   private void removeEmptyQuestions() {
     Iterator<Question> i = questions.iterator();
     while (i.hasNext()) {
@@ -181,12 +186,13 @@ public final class DitoConfiguration implements PropertyListener {
       
       //question doesn't exist yet -> create default
       if (q == null) {
-        q = createDefaultQuestion(i, v);
+        q = createDefaultQuestion(i+1, v);
         questions.add(q);        
       } else {
         q.setData(v);  
       }
     }
+    //all questions without a data vector must be removed
     removeEmptyQuestions();
   }
   

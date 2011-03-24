@@ -1,25 +1,27 @@
 package ch.zhaw.ias.dito.config;
 
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import net.jcip.annotations.NotThreadSafe;
 
 import ch.zhaw.ias.dito.Coding;
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.QuestionType;
+import ch.zhaw.ias.dito.Utils;
 
 /**
  * TODO it should be considered to cache the values of min, max and values for performance reasons
- * @author Thomas
- *
+ * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
  */
 @NotThreadSafe
+@XmlType(propOrder={"column", "name" , "questionType", "enabled", "scaling", "questionWeight", "distanceWeight", "exclude"})
 public final class Question {
 	private int column;
 	private String name;
@@ -28,15 +30,18 @@ public final class Question {
 	private Double distanceWeight;
   private QuestionType questionType;
   private Boolean enabled;
+  @XmlElementWrapper(name = "excludeValues") 
+  @XmlElement(name = "value")
+  private double[] exclude;
 
   private DVector data;
 	
   public Question() {
-    this(-1, "", QuestionType.ORDINAL, 1.0, 1.0, 1.0);
+    this(-1, "", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0]);
   }
 	
 	public Question(Integer column, String name, QuestionType questionType, Double scaling, Double questionWeight,
-      Double distanceWeight) {
+      Double distanceWeight, double[] exclude) {
     this.column = column;
     this.name = name;
     this.scaling = scaling;
@@ -44,6 +49,7 @@ public final class Question {
     this.distanceWeight = distanceWeight;
     this.questionType = questionType;
     this.enabled = true;
+    this.exclude = exclude;
   }
 
   @Override
@@ -57,22 +63,14 @@ public final class Question {
       && scaling.equals(q.scaling)
       && questionWeight.equals(q.questionWeight)
       && distanceWeight.equals(q.distanceWeight)
-      && enabled.equals(q.enabled);
+      && enabled.equals(q.enabled)
+      && Arrays.equals(exclude, q.exclude);
   }
 
   public Object getDistinctValues() {
     Set<Double> values = new TreeSet<Double>();
     data.addValuesToCollection(values);
-    
-    StringBuilder sb = new StringBuilder();
-    Iterator<Double> i = values.iterator();
-    for (; i.hasNext(); ) {
-      sb.append(Double.toString(i.next()));
-      if (i.hasNext() == true) {
-        sb.append(", ");
-      }
-    }
-    return sb.toString();
+    return Utils.toCommaSeparatedString(values.iterator());
   }
 
   public Object getValue(TableColumn col) {
@@ -82,6 +80,8 @@ public final class Question {
       return getName();
     } else if (col == TableColumn.VALUES) {
       return getDistinctValues();
+    } else if (col == TableColumn.EXCLUDE) {
+      return Utils.toCommaSeparatedString(exclude);
     } else if (col == TableColumn.MIN) {
       return min();
     } else if (col == TableColumn.MAX) {
@@ -101,6 +101,8 @@ public final class Question {
   public void setValue(TableColumn col, Object value) {
     if (col == TableColumn.NAME) {
       name = value.toString();
+    } else if (col == TableColumn.EXCLUDE) {
+      exclude = (double[]) value;
     } else if (col == TableColumn.DISTANCE_WEIGHT) {
       distanceWeight = Double.parseDouble(value.toString());
     } else if (col == TableColumn.QUESTION_WEIGHT) {
@@ -122,6 +124,11 @@ public final class Question {
     return data.max();
   }
 
+  /**
+   * Sets a new data vector. For consistency reasons this changes other attributes of Question (i.e. QuestionType) too.
+   * TODO maybe other values must be changed too.
+   * @param data
+   */
   public void setData(DVector data) {
     this.data = data;
     QuestionType type = data.getDefaultQuestionType();
@@ -200,5 +207,18 @@ public final class Question {
 
   public DVector[] recode(Coding coding) {
     return data.recode(coding, questionType);
+  }
+  
+  @XmlTransient
+  public double[] getExclude() {
+    return exclude;
+  }
+  
+  public void setExclude(double[] exclude) {
+    this.exclude = exclude;
+  }
+  
+  public DVector getExcludedVector() {
+    return data.exclude(exclude);
   }
 }

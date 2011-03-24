@@ -1,8 +1,11 @@
 package ch.zhaw.ias.dito.config;
 
+import javax.xml.bind.annotation.XmlType;
+
 import net.jcip.annotations.NotThreadSafe;
 
 @NotThreadSafe
+@XmlType(propOrder={"filename", "separator" , "precision"})
 public final class Output {
 	private String filename;
   private String separator;

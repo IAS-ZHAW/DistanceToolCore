@@ -3,10 +3,12 @@ package ch.zhaw.ias.dito.config;
 import java.io.File;
 
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import net.jcip.annotations.NotThreadSafe;
 
 @NotThreadSafe
+@XmlType(propOrder={"filename", "separator"})
 public final class Input { 
 	private File file;
   private String separator;	

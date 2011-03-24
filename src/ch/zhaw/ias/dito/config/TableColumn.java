@@ -7,12 +7,13 @@ public enum TableColumn {
   NUMBER(0, false),
   NAME(1, true),
   VALUES(2, false),
-  MIN(3, false),
-  MAX(4, false),
-  TYPE(5, false),
-  DISTANCE_WEIGHT(6, true),
-  QUESTION_WEIGHT(7, true),
-  SCALING(8, true);
+  EXCLUDE(3, true),
+  MIN(4, false),
+  MAX(5, false),
+  TYPE(6, false),
+  DISTANCE_WEIGHT(7, true),
+  QUESTION_WEIGHT(8, true),
+  SCALING(9, true);
   
   public static TableColumn getById(int id) {
     for (TableColumn c : values()) {

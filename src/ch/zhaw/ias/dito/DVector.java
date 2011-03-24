@@ -6,6 +6,7 @@ import java.util.Collection;
 import net.jcip.annotations.Immutable;
 
 import ch.zhaw.ias.dito.ops.AddOp2;
+import ch.zhaw.ias.dito.ops.FilterOp1;
 import ch.zhaw.ias.dito.ops.MaxOp2;
 import ch.zhaw.ias.dito.ops.MinOp2;
 import ch.zhaw.ias.dito.ops.Operation1;
@@ -16,12 +17,14 @@ import ch.zhaw.ias.dito.ops.ScaleOp1;
  * In respect of possible concurrent calculation this class is immutable.
  * It's absolutely necessary that this class is immutable
  * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
+ * TODO this class could implement some low level concurrency mechanism to improve performance.
  */
 @Immutable
 public final class DVector {
 	private final double[] values;
 	
 	public DVector(double... values) {
+	  //values must be copied to new array to ensure immutability.
 		this.values = Arrays.copyOf(values, values.length);
 	}
 	
@@ -62,6 +65,12 @@ public final class DVector {
 		return values[index];
 	}
 	
+	/**
+	 * Implements a Haskell like zipWith operation
+	 * @param v
+	 * @param o
+	 * @return
+	 */
 	public DVector zipWith(DVector v, Operation2 o) {
 		if (v.values.length != values.length) {
 			throw new IllegalArgumentException();
@@ -73,6 +82,12 @@ public final class DVector {
 		return new DVector(c);
 	}
 	
+  /**
+   * Implements a Haskell like foldl operation
+   * @param v
+   * @param o
+   * @return
+   */	
 	public double foldl(Operation2 op, double initial) {
 		double result = initial;
 
@@ -86,6 +101,12 @@ public final class DVector {
 		return result;
 	}
 	
+  /**
+   * Implements a Haskell like foldl1 operation
+   * @param v
+   * @param o
+   * @return
+   */	
 	public double foldl1(Operation2 op) {
 		double result = Double.NaN;
 
@@ -115,9 +136,12 @@ public final class DVector {
 		return sb.append(')').toString();
 	}
 
+	/**
+	 * Returns the length of this vector subtracted by the number of NaN values
+	 * @return
+	 */
 	public int filteredLength() {
 		return (int) foldl(new Operation2() {
-			
 			@Override
 			public double execute(double a, double b) {
 				return a + 1;
@@ -125,6 +149,12 @@ public final class DVector {
 		}, 0);
 	}
 
+  /**
+   * Implements a Haskell like map operation
+   * @param v
+   * @param o
+   * @return
+   */ 	
 	public DVector map(Operation1 op) {
 	  double[] c = new double[values.length];
     for (int i = 0; i < values.length; i++) {
@@ -141,6 +171,11 @@ public final class DVector {
 	  return map(new ScaleOp1(multiplier, offset));
 	}
 	
+	/**
+	 * returns a rescaled copy of this vector. All values will be ranging form 0 to 1.
+	 * the scaling is done using the following forumla: (value-min)/(max-min)
+	 * @return
+	 */
 	public DVector autoRescale() {
 	  double max = max();
 	  double min = min();
@@ -230,7 +265,7 @@ public final class DVector {
         if (Double.isNaN(value)){
           values[j][i] = Double.NaN;
         }
-        // ensure max is not lost due tue rounding problems
+        // ensure max is not lost due to rounding problems
         if (j + 1 == numOfGroups) {
           upperBoundary = max;
         }
@@ -269,5 +304,9 @@ public final class DVector {
       throw new IllegalStateException("not implemented yet");
     }
     throw new IllegalArgumentException("unsupported coding " + coding);
+  }
+
+  public DVector exclude(double... values) {
+    return map(new FilterOp1(values));
   }
 }

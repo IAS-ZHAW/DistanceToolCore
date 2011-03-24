@@ -2,7 +2,6 @@ package ch.zhaw.ias.dito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import ch.zhaw.ias.dito.config.DitoConfiguration;
 import ch.zhaw.ias.dito.config.Method;
@@ -20,19 +19,20 @@ public class DistanceAlgorithm {
     this.config = config;
   }
   
-  public Matrix getRescaled() {
+  /**
+   * TODO Refactor this method. Quite complicated.
+   * @return
+   */
+  public Matrix getRescaledOfFiltered() {
     Method m = config.getMethod();
-    if (m.getMethod().getCoding() == Coding.BINARY) {
-      throw new IllegalStateException("Binary method -> no rescaling allowed!");
-    }
     QuestionConfig qc = config.getQuestionConfig();
     Matrix inputM = config.getData();
 
     DVector[] rescaled = new DVector[inputM.getColCount()];
     for (int i = 0; i < inputM.getColCount(); i++) {
-      DVector v = inputM.col(i);
       Question q = config.getQuestion(i+1);
-      if (qc.isEnableScale()) {
+      DVector v = q.getExcludedVector();
+      if (qc.isEnableScale() && m.getMethod().getCoding() != Coding.BINARY) {
         if (qc.isEnableAutoScale()) {
           rescaled[i] = v.autoRescale();
         } else {
@@ -49,14 +49,13 @@ public class DistanceAlgorithm {
     return new Matrix(rescaled);
   }
   
-  public Matrix doIt() {
+  public Matrix doIt(boolean randomMode) {
     System.out.println("calculating " + config.getMethod().getName() + " distances");
     long start = System.currentTimeMillis();
     Matrix m;
     Coding coding = config.getMethod().getMethod().getCoding();
     if (coding == Coding.REAL) {
-      m = getRescaled();
-
+      m = getRescaledOfFiltered();
     } else {
       m = config.getData();
     }

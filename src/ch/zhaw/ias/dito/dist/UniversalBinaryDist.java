@@ -25,7 +25,7 @@ public class UniversalBinaryDist extends AbstractBinaryDist {
     invocableEngine = (Invocable) engine; 
   }
   
-  public void setExpression(String exp) {
+  public synchronized void setExpression(String exp) {
     this.exp = exp;
     try {
       engine.eval("function distance(a, b, c, d) {" +
@@ -37,7 +37,7 @@ public class UniversalBinaryDist extends AbstractBinaryDist {
   }
   
   @Override
-  public double distance(double a, double b, double c, double d) {
+  public synchronized double distance(double a, double b, double c, double d) {
     try {
       return (Double) invocableEngine.invokeFunction("distance", a, b, c, d);
     } catch (ScriptException e) {

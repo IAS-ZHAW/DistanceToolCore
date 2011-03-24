@@ -6,31 +6,36 @@
     </input>
     <output>
         <filename>c:/bsdf</filename>
-        <precision>10</precision>
         <separator>98</separator>
+        <precision>10</precision>
     </output>
     <method>
         <name>Canberra</name>
-        <numberOfThreads>20</numberOfThreads>
-        <parallel>false</parallel>
-        <sampleSize>1000</sampleSize>
         <useRandomSample>false</useRandomSample>
+        <sampleSize>1000</sampleSize>
+        <parallel>false</parallel>
+        <numberOfThreads>20</numberOfThreads>
     </method>
     <questionConfig>
-        <enableAutoScale>false</enableAutoScale>
-        <enableDistanceWeight>true</enableDistanceWeight>
-        <enableQuestionWeight>false</enableQuestionWeight>
         <enableScale>false</enableScale>
+        <enableAutoScale>false</enableAutoScale>
+        <enableQuestionWeight>false</enableQuestionWeight>
+        <enableDistanceWeight>true</enableDistanceWeight>
     </questionConfig>
     <questions>
         <question>
             <column>100</column>
-            <distanceWeight>30.0</distanceWeight>
-            <enabled>true</enabled>
             <name>name</name>
             <questionType>ORDINAL</questionType>
-            <questionWeight>50.0</questionWeight>
+            <enabled>true</enabled>
             <scaling>100.0</scaling>
+            <questionWeight>50.0</questionWeight>
+            <distanceWeight>30.0</distanceWeight>
+            <excludeValues>
+                <value>3.31</value>
+                <value>2.2</value>
+                <value>1.0</value>
+            </excludeValues>
         </question>
     </questions>
 </ns2:ditoConfiguration>
