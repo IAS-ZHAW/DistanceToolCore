@@ -7,6 +7,7 @@ public enum ConfigProperty {
   INPUT_FILENAME("s1.lb.file"),
   INPUT_SEPARATOR("s1.lb.separator"),
   METHOD_NAME("s3.lb.method"),
+  RANDOM_SAMPLE("s3.lb.sampleSize"),
   OUTPUT_FILENAME("s5.lb.file"),
   OUTPUT_SEPARATOR("s5.lb.separator"),
   OUTPUT_PRECISION("s5.lb.precision"),

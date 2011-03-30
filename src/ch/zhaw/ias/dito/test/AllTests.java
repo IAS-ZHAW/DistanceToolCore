@@ -28,6 +28,7 @@ public class AllTests {
 		suite.addTestSuite(TestSoergelDist.class);
 		suite.addTestSuite(TestUniversalBinaryDist.class);
 		suite.addTestSuite(TestUtil.class);
+		suite.addTestSuite(TestImport.class);
 		//$JUnit-END$
 		return suite;
 	}

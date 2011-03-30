@@ -134,7 +134,7 @@ public final class DitoConfiguration implements PropertyListener {
   
   public void loadMatrix() throws IOException {
     clearVectorData();
-    Matrix m = Matrix.readFromFile(new File(getInput().getFilename()), getInput().getSeparator());
+    Matrix m = Matrix.readFromFile(getInput());
     m = m.transpose();
     setData(m);
   }

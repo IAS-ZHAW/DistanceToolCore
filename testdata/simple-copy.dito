@@ -3,6 +3,13 @@
     <input>
         <filename>c:\asdf</filename>
         <separator>97</separator>
+        <questionTitles>false</questionTitles>
+        <allQuestions>true</allQuestions>
+        <startQuestion>0</startQuestion>
+        <endQuestion>10</endQuestion>
+        <allSurveys>true</allSurveys>
+        <startSurvey>0</startSurvey>
+        <endSurvey>10</endSurvey>
     </input>
     <output>
         <filename>c:/bsdf</filename>

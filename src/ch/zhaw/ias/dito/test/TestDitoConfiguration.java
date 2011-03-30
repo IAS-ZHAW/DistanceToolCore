@@ -40,7 +40,7 @@ public class TestDitoConfiguration extends TestCase {
   
   
   public void testCompleteSave() throws FileNotFoundException, JAXBException {
-    Input i = new Input("c:/asdf", "a");
+    Input i = new Input("c:/asdf", 'a', false, true, 0, 10, true, 0, 10);
     Output o = new Output("c:/bsdf", "b", 10);
     Method m = new Method(DistanceMethodEnum.get("Canberra"), false, 20);
     QuestionConfig qc = new QuestionConfig(false, false, true, false);
@@ -84,12 +84,12 @@ public class TestDitoConfiguration extends TestCase {
   }
   
   public void testInputEquals() {
-    Input i = new Input("filename", "|");
+    Input i = new Input("filename", '|', false, true, 0, 10, true, 0, 10);
     assertEquals(i.equals(null), false);
     assertEquals(i.equals("something"), false);
     assertEquals(i.equals(i), true);
-    assertEquals(i.equals(new Input("filename", ";")), false);
-    assertEquals(i.equals(new Input("filename", "|")), true);
+    assertEquals(i.equals(new Input("filename", ';', false, true, 0, 10, true, 0, 10)), false);
+    assertEquals(i.equals(new Input("filename", '|', false, true, 0, 10, true, 0, 10)), true);
   }
   
   public void testQuestionConfigEquals() {

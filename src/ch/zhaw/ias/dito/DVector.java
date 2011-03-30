@@ -2,6 +2,7 @@ package ch.zhaw.ias.dito;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import net.jcip.annotations.Immutable;
 
@@ -27,6 +28,13 @@ public final class DVector {
 	  //values must be copied to new array to ensure immutability.
 		this.values = Arrays.copyOf(values, values.length);
 	}
+	
+	 public DVector(List<Double> values) {
+	    this.values = new double[values.size()];
+	    for (int i = 0; i < values.size(); i++) {
+	      this.values[i] = values.get(i);
+	    }
+	  }
 	
 	public double sum() {
 		return foldl1(new AddOp2());

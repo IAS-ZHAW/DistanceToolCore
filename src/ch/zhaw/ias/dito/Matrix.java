@@ -1,5 +1,6 @@
 package ch.zhaw.ias.dito;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,14 +10,17 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import net.jcip.annotations.Immutable;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+import ch.zhaw.ias.dito.config.Input;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 
 /**
@@ -29,25 +33,63 @@ import ch.zhaw.ias.dito.dist.DistanceSpec;
 @Immutable
 public final class Matrix {
 	private final List<DVector> cols;
-	
-	public static Matrix readFromFile(File file, char separator) throws IOException {
-		CSVReader reader = new CSVReader(new FileReader(file), separator);
-		String [] nextLine;
-		List<DVector> vectors = new ArrayList<DVector>();
-	    while ((nextLine = reader.readNext()) != null) {
-	    	double[] values = new double[nextLine.length];
-	        for (int i = 0; i < values.length; i++) {
-	        	if (nextLine[i].length() == 0 || nextLine[i].isEmpty() == true || " ".equals(nextLine[i])) {
-	        		values[i] = Float.NaN;
-	        	} else {
-	        	  values[i] = Double.parseDouble(nextLine[i]);
-	        	}
-	        }
-	        vectors.add(new DVector(values));
-	    }
-	    return new Matrix(vectors.toArray(new DVector[0]));
-	}
-	
+		
+  public static Matrix readFromFile(File file, char separator) throws IOException {
+    return readFromFile(file, separator, false);
+  }	
+  
+  public static Matrix readFromFile(File file, char separator, boolean ignoreFirstLine) throws IOException {
+    return readFromFile(new Input(file, separator, ignoreFirstLine, true, -1, -2, true, -1, -2));
+  }
+  
+	/**
+   * all whitespaces and all common masking symbols like " or ' will be removed at the beginning.
+   * therefore texts are not allowed to contain the separator char
+   * the first line will have line number 1
+   * @param file
+   * @param separator
+   * @return
+   * @throws IOException
+   */
+  public static Matrix readFromFile(Input i) throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(i.getFile()));
+    Pattern pattern = Pattern.compile(Character.toString(i.getSeparator()));
+    String line;
+    List<DVector> vectors = new ArrayList<DVector>();
+    //exclude question titles
+    if (i.isQuestionTitles() == true) {
+      reader.readLine();
+    }
+    int lineCounter = 0;
+    while ((line = reader.readLine()) != null) {
+      lineCounter++;
+      if (i.isAllSurveys() == false && (lineCounter < i.getStartSurvey() || lineCounter > i.getEndSurvey())) {
+        continue;
+      }
+      Scanner s = new Scanner(line);
+      s.useDelimiter(pattern);
+      int rowCounter = 0;
+      ArrayList<Double> values = new ArrayList<Double>();
+      while (s.hasNext()) {
+        rowCounter++;
+        // ignore excluded columns
+        if (i.isAllQuestions() == false && (rowCounter < i.getStartQuestion() || rowCounter > i.getEndQuestion())) {
+          s.next();
+          continue;
+        }
+        if (s.hasNextDouble()) {
+          values.add(s.nextDouble());
+        } else {
+          //convert to Double.NaN  
+          values.add(Double.NaN);    
+          s.next();
+        }
+      }
+      vectors.add(new DVector(values));
+    }
+    return new Matrix(vectors.toArray(new DVector[0]));
+  }
+  
   public static void writeToFile(Matrix dist, String outputFilename, char separator, int precision) throws IOException {
     System.out.println("writing results to output-file: " + outputFilename);
     long start = System.currentTimeMillis();

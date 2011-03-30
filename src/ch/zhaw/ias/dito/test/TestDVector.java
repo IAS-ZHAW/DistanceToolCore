@@ -1,5 +1,8 @@
 package ch.zhaw.ias.dito.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 import ch.zhaw.ias.dito.*;
 import ch.zhaw.ias.dito.ops.AddOp2;
@@ -21,6 +24,16 @@ public class TestDVector extends TestCase {
 		v2 = new DVector(4,5,6);
 		v3 = new DVector(4,5,6,9,10);
 		super.setUp();
+	}
+	
+	public void testListConstructor() {
+	  List<Double> vals = new ArrayList<Double>();
+	  vals.add(-3.0);
+	  vals.add(3.41);
+	  vals.add(Double.NaN);
+	  
+	  DVector vec = new DVector(vals);
+	  assertEquals(vec, new DVector(-3.0, 3.41, Double.NaN));
 	}
 	
 	public void testSum() {
