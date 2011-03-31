@@ -144,6 +144,4 @@ public final class Input {
   public void setEndSurvey(int endSurvey) {
     this.endSurvey = endSurvey;
   }	
-  
-  
 }

@@ -9,8 +9,10 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -346,5 +348,11 @@ public final class Matrix {
       }
     }
     return extremum;
+  }
+  
+  public Matrix sortBy(int row) {
+    ArrayList<DVector> sortedList = new ArrayList<DVector>(cols);
+    Collections.sort(sortedList, new VectorComparator(row));
+    return new Matrix(sortedList);
   }
 }

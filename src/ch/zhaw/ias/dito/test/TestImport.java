@@ -88,5 +88,5 @@ public class TestImport extends TestCase {
     } catch (IOException e) {
       fail();
     }
-  }  
+  }
 }

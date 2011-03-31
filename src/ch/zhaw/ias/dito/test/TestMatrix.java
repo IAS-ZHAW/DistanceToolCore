@@ -169,4 +169,14 @@ public class TestMatrix extends TestCase {
     Matrix dist = m.calculateDistance(new DivergenceDist(), false);
     assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0, 0.5}, {0.5, 0}}));
   }
+  
+  public void testMatrixSort() {
+    m = Matrix.createDoubleMatrix(new double[][] {{0, 10, 4.1}, {0.1, 3, 4}});
+    m = m.sortBy(0);
+    assertEquals(m.row(0), new DVector(0, 0.1));
+    m = m.sortBy(1);
+    assertEquals(m.row(0), new DVector(0.1, 0.0));
+    m = m.sortBy(2);
+    assertEquals(m.row(0), new DVector(0.1, 0.0));    
+  }
 }

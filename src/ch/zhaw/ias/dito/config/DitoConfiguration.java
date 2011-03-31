@@ -19,6 +19,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
+
 import net.jcip.annotations.NotThreadSafe;
 
 import ch.zhaw.ias.dito.DVector;
@@ -193,7 +195,7 @@ public final class DitoConfiguration implements PropertyListener {
       }
     }
     //all questions without a data vector must be removed
-    removeEmptyQuestions();
+    removeEmptyQuestions();    
   }
   
   @Override
@@ -202,8 +204,7 @@ public final class DitoConfiguration implements PropertyListener {
   }
   
   @Override
-  public void propertyChanged(ConfigProperty prop, Object oldValue,
-      Object newValue) {
+  public void propertyChanged(ConfigProperty prop) {
     try {
       loadMatrix();
     } catch (IOException e) {
@@ -224,5 +225,17 @@ public final class DitoConfiguration implements PropertyListener {
     questionConfig = null;
     questions.clear();
     data = null;
+  }
+  
+  public Object getPropertyValue(ConfigProperty p) {
+    switch (p) {
+    case INPUT_FILENAME: return input.getFilename(); 
+    case METHOD_NAME: return method.getName();
+    case OUTPUT_FILENAME: return output.getFilename();
+    case OUTPUT_PRECISION: return output.getPrecision();
+    case QUESTION_NUMBER: return data.getColCount();
+    case INPUT_SIZE: return data.getRowCount();
+    default: return null;
+    }
   }
 }

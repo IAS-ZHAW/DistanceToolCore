@@ -9,35 +9,35 @@ public class DistanceMethodEnum {
 
 	private static List<DistanceMethodEnum> METHODS = new ArrayList<DistanceMethodEnum>();
 	static {
-    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist()));
-    METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist()));
-	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist()));
-	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist()));
-	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist()));
-		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist()));
-		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist()));
-		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist()));
-		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist()));
+    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist(), ""));
+    METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist(), ""));
+	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist(), ""));
+	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist(), ""));
+	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist(), ""));
+		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist(), ""));
+		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist(), ""));
+		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), ""));
+		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist(), ""));
 		
-		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY));
+		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, ""));
 		METHODS.add(new DistanceMethodEnum("Braun, Blanque", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/Math.max(a+b, a+c);
       }
-    }, Coding.BINARY));
+    }, Coding.BINARY, ""));
     METHODS.add(new DistanceMethodEnum("Czekanowski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return 2*a/(2*a + b + c);
       }
-    }, Coding.BINARY));
+    }, Coding.BINARY, ""));
     METHODS.add(new DistanceMethodEnum("Hamman", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return (a - (b + c) + d)/(a + b + c + d);
       }
-    }, Coding.BINARY));    
+    }, Coding.BINARY, "{a-(b+c)+d \\over a+b+c+d}"));    
     METHODS.add(new DistanceMethodEnum("Michael", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
@@ -45,25 +45,25 @@ public class DistanceMethodEnum {
         double m = (a + d)*(a + d) + (b + c)*(b + c);
         return n/m;
       }
-    }, Coding.BINARY));    
+    }, Coding.BINARY, ""));    
 		METHODS.add(new DistanceMethodEnum("Kulzynski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/(b+c);
       }
-    }, Coding.BINARY));
+    }, Coding.BINARY, "{a \\over b+c}"));
     METHODS.add(new DistanceMethodEnum("Jaccard", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/(a+b+c);
       }
-    }, Coding.BINARY));
+    }, Coding.BINARY, "{a \\over a+b+c}"));
     METHODS.add(new DistanceMethodEnum("Simple", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return (a+d)/(a+b+c+d);
       }
-    }, Coding.BINARY));
+    }, Coding.BINARY, "{a+d \\over a+b+c+d}"));
 	}
 
 	public static DistanceMethodEnum get(String name) {
@@ -88,15 +88,17 @@ public class DistanceMethodEnum {
 	private final String name;
 	private final DistanceSpec spec;
 	private final Coding coding;
+	private final String formula; 
 
-  private DistanceMethodEnum(String name, DistanceSpec spec) {
-   this(name, spec, Coding.REAL);
+  private DistanceMethodEnum(String name, DistanceSpec spec, String formula) {
+   this(name, spec, Coding.REAL, formula);
   }
 	
-	private DistanceMethodEnum(String name, DistanceSpec spec, Coding coding) {
+	private DistanceMethodEnum(String name, DistanceSpec spec, Coding coding, String formula) {
 		this.name = name;
 		this.spec = spec;
 		this.coding = coding;
+		this.formula = formula;
 	}
 	
 	public String getName() {
@@ -115,4 +117,8 @@ public class DistanceMethodEnum {
 	public String toString() {
 	  return name;
 	}
+
+  public String getFormula() {
+    return formula;
+  }
 }
