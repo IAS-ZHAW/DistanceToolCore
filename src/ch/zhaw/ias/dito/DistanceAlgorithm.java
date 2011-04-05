@@ -74,7 +74,7 @@ public class DistanceAlgorithm {
     
     start = System.currentTimeMillis();         
     DistanceSpec spec = DistanceMethodEnum.get(config.getMethod().getName()).getSpec();
-    dist = m.calculateDistance(spec, false);
+    dist = m.calculateDistance(spec);
     System.out.println("calculations finished after " + (System.currentTimeMillis() - start) + " ms");
     return dist;
   }

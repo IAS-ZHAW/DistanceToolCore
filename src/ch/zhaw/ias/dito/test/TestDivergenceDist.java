@@ -29,7 +29,7 @@ public class TestDivergenceDist extends TestCase {
     DVector v2 = new DVector(0, 7, 11, Double.NaN);
     
     Matrix m = new Matrix(v1, v2);
-    Matrix distM = m.calculateDistance(dist, true);
+    Matrix distM = m.calculateDistance(dist);
     assertEquals(distM, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.0025}, {0.0025, 0.0}}));    
   }
 }

@@ -105,7 +105,7 @@ public class TestMatrix extends TestCase {
 	
 	public void testCalculateDistance() {
 		m = Matrix.createDoubleMatrix(new double[][]{{1,4},{8,4}});
-		Matrix distance = m.transpose().calculateDistance(new EuklidianDist(), false);
+		Matrix distance = m.transpose().calculateDistance(new EuklidianDist());
 		assertEquals(distance, Matrix.createDoubleMatrix(new double[][] {{0,5}, {5,0}}));
 	}
 	
@@ -121,7 +121,7 @@ public class TestMatrix extends TestCase {
 	public void testNaN() {
 		Matrix nanM = Matrix.createDoubleMatrix(new double[][] {{Double.NaN,4}, {Double.NaN,5}, {3,6}});
 		assertEquals(nanM.transpose(), Matrix.createDoubleMatrix(new double[][] {{Double.NaN, Double.NaN, 3}, {4.0, 5, 6}}));
-		Matrix dist = nanM.transpose().calculateDistance(new EuklidianDist(), false);
+		Matrix dist = nanM.transpose().calculateDistance(new EuklidianDist());
 		assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0.0, 3.0}, {3.0, 0.0}}));
 	}
 	
@@ -144,7 +144,7 @@ public class TestMatrix extends TestCase {
 	  DVector col2 = new DVector(4,8,16,32,64,128,256,512,1024,2048,4096);
 	  DVector col64 = new DVector(128,256,512,1024,2048,4096,8192,16384,32768,65536,131072);
 	  Matrix m = new Matrix(col2, col64);
-	  Matrix dist = m.calculateDistance(new WaveHedgesDist(), false);
+	  Matrix dist = m.calculateDistance(new WaveHedgesDist());
 	  assertEquals(dist, Matrix.createDoubleMatrix(new double[][]{{0,10.65625}, {10.65625, 0}}));
 	}
 	
@@ -166,7 +166,7 @@ public class TestMatrix extends TestCase {
   
   public void testCompareZeroVectors() {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 0}, {Double.NaN, 4}});
-    Matrix dist = m.calculateDistance(new DivergenceDist(), false);
+    Matrix dist = m.calculateDistance(new DivergenceDist());
     assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0, 0.5}, {0.5, 0}}));
   }
   

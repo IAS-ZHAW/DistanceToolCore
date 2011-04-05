@@ -80,6 +80,7 @@ public final class DitoConfiguration implements PropertyListener {
 	  this.method = method;
 	  this.questionConfig = questionConfig;
 	  this.questions = questions;
+	  data = Matrix.createDoubleMatrix(new double[0][0]);
   }
   
   public QuestionConfig getQuestionConfig() {

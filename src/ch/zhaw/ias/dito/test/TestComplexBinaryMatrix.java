@@ -19,14 +19,14 @@ public class TestComplexBinaryMatrix extends TestCase {
 		Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',');
 		m = m.toBinary();
 		DistanceMethodEnum method = DistanceMethodEnum.get("Simple");
-		assertEquals(m.calculateDistance(method.getSpec(), true), Matrix.readFromFile(new File("./testdata/m20x20randBin-simple.csv"), ','));
+		assertEquals(m.calculateDistance(method.getSpec()), Matrix.readFromFile(new File("./testdata/m20x20randBin-simple.csv"), ','));
 	}
 	
   public void testLargeJaccard() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',');
     m = m.toBinary();
     DistanceMethodEnum method = DistanceMethodEnum.get("Jaccard");
-    Matrix dist = m.calculateDistance(method.getSpec(), true);
+    Matrix dist = m.calculateDistance(method.getSpec());
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m20x20randBin-jaccard.csv"), ','), 7), true);
   }
   
@@ -34,4 +34,28 @@ public class TestComplexBinaryMatrix extends TestCase {
     DitoConfiguration config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), null);
     //config.setData(data);
   }
+  
+  public void testLargeSimple2() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    //m = m.toBinary();
+    DistanceMethodEnum method = DistanceMethodEnum.get("Simple");
+    Matrix dist = m.calculateDistance(method.getSpec());
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-simple.csv"), ';'), 4), true);
+  }
+
+  public void testLargeCzekanowski() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    //m = m.toBinary();
+    DistanceMethodEnum method = DistanceMethodEnum.get("Czekanowski");
+    Matrix dist = m.calculateDistance(method.getSpec());
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Czekanowski.csv"), ';'), 4), true);
+  }
+  
+  public void testLargeOchiai() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    //m = m.toBinary();
+    DistanceMethodEnum method = DistanceMethodEnum.get("Ochiai");
+    Matrix dist = m.calculateDistance(method.getSpec());
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Ochiai.csv"), ';'), 4), true);
+  }  
 }

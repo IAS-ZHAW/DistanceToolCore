@@ -184,7 +184,7 @@ public final class Matrix {
 		return new DVector(values);
 	}
 	
-	public Matrix calculateDistance(DistanceSpec dist, boolean isBinary) {
+	public Matrix calculateDistance(DistanceSpec dist) {
 		double[][] distances = new double[getColCount()][getColCount()];
 	    for (int i = 0; i < getColCount(); i++) {
 	      DVector v = col(i);

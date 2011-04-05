@@ -9,7 +9,7 @@ public class DistanceMethodEnum {
 
 	private static List<DistanceMethodEnum> METHODS = new ArrayList<DistanceMethodEnum>();
 	static {
-    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist(), ""));
+    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist(), "{a \\over b}"));
     METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist(), ""));
 	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist(), ""));
 	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist(), ""));
@@ -19,13 +19,13 @@ public class DistanceMethodEnum {
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), ""));
 		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist(), ""));
 		
-		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, ""));
+		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, "{a \\over b}"));
 		METHODS.add(new DistanceMethodEnum("Braun, Blanque", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/Math.max(a+b, a+c);
       }
-    }, Coding.BINARY, ""));
+    }, Coding.BINARY, "a \\ over max\\{(a+b),(a+c)\\}"));
     METHODS.add(new DistanceMethodEnum("Czekanowski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
@@ -37,7 +37,19 @@ public class DistanceMethodEnum {
       public double distance(double a, double b, double c, double d) {
         return (a - (b + c) + d)/(a + b + c + d);
       }
-    }, Coding.BINARY, "{a-(b+c)+d \\over a+b+c+d}"));    
+    }, Coding.BINARY, "{a-(b+c)+d \\over a+b+c+d}"));
+    METHODS.add(new DistanceMethodEnum("Jaccard", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return a/(a+b+c);
+      }
+    }, Coding.BINARY, "{a \\over a+b+c}"));    
+    METHODS.add(new DistanceMethodEnum("Kulzynski", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return a/(b+c);
+      }
+    }, Coding.BINARY, "{a \\over b+c}"));    
     METHODS.add(new DistanceMethodEnum("Michael", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
@@ -46,18 +58,12 @@ public class DistanceMethodEnum {
         return n/m;
       }
     }, Coding.BINARY, ""));    
-		METHODS.add(new DistanceMethodEnum("Kulzynski", new AbstractBinaryDist() {
+    METHODS.add(new DistanceMethodEnum("Ochiai", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
-        return a/(b+c);
+        return a/Math.sqrt((a+b)*(a+c));
       }
-    }, Coding.BINARY, "{a \\over b+c}"));
-    METHODS.add(new DistanceMethodEnum("Jaccard", new AbstractBinaryDist() {
-      @Override
-      public double distance(double a, double b, double c, double d) {
-        return a/(a+b+c);
-      }
-    }, Coding.BINARY, "{a \\over a+b+c}"));
+    }, Coding.BINARY, ""));
     METHODS.add(new DistanceMethodEnum("Simple", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
