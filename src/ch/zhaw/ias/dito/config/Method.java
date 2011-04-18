@@ -24,7 +24,7 @@ public final class Method {
   }
   
   public Method(DistanceMethodEnum method, boolean parallel, int numberOfThreads) {
-    this(method, parallel, numberOfThreads, false, 1000);
+    this(method, parallel, numberOfThreads, false, 500);
   }
   
   public Method(DistanceMethodEnum method, boolean parallel, int numberOfThreads, boolean useRandomSample, int sampleSize) {

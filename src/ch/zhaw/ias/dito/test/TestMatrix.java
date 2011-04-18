@@ -1,5 +1,7 @@
 package ch.zhaw.ias.dito.test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.zhaw.ias.dito.DVector;
@@ -105,7 +107,7 @@ public class TestMatrix extends TestCase {
 	
 	public void testCalculateDistance() {
 		m = Matrix.createDoubleMatrix(new double[][]{{1,4},{8,4}});
-		Matrix distance = m.transpose().calculateDistance(new EuklidianDist());
+		Matrix distance = DistanceTestCaseHelper.compareNormalParallel(this, new EuklidianDist(), m.transpose()); 
 		assertEquals(distance, Matrix.createDoubleMatrix(new double[][] {{0,5}, {5,0}}));
 	}
 	
@@ -121,7 +123,7 @@ public class TestMatrix extends TestCase {
 	public void testNaN() {
 		Matrix nanM = Matrix.createDoubleMatrix(new double[][] {{Double.NaN,4}, {Double.NaN,5}, {3,6}});
 		assertEquals(nanM.transpose(), Matrix.createDoubleMatrix(new double[][] {{Double.NaN, Double.NaN, 3}, {4.0, 5, 6}}));
-		Matrix dist = nanM.transpose().calculateDistance(new EuklidianDist());
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new EuklidianDist(), nanM.transpose()); 
 		assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0.0, 3.0}, {3.0, 0.0}}));
 	}
 	
@@ -144,7 +146,7 @@ public class TestMatrix extends TestCase {
 	  DVector col2 = new DVector(4,8,16,32,64,128,256,512,1024,2048,4096);
 	  DVector col64 = new DVector(128,256,512,1024,2048,4096,8192,16384,32768,65536,131072);
 	  Matrix m = new Matrix(col2, col64);
-	  Matrix dist = m.calculateDistance(new WaveHedgesDist());
+	  Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new WaveHedgesDist(), m); 
 	  assertEquals(dist, Matrix.createDoubleMatrix(new double[][]{{0,10.65625}, {10.65625, 0}}));
 	}
 	
@@ -166,7 +168,7 @@ public class TestMatrix extends TestCase {
   
   public void testCompareZeroVectors() {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 0}, {Double.NaN, 4}});
-    Matrix dist = m.calculateDistance(new DivergenceDist());
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new DivergenceDist(), m); 
     assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0, 0.5}, {0.5, 0}}));
   }
   
@@ -178,5 +180,34 @@ public class TestMatrix extends TestCase {
     assertEquals(m.row(0), new DVector(0.1, 0.0));
     m = m.sortBy(2);
     assertEquals(m.row(0), new DVector(0.1, 0.0));    
+  }
+  
+  public void testToJama() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("testdata/m4x4citiesDenmark-euklid.csv"), ' ');
+    Jama.Matrix jamaM = m.toJama();
+    Matrix clone = Matrix.createDoubleMatrix(jamaM.getArray());
+    assertEquals(m, clone);
+  }
+  
+  public void testRandomSample() throws IOException {
+    Matrix m = Matrix.readFromFile(new File("./testdata/m200x130rand.csv"), ',');
+    Matrix sample = m.getRandomSample(10);
+    assertEquals(sample.getColCount(), 10);
+    assertEquals(sample.getRowCount(), 130);
+    sample = m.getRandomSample(100);
+    assertEquals(sample.getColCount(), 100);
+    assertEquals(sample.getRowCount(), 130);
+    sample = m.getRandomSample(200);
+    assertEquals(sample.getColCount(), 200);
+    assertTrue(sample == m);
+    sample = m.getRandomSample(201);
+    assertEquals(sample.getColCount(), 200);
+    assertTrue(sample == m);
+  }
+  
+  public void testDuplicateRandomSample() {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{1.0,2.0}, {1.0, 2.0}, {1.0, 2.0}});
+    Matrix sample = m.getRandomSample(2);
+    assertEquals(sample.getColCount(), 2);
   }
 }

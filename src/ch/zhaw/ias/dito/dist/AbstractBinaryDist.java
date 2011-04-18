@@ -2,7 +2,7 @@ package ch.zhaw.ias.dito.dist;
 
 import ch.zhaw.ias.dito.DVector;
 
-public abstract class AbstractBinaryDist implements DistanceSpec {
+public abstract class AbstractBinaryDist implements DistanceSpec, Cloneable {
   @Override
   public double distance(DVector aVec, DVector bVec) {
     int a = 0;

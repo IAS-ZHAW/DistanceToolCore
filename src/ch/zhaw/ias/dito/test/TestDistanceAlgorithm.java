@@ -31,7 +31,7 @@ public class TestDistanceAlgorithm extends TestCase {
     
     m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, Double.NaN, 1}, {-2, 0, Double.NaN, 2, 1}});
     config.setData(m);
-    algo = new DistanceAlgorithm(config);
+    algo = new DistanceAlgorithm(config, false);
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
     config.getQuestionConfig().setEnableQuestionWeight(false);
@@ -86,7 +86,7 @@ public class TestDistanceAlgorithm extends TestCase {
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
     config.getQuestionConfig().setEnableQuestionWeight(false);
-    algo = new DistanceAlgorithm(config);
+    algo = new DistanceAlgorithm(config, false);
     Matrix scaled = algo.getRescaledOfFiltered();
     assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{-1, Double.NaN, 0, Double.NaN, 1}, {Double.NaN, 0, 3, 2, 1}}));
   }

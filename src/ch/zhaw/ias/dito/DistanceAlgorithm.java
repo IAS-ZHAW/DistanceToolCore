@@ -10,12 +10,14 @@ import ch.zhaw.ias.dito.config.QuestionConfig;
 import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 import ch.zhaw.ias.dito.ops.MultiplyOp1;
+import ch.zhaw.ias.dito.util.Logger;
+import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 public class DistanceAlgorithm {
   private DitoConfiguration config;
   private Matrix dist;
   
-  public DistanceAlgorithm(DitoConfiguration config) {
+  public DistanceAlgorithm(DitoConfiguration config, boolean random) {
     this.config = config;
   }
   
@@ -50,7 +52,7 @@ public class DistanceAlgorithm {
   }
   
   public Matrix doIt(boolean randomMode) {
-    System.out.println("calculating " + config.getMethod().getName() + " distances");
+    Logger.INSTANCE.log("calculating " + config.getMethod().getName() + " distances", LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     Matrix m;
     Coding coding = config.getMethod().getMethod().getCoding();
@@ -59,6 +61,8 @@ public class DistanceAlgorithm {
     } else {
       m = config.getData();
     }
+    
+    //recode vectors
     ArrayList<DVector> vecs = new ArrayList<DVector>();
     for (int i = 0; i < m.getColCount(); i++) {
       Question q = config.getQuestions().get(i);
@@ -67,15 +71,23 @@ public class DistanceAlgorithm {
     }
     m = new Matrix(vecs);
     
-    System.out.println("rescaling finished after " + (System.currentTimeMillis() - start) + " ms");
+    Logger.INSTANCE.log("rescaling finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
     start = System.currentTimeMillis();
     m = m.transpose();
-    System.out.println("transposing finished after " + (System.currentTimeMillis() - start) + " ms");      
+    Logger.INSTANCE.log("transposing finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);      
+
+    if (randomMode && config.getMethod().isUseRandomSample()) {
+      m = m.getRandomSample(config.getMethod().getSampleSize());
+    }
     
     start = System.currentTimeMillis();         
     DistanceSpec spec = DistanceMethodEnum.get(config.getMethod().getName()).getSpec();
-    dist = m.calculateDistance(spec);
-    System.out.println("calculations finished after " + (System.currentTimeMillis() - start) + " ms");
+    if (config.getMethod().isParallel()) {
+      dist = m.calculateDistanceParallel(spec, config.getMethod().getNumberOfThreads());
+    } else {
+      dist = m.calculateDistance(spec);
+    }
+    Logger.INSTANCE.log("calculations finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
     return dist;
   }
 }

@@ -25,6 +25,8 @@ import net.jcip.annotations.NotThreadSafe;
 
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
+import ch.zhaw.ias.dito.util.Logger;
+import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement( namespace = "http://ias.zhaw.ch/" )
@@ -66,6 +68,9 @@ public final class DitoConfiguration implements PropertyListener {
     return new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), new ArrayList<Question>());
   }
   
+  /**
+   * Constructor necessary for Jaxb
+   */
   private DitoConfiguration() {
 	  input = null;
 	  output = null;
@@ -209,8 +214,7 @@ public final class DitoConfiguration implements PropertyListener {
     try {
       loadMatrix();
     } catch (IOException e) {
-      // TODO Error-Handling
-      e.printStackTrace();
+      Logger.INSTANCE.error("couldn't load specified matrix", e);
     }
   }
   

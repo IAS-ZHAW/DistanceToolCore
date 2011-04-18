@@ -9,29 +9,30 @@ public class DistanceMethodEnum {
 
 	private static List<DistanceMethodEnum> METHODS = new ArrayList<DistanceMethodEnum>();
 	static {
-    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist(), "{a \\over b}"));
-    METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist(), ""));
-	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist(), ""));
-	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist(), ""));
-	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist(), ""));
-		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist(), ""));
-		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist(), ""));
-		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), ""));
+    METHODS.add(new DistanceMethodEnum("Bhattacharyya", new BhattacharyyaDist(), "\\sqrt {\\sum_{i}(\\sqrt {x_{ri}}- \\sqrt {x_{si}})^2}"));
+    METHODS.add(new DistanceMethodEnum("Bray-Curtis", new BrayCurtisDist(), "{1 \\over p} {\\sum_i |x_{ri}-x_{si}| \\over \\sum_i (x_{ri}+x_{si})}"));
+	  METHODS.add(new DistanceMethodEnum("Canberra", new CanberraDist(), "\\sum_{i} {|x_{ri}-x_{si}| \\over x_{ri}+x_{si}}"));
+	  METHODS.add(new DistanceMethodEnum("Divergence", new DivergenceDist(), "{1 \\over p} \\sum_i {(x_{ri}-x_{si})^2 \\over (x_{ri}+x_{si})^2}"));
+	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist(), "\\sqrt{ \\sum_{i}(x_{ri}-x_{si})^{2}}"));
+		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist(), "\\sum_{i} |x_{ri}-x_{si}|"));
+		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist(), "{1 \\over p} {\\sum_i |x_{ri}-x_{si}| \\over \\sum_i max(x_{ri}, x_{si})}"));
+		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), "\\sum_i(1-{min(x_{ri},x_{si}) \\over max(x_{ri},x_{si})})"));
+		METHODS.add(new DistanceMethodEnum("Ott-Niederberger", new OttNiederbergerDist(), "100(1-{\\sum_i min(x_{ri}, x_{si}) \\over \\sum_i (x_{ri}+x_{si}) - \\sum_i min(x_{ri}-x_{si})})"));
 		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist(), ""));
 		
-		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, "{a \\over b}"));
+		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, ""));
 		METHODS.add(new DistanceMethodEnum("Braun, Blanque", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/Math.max(a+b, a+c);
       }
-    }, Coding.BINARY, "a \\ over max\\{(a+b),(a+c)\\}"));
+    }, Coding.BINARY, "a \\over max\\{(a+b),(a+c)\\}"));
     METHODS.add(new DistanceMethodEnum("Czekanowski", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return 2*a/(2*a + b + c);
       }
-    }, Coding.BINARY, ""));
+    }, Coding.BINARY, "2a \\over 2a+b+c"));
     METHODS.add(new DistanceMethodEnum("Hamman", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
@@ -57,13 +58,13 @@ public class DistanceMethodEnum {
         double m = (a + d)*(a + d) + (b + c)*(b + c);
         return n/m;
       }
-    }, Coding.BINARY, ""));    
+    }, Coding.BINARY, "4(ad-bc) \\over (a+d)^2 + (b+c)^2"));    
     METHODS.add(new DistanceMethodEnum("Ochiai", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {
         return a/Math.sqrt((a+b)*(a+c));
       }
-    }, Coding.BINARY, ""));
+    }, Coding.BINARY, "a \\over \\sqrt{(a+b)(a+c)}"));
     METHODS.add(new DistanceMethodEnum("Simple", new AbstractBinaryDist() {
       @Override
       public double distance(double a, double b, double c, double d) {

@@ -10,20 +10,24 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import net.jcip.annotations.Immutable;
-import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import ch.zhaw.ias.dito.config.Input;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
+import ch.zhaw.ias.dito.util.Logger;
+import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 /**
  * In respect of possible concurrent calculation this class is immutable.
@@ -93,7 +97,7 @@ public final class Matrix {
   }
   
   public static void writeToFile(Matrix dist, String outputFilename, char separator, int precision) throws IOException {
-    System.out.println("writing results to output-file: " + outputFilename);
+    Logger.INSTANCE.log("writing results to output-file: " + outputFilename, LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     FileWriter fw = new FileWriter(outputFilename);
     //BufferedWriter bw = new BufferedWriter(fw, 8192);
@@ -117,7 +121,7 @@ public final class Matrix {
       //bw.write("\r\n");
       writer.writeNext(line);
     }
-    System.out.println("writing output finished after " + (System.currentTimeMillis() - start) + " ms");
+    Logger.INSTANCE.log("writing output finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
     //bw.close();
     fw.close();
   }
@@ -202,8 +206,8 @@ public final class Matrix {
 	    return createDoubleMatrix(distances);
 	}
 	
-  public Matrix calculateDistanceParallel(DistanceSpec dist, boolean isBinary, int numberOfThreads) {
-    ExecutorService es = Executors.newFixedThreadPool(numberOfThreads);//CachedThreadPool();
+  public Matrix calculateDistanceParallel(DistanceSpec dist, int numberOfThreads) {
+    ExecutorService es = Executors.newFixedThreadPool(5);//newCachedThreadPool();
     double[][] distances = new double[getColCount()][getColCount()];
     for (int i = 0; i < getColCount(); i++) {
       //DVector v = helper.col(i);
@@ -219,7 +223,7 @@ public final class Matrix {
     return createDoubleMatrix(distances);
   }	
 	
-  class CalcRow implements Runnable {
+  static final class CalcRow implements Runnable {
     private Matrix helper;
     private double[][] distances;
     private DistanceSpec dist;
@@ -228,7 +232,7 @@ public final class Matrix {
     CalcRow(Matrix helper, double[][] distances, DistanceSpec dist, int startAt) {
       this.helper = helper;
       this.distances = distances;
-      this.dist = (DistanceSpec) dist.clone();
+      this.dist = dist;//(DistanceSpec) dist.clone();
       this.startAt = startAt;
     }
     
@@ -238,6 +242,10 @@ public final class Matrix {
       for (int j = startAt; j < helper.getColCount(); j++) {
         DVector w = helper.col(j);
         double distance = dist.distance(v, w);
+        //Map NaN Values to 0
+        if (Double.isNaN(distance)) {
+          distance = 0;
+        }
         distances[startAt][j] = distance;
         distances[j][startAt] = distance;
       }
@@ -354,5 +362,48 @@ public final class Matrix {
     ArrayList<DVector> sortedList = new ArrayList<DVector>(cols);
     Collections.sort(sortedList, new VectorComparator(row));
     return new Matrix(sortedList);
+  }
+
+  public Jama.Matrix toJama() {
+    double[][] values = new double[getColCount()][getRowCount()];
+    for (int i = 0; i < getColCount(); i++) {
+      DVector v = col(i);
+      values[i] = v.getValues();
+    }
+    return new Jama.Matrix(values);
+  }
+
+  /**
+   * the method ensures that every vector will only be included once into the random sample.
+   * if the specified sampleSize is bigger than this matrix the matrix will return a reference to itself 
+   * @param sampleSize
+   * @return
+   */
+  public Matrix getRandomSample(int sampleSize) {
+    int totalSize = getColCount();
+    if (sampleSize >= totalSize) {
+      //no need to create a new matrix. return this pointer
+      return this;
+    }
+    Random rand = new Random();
+    
+    //use a hash set to ensure that no duplicates will be included
+    Set<Integer> indexes = new HashSet<Integer>(sampleSize);
+    /* 
+     * first a list of indexes is calculated. this is done because if the elements are added directly to a list of DVectors
+     * this could lead to errors. this matrix could include duplicated DVectors. duplicated DVectors can only be added once to a
+     * Set. therefore if added directly this could (theoretically) lead to an endless loop, because the sample size could never be reached.
+     * i.e. if matrix size is 500 and sample size is 499 and 3 DVectors are duplicates.
+     */
+    while (indexes.size() < sampleSize) {
+      indexes.add(rand.nextInt(totalSize));
+    }
+    DVector[] vecs = new DVector[sampleSize];
+    int i = 0;
+    for (Integer index : indexes) {
+      vecs[i] = col(index);
+      i++;
+    }
+    return new Matrix(vecs);
   }
 }

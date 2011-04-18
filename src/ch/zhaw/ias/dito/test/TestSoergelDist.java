@@ -21,10 +21,6 @@ public class TestSoergelDist extends TestCase {
     v1 = new DVector(3,Double.NaN, 9, 11);
     v2 = new DVector(4, 7, 11, Double.NaN);
     assertEquals(dist.distance(v1, v2), 0.05);
-    
-    /*v1 = new DVector(-5, 10);
-    v2 = new DVector(10, 5);
-    assertEquals(dist.distance(v1, v2), 0.5); */   
   }
   
   public void testMatrix() {
@@ -32,7 +28,7 @@ public class TestSoergelDist extends TestCase {
     DVector v2 = new DVector(4, 7, 11, Double.NaN);
     
     Matrix m = new Matrix(v1, v2);
-    Matrix distM = m.calculateDistance(dist);
+    Matrix distM = DistanceTestCaseHelper.compareNormalParallel(this, dist, m);
     assertEquals(distM, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.05}, {0.05, 0.0}}));
   }
 }
