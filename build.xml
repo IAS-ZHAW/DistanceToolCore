@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="DistanceToolCore">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../eclipse"/>
+    <property name="DistanceToolUI.location" value="../DistanceToolUI"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+    </path>
+    <path id="DistanceToolCore.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="../../libs/opencsv-2.2/deploy/opencsv-2.2.jar"/>
+        <pathelement location="../../libs/jcip-annotations.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${DistanceToolUI.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${DistanceToolUI.location}" inheritAll="false" target="build">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="AllTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="FileTransformer">
+        <java classname="FileTransformer" failonerror="true" fork="yes">
+            <classpath refid="DistanceToolCore.classpath"/>
+        </java>
+    </target>
+    <target name="FileWritingPerfTest">
+        <java classname="FileWritingPerfTest" failonerror="true" fork="yes">
+            <classpath refid="DistanceToolCore.classpath"/>
+        </java>
+    </target>
+    <target name="NumberFormatTest">
+        <java classname="NumberFormatTest" failonerror="true" fork="yes">
+            <classpath refid="DistanceToolCore.classpath"/>
+        </java>
+    </target>
+    <target name="TestComplexDoubleMatrix">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestComplexDoubleMatrix" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="TestDVector">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestDVector" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="TestImport">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestImport" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="TestMatrix">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestMatrix" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="TestOps">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestOps" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="TestUniversalBinaryDist">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="ch.zhaw.ias.dito.test.TestUniversalBinaryDist" todir="${junit.output.dir}"/>
+            <classpath refid="DistanceToolCore.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
