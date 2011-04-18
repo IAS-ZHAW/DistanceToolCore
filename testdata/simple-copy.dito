@@ -19,7 +19,7 @@
     <method>
         <name>Canberra</name>
         <useRandomSample>false</useRandomSample>
-        <sampleSize>1000</sampleSize>
+        <sampleSize>500</sampleSize>
         <parallel>false</parallel>
         <numberOfThreads>20</numberOfThreads>
     </method>
