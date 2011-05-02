@@ -6,7 +6,7 @@ n=length(cities);
 squared = cities.*cities;
 J=eye(n)-1/n*ones(n);
 B=-1/2*J*squared*J;
-B
+B;
 
 [eigenvektorMatrix,eigenwertMatrix] = eig(B); 
 eigenwerte = diag(eigenwertMatrix);
@@ -16,9 +16,11 @@ eigenwerte(index) = 0;
 [ew2 index] = max(eigenwerte);
 ev2 = eigenvektorMatrix(:,index);
 
-[ev1 ev2]
+[ew1 ew2]
 diag([sqrt(ew1) sqrt(ew2)])
 
-coord = [ev1 ev2]*diag([sqrt(ew1) sqrt(ew2)])
+coord = [ev1 ev2]*diag([sqrt(ew1) sqrt(ew2)]);
+%coord = [ev1 ev2]*diag([sqrt(ew1) sqrt(ew2)]);
+%coord = [ev1 ev2]*eye(2);%diag([sqrt(ew1) sqrt(ew2)]);
 
-scatter(coord(:,1), coord(:,2))
+scatter(coord(:,1), coord(:,2));
