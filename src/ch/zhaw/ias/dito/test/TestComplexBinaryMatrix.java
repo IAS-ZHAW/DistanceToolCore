@@ -33,6 +33,7 @@ public class TestComplexBinaryMatrix extends TestCase {
   
   public void testConfig() {
     DitoConfiguration config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), null);
+    assertTrue(false);
     //config.setData(data);
   }
   

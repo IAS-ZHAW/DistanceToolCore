@@ -234,7 +234,7 @@ public final class DitoConfiguration implements PropertyListener {
   
   public Object getPropertyValue(ConfigProperty p) {
     switch (p) {
-    case INPUT_FILENAME: return input.getFilename(); 
+    case INPUT_FILENAME: return input.getFile().getName(); 
     case METHOD_NAME: return method.getName();
     case OUTPUT_FILENAME: return output.getFilename();
     case OUTPUT_PRECISION: return output.getPrecision();

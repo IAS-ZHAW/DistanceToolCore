@@ -50,16 +50,10 @@ public class TestComplexDoubleMatrix extends TestCase {
     Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new ManhattanDist(), m);
     assertEquals(dist, Matrix.readFromFile(new File("./testdata/m10x10addNaN-Manhattan.csv"), ';'));
   } 
-  
-  public void testIrisFlower() throws IOException {
-    
-  }
 
   /*public void testSmartvoteEuklid() throws IOException {
     Matrix m = Matrix.readFromFile(new File("./testdata/m1271x70smartvote.csv"), ',');
     Matrix dist = m.transpose().calculateDistance(new EuklidianDist());
     assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m1271x70smartvote-euklid.csv"), ','), 4), true);
-  } */
-  
-  
+  } */  
 }

@@ -19,6 +19,7 @@ public class DistanceMethodEnum {
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), "\\sum_i(1-{min(x_{ri},x_{si}) \\over max(x_{ri},x_{si})})"));
 		METHODS.add(new DistanceMethodEnum("Ott-Niederberger", new OttNiederbergerDist(), "100(1-{\\sum_i min(x_{ri}, x_{si}) \\over \\sum_i (x_{ri}+x_{si}) - \\sum_i min(x_{ri}-x_{si})})"));
 		METHODS.add(new DistanceMethodEnum("Niederberger", new NiederbergerDist(), ""));
+		METHODS.add(new DistanceMethodEnum("Niederberger Cyklisch", new NiederbergerCyclicDist(), ""));
 		
 		METHODS.add(new DistanceMethodEnum("Universal", new UniversalBinaryDist(), Coding.BINARY, ""));
 		METHODS.add(new DistanceMethodEnum("Braun, Blanque", new AbstractBinaryDist() {
