@@ -72,6 +72,12 @@ public class DistanceMethodEnum {
         return (a+d)/(a+b+c+d);
       }
     }, Coding.BINARY, "{a+d \\over a+b+c+d}"));
+    METHODS.add(new DistanceMethodEnum("BinaryTest", new AbstractBinaryDist() {
+      @Override
+      public double distance(double a, double b, double c, double d) {
+        return 1000*a + 100*b + 10 * c + d;
+      }
+    }, Coding.BINARY, "1000a+100b+10c+d"));    
 	}
 
 	public static DistanceMethodEnum get(String name) {

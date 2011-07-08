@@ -44,33 +44,25 @@ public class DistanceAlgorithm {
       } else {
         rescaled[i] = v;
       }
-      if (qc.isEnableQuestionWeight()) {
+      if (qc.isEnableQuestionWeight() && m.getMethod().getCoding() != Coding.BINARY) {
         rescaled[i] = rescaled[i].map(new MultiplyOp1(q.getQuestionWeight()));
       }
     }
     return new Matrix(rescaled);
   }
   
+  /**
+   * Only if randomMode is set to true AND the UseRandomSample in the configuration is set to true a random sample will be taken.
+   * @param randomMode
+   * @return
+   */
   public Matrix doIt(boolean randomMode) {
     Logger.INSTANCE.log("calculating " + config.getMethod().getName() + " distances", LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
-    Matrix m;
-    Coding coding = config.getMethod().getMethod().getCoding();
-    if (coding == Coding.REAL) {
-      m = getRescaledOfFiltered();
-    } else {
-      m = config.getData();
-    }
     
-    //recode vectors
-    ArrayList<DVector> vecs = new ArrayList<DVector>();
-    for (int i = 0; i < m.getColCount(); i++) {
-      Question q = config.getQuestions().get(i);
-      DVector[] v = m.col(i).recode(coding, q.getQuestionType());
-      vecs.addAll(Arrays.asList(v));
-    }
-    m = new Matrix(vecs);
-    
+    Matrix m = getRescaledOfFiltered();
+    m = getRecoded(m);
+
     Logger.INSTANCE.log("rescaling finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
     start = System.currentTimeMillis();
     m = m.transpose();
@@ -89,5 +81,22 @@ public class DistanceAlgorithm {
     }
     Logger.INSTANCE.log("calculations finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
     return dist;
+  }
+
+  /**
+   * recode vectors and put them into one list (two dimensions)
+   * @param m
+   * @param coding
+   * @return
+   */
+  public Matrix getRecoded(Matrix m) {
+    Coding coding = config.getMethod().getMethod().getCoding();
+    ArrayList<DVector> vecs = new ArrayList<DVector>();
+    for (int i = 0; i < m.getColCount(); i++) {
+      Question q = config.getQuestions().get(i);
+      DVector[] v = m.col(i).recode(coding, q.getQuestionType());
+      vecs.addAll(Arrays.asList(v));
+    }
+    return new Matrix(vecs);
   }
 }

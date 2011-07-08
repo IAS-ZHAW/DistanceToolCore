@@ -133,9 +133,13 @@ public final class Question {
     this.data = data;
     QuestionType type = data.getDefaultQuestionType();
     // set new type if QuestionType is Binary or Metric
-    if (type == QuestionType.BINARY || type == QuestionType.METRIC) {
+    // is it strictly necessary to set the type to binary??
+    /*if (type == QuestionType.BINARY || type == QuestionType.METRIC) {
       setQuestionType(type);
     } else if (questionType == QuestionType.BINARY || questionType == QuestionType.METRIC) {
+      setQuestionType(type);
+    }*/
+    if (type == QuestionType.BINARY || type == QuestionType.METRIC) {
       setQuestionType(type);
     }
   }

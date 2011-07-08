@@ -25,7 +25,6 @@ public class TestDitoConfiguration extends TestCase {
     assertTrue(config.getQuestionConfig() != null);
     assertEquals(config.getQuestionConfig().isEnableAutoScale(), true);
     assertEquals(config.getQuestions().size(), 2);
-    
     assertEquals(config.getQuestion(3), null);
   }
   
@@ -37,7 +36,6 @@ public class TestDitoConfiguration extends TestCase {
     reloadedConfig.getQuestions().clear();
     assertEquals(config.equals(reloadedConfig), false);
   }
-  
   
   public void testCompleteSave() throws FileNotFoundException, JAXBException {
     Input i = new Input("c:/asdf", 'a', false, true, 0, 10, true, 0, 10);

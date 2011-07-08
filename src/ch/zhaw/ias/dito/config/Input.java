@@ -53,10 +53,7 @@ public final class Input {
 	}
 	
 	public Character getSeparator() {
-	  //very good idea to just access index 0
-	  //shows that the engineer should be fired
-	  //TODO think of something better
-	  return separator;//.charAt(0);
+	  return separator;
 	}
 	
 	@Override
@@ -86,7 +83,7 @@ public final class Input {
   }
 
   public void setSeparator(Character separator) {
-    this.separator = separator;//Character.toString(separator);
+    this.separator = separator;
   }
 
   public boolean isQuestionTitles() {

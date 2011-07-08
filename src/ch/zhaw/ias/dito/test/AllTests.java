@@ -21,6 +21,7 @@ public class AllTests {
 		suite.addTestSuite(TestDivergenceDist.class);
 		suite.addTestSuite(TestComplexBinaryMatrix.class);
 		suite.addTestSuite(TestDistanceAlgorithm.class);
+		suite.addTestSuite(TestBinaryDistanceAlgorithm.class);
 		suite.addTestSuite(TestDitoConfiguration.class);
 		suite.addTestSuite(TestQuestion.class);
 		suite.addTestSuite(TestBinaryDistance.class);

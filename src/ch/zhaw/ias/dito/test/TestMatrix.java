@@ -135,6 +135,21 @@ public class TestMatrix extends TestCase {
     assertEquals(m23.equalsRounded(floating, 1), false);
 	}
 	
+  public void testRemoveMean() {
+    assertEquals(m33.removeMeans(), Matrix.createDoubleMatrix(new double[][] {{-1,0,1}, {-1,0,1}, {-1,0,1}}));
+  }
+  
+  public void testCovariance() {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{1, 20, 3}, {4, -4, 6}, {7, -7, -9}});
+    assertEquals(m.covariance(), Matrix.createDoubleMatrix(new double[][] {{109,-53,-44}, {-53,28,10}, {-44,10,76}}));
+  }
+  
+  
+  public void testCorrelationCoeffs() {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{1, 20, 3}, {4, 5, 6}, {7, 8, 9}});
+    assertEquals(m.correlationCoeffs(), Matrix.createDoubleMatrix(new double[][] {{1.0,0.0958,0.0958}, {0.0958,1.0,1.0}, {0.0958,1.0,1.0}}));
+  }  
+	
 	public void testEqualDimensions() {
 	  assertEquals(m33.equalDimensions(m33), true);
 	  assertEquals(m33.equalDimensions(Matrix.createDoubleMatrix(new double[][]{{0,0,0}, {0,0,0}, {0,0,0}})), true);

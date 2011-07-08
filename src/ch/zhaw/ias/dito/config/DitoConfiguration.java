@@ -69,7 +69,7 @@ public final class DitoConfiguration implements PropertyListener {
   }
   
   /**
-   * Constructor necessary for Jaxb
+   * Constructor necessary for Jaxb. Don't remove
    */
   private DitoConfiguration() {
 	  input = null;
@@ -195,7 +195,7 @@ public final class DitoConfiguration implements PropertyListener {
       //question doesn't exist yet -> create default
       if (q == null) {
         q = createDefaultQuestion(i+1, v);
-        questions.add(q);        
+        questions.add(q);
       } else {
         q.setData(v);  
       }

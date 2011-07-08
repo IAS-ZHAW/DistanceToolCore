@@ -69,6 +69,7 @@ public final class Matrix {
     int lineCounter = 0;
     while ((line = reader.readLine()) != null) {
       lineCounter++;
+      //ignore certain lines if configured
       if (i.isAllSurveys() == false && (lineCounter < i.getStartSurvey() || lineCounter > i.getEndSurvey())) {
         continue;
       }
@@ -157,6 +158,64 @@ public final class Matrix {
 		return cols.size();
 	}	
 	
+	/**
+	 * removes the means of this matrix in a column oriented way.
+	 * for each column the mean is calculated and then removed from all values.
+	 * @return
+	 */
+	public Matrix removeMeans() {
+	  DVector[] vecs = new DVector[getColCount()];
+	  for (int i = 0; i < getColCount(); i++) {
+	    vecs[i] = col(i).removeMean();
+	  }
+	  return new Matrix(vecs);
+	}
+	
+	/**
+	 * calculates the covariances between all the columns in this matrix.
+	 * the resulting matrix will have dimensions [getColCount() X getColCount()]
+	 * @return
+	 */
+	public Matrix covariance() {
+	  Matrix m = removeMeans();
+	  
+    double[][] covariances = new double[getColCount()][getColCount()];
+    for (int i = 0; i < m.getColCount(); i++) {
+      DVector v = m.col(i);
+      for (int j = i; j < m.getColCount(); j++) {
+        DVector w = m.col(j);
+        double covariance = v.scalarProduct(w)/(w.length()-1);
+
+        covariances[i][j] = covariance;
+        covariances[j][i] = covariance;
+      }
+    }
+    return createDoubleMatrix(covariances);
+	}
+	
+	 public Matrix correlationCoeffs() {
+	    Matrix m = removeMeans();
+
+	    double[] variances = new double[getColCount()];
+	    for (int i = 0; i < m.getColCount(); i++) {
+	      DVector v = m.col(i);
+	      variances[i] = v.unscaledVariance();
+	    }
+	    double[][] coeffs = new double[getColCount()][getColCount()];
+	    for (int i = 0; i < m.getColCount(); i++) {
+	      DVector v = m.col(i);
+	      for (int j = i; j < m.getColCount(); j++) {
+	        DVector w = m.col(j);
+	        double div = Math.sqrt(variances[i] * variances[j]);
+	        double coeff = v.scalarProduct(w)/div;
+
+	        coeffs[i][j] = coeff;
+	        coeffs[j][i] = coeff;
+	      }
+	    }
+	    return createDoubleMatrix(coeffs);
+	  }
+	
 	public static boolean checkLengths(DVector... cols) {
 		int length = 0;
 		for (int i = 0; i < cols.length; i++) {
@@ -190,20 +249,20 @@ public final class Matrix {
 	
 	public Matrix calculateDistance(DistanceSpec dist) {
 		double[][] distances = new double[getColCount()][getColCount()];
-	    for (int i = 0; i < getColCount(); i++) {
-	      DVector v = col(i);
-	    	for (int j = i; j < getColCount(); j++) {
-	    	  DVector w = col(j);
-	    		double distance = dist.distance(v, w);
-	    		//Map NaN Values to 0
-	    		if (Double.isNaN(distance)) {
-	    		  distance = 0;
-	    		}
-	    		distances[i][j] = distance;
-	    		distances[j][i] = distance;
-	    	}
-	    }
-	    return createDoubleMatrix(distances);
+    for (int i = 0; i < getColCount(); i++) {
+      DVector v = col(i);
+    	for (int j = i; j < getColCount(); j++) {
+    	  DVector w = col(j);
+    		double distance = dist.distance(v, w);
+    		//Map NaN Values to 0
+    		if (Double.isNaN(distance)) {
+    		  distance = 0;
+    		}
+    		distances[i][j] = distance;
+    		distances[j][i] = distance;
+    	}
+    }
+    return createDoubleMatrix(distances);
 	}
 	
   public Matrix calculateDistanceParallel(DistanceSpec dist, int numberOfThreads) {

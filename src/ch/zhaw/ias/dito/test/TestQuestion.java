@@ -96,5 +96,7 @@ public class TestQuestion extends TestCase {
     Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[] {1, 0});
     q.setData(new DVector(1, 0, 1));
     assertEquals(q.getExcludedVector(), new DVector(Double.NaN, Double.NaN, Double.NaN));
+    q.setData(new DVector(1, 0, 2));
+    assertEquals(q.getExcludedVector(), new DVector(Double.NaN, Double.NaN, 2.0));
   }
 }

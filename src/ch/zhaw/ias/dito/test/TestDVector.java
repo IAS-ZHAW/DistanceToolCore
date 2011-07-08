@@ -41,6 +41,29 @@ public class TestDVector extends TestCase {
 		assertEquals(v2.sum(), 15.0);
 	}
 	
+  public void testMean() {
+    assertEquals(v1.mean(), 2.0);
+    assertEquals(v2.mean(), 5.0);
+    assertEquals(new DVector(-2, 2).mean(), 0.0);
+    assertEquals(new DVector(2, Double.NaN).mean(), 1.0);
+  }
+  
+  public void testVariance() {
+    assertEquals(v1.unscaledVariance(), 2.0);
+    assertEquals(new DVector(-1, 0, 1, 3, 4,4, 3).unscaledVariance(), 24.0);
+  }  
+  
+  public void testScalarProduct() {
+    assertEquals(v1.scalarProduct(v2), 32.0);
+    assertEquals(v1.scalarProduct(new DVector(1.0, -3.0, Double.NaN)), -5.0);
+  }  
+  
+  public void testRemoveMean() {
+    assertEquals(v1.removeMean(), new DVector(-1.0, 0.0, 1.0));
+    assertEquals(v2.removeMean(), new DVector(-1.0, 0.0, 1.0));
+    assertEquals(new DVector(2, Double.NaN).removeMean(), new DVector(1.0, Double.NaN));
+  }  
+	
 	public void testLength() {
 		assertEquals(v1.length(), 3);
 		assertEquals(v3.length(), 5);

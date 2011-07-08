@@ -12,7 +12,9 @@ import ch.zhaw.ias.dito.ops.MaxOp2;
 import ch.zhaw.ias.dito.ops.MinOp2;
 import ch.zhaw.ias.dito.ops.Operation1;
 import ch.zhaw.ias.dito.ops.Operation2;
+import ch.zhaw.ias.dito.ops.ScalarProduct2;
 import ch.zhaw.ias.dito.ops.ScaleOp1;
+import ch.zhaw.ias.dito.ops.VarianceOp1;
 
 /**
  * In respect of possible concurrent calculation this class is immutable.
@@ -39,6 +41,30 @@ public final class DVector {
 	public double sum() {
 		return foldl1(new AddOp2());
 	}
+	
+  public double mean() {
+    //maybe better use filtered length?
+    return foldl1(new AddOp2())/values.length;
+  }
+  
+  /**
+   * calculates the variance for this vector, but doesn't scale the results in the end (does not divide by (n-1)).
+   * @return
+   */
+  public double unscaledVariance() {
+    double mean = mean();
+    return map(new VarianceOp1(mean)).sum();
+  }
+
+  public double scalarProduct(DVector v) {
+    DVector multiplied = zipWith(v, new ScalarProduct2());
+    return multiplied.sum();
+  }
+  
+  public DVector removeMean() {
+    double mean = mean();
+    return map(new ScaleOp1(1.0, mean));
+  }
 	
 	public double max() {
 		return foldl1(new MaxOp2());
@@ -221,21 +247,35 @@ public final class DVector {
     return Arrays.copyOf(values, values.length);
   }
   
+  /**
+   * find an appropriate default question type for this question
+   * if a vector contains only 0 and 1 values it is supposed to be binary
+   * if a vector contains values with decimal places it is supposed to be METRIC 
+   * all other values are supposed to be ORDINAL
+   * @return
+   */
   public QuestionType getDefaultQuestionType() {
+    // default is binary
     QuestionType type = QuestionType.BINARY;
     for (int i = 0; i < values.length; i++) {
       if (Double.isNaN(values[i])) {
         continue;
       }
       if (values[i] - ((int) values[i]) != 0.0) {
+        // if a value with decimal places occurs the question is supposed to be metric
         return QuestionType.METRIC;
       } else if (values[i] != 0 && values[i] != 1) {
+        // if a value different from 0 or 1 occurs the vector can't be binary anymore -> ORDINAL
         type = QuestionType.ORDINAL;
       }
     }
     return type;
   }
   
+  /**
+   * 
+   * @return
+   */
   private DVector[] splitUpCoding() {
     int min = (int) min();
     int max = (int) max();
@@ -291,6 +331,13 @@ public final class DVector {
     return vecs;
   }
 
+  /**
+   * Will recode this Vector to BINARY or REAL values depending on the question type. In some cases components will be split up to multiple  
+   * (see separate documentation)
+   * @param coding
+   * @param questionType
+   * @return
+   */
   public DVector[] recode(Coding coding, QuestionType questionType) {
     if (coding == Coding.BINARY) {
       if (questionType == QuestionType.BINARY) {

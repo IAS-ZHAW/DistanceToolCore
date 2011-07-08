@@ -21,6 +21,10 @@
         <path refid="JUnit 4.libraryclasspath"/>
         <pathelement location="../../libs/opencsv-2.2/deploy/opencsv-2.2.jar"/>
         <pathelement location="../../libs/jcip-annotations.jar"/>
+    	<pathelement location="../../libs/jmatharray.jar"/>
+        	<pathelement location="../../libs/jmathplot.jar"/>
+    	
+    	
     </path>
     <target name="init">
         <mkdir dir="bin"/>
