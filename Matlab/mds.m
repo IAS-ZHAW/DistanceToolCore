@@ -15,12 +15,15 @@ ev1 = eigenvektorMatrix(:,index);
 eigenwerte(index) = 0;
 [ew2 index] = max(eigenwerte);
 ev2 = eigenvektorMatrix(:,index);
+eigenwerte(index) = 0;
+[ew3 index] = max(eigenwerte);
+ev3 = eigenvektorMatrix(:,index);
 
-[ew1 ew2]
-diag([sqrt(ew1) sqrt(ew2)])
+[ew1 ew2 ew3]
+diag([sqrt(ew1) sqrt(ew2) sqrt(ew3)])
 
-coord = [ev1 ev2]*diag([sqrt(ew1) sqrt(ew2)]);
+coord = [ev1 ev2 ev3]*diag([sqrt(ew1) sqrt(ew2) sqrt(ew3)]);
 %coord = [ev1 ev2]*diag([sqrt(ew1) sqrt(ew2)]);
 %coord = [ev1 ev2]*eye(2);%diag([sqrt(ew1) sqrt(ew2)]);
 
-scatter(coord(:,1), coord(:,2));
+scatter3(coord(:,1), coord(:,2), coord(:,3));

@@ -2,6 +2,7 @@ package ch.zhaw.ias.dito.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
@@ -12,7 +13,7 @@ import junit.framework.TestCase;
 public class TestImport extends TestCase {
   public void testComplicatedImport() {
     try {
-      Matrix m = Matrix.readFromFile(new File("testdata/complicatedImport.csv"), ';', true);
+      Matrix m = Matrix.readFromFile(new File("testdata/complicatedImport.csv"), ';', true).getMatrix();
       assertEquals(m.getRowCount(), 3);
       assertEquals(m.getColCount(), 9);
       //normal line
@@ -40,45 +41,53 @@ public class TestImport extends TestCase {
   
   public void testExcludeQuestionsImport() throws IOException {
     Input i = new Input(new File("testdata/complicatedImport.csv"), ';', true, false, 1, 3, true, -1, -2);    
-    Matrix m = Matrix.readFromFile(i);
+    Matrix m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getRowCount(), 3);
     i.setStartQuestion(2);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getRowCount(), 2);
     assertEquals(m.col(0), new DVector(5.0, 10.0));
     assertEquals(m.col(2), new DVector(0.50, 100.0));
     i.setEndQuestion(2);
-    m = Matrix.readFromFile(i);    
+    m = Matrix.readFromFile(i).getMatrix();    
     assertEquals(m.getRowCount(), 1);    
     i.setAllQuestions(true);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getRowCount(), 3);    
   }
   
   public void testExcludeSurveysImport() throws IOException {
     Input i = new Input(new File("testdata/complicatedImport.csv"), ';', true, true, -1, -2, false, 1, 5);
-    Matrix m = Matrix.readFromFile(i);
+    Matrix m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getColCount(), 5);     
     i.setStartSurvey(2);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getColCount(), 4);
     assertEquals(m.col(1), new DVector(3.0, 0.5, 100.0));
     assertEquals(m.col(3), new DVector(Double.NaN, 1.654, Double.NaN));
     i.setQuestionTitles(false);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getColCount(), 4);
     assertEquals(m.col(2), new DVector(3.0, 0.5, 100.0));
     i.setAllSurveys(true);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getColCount(), 10);
     i.setQuestionTitles(true);
-    m = Matrix.readFromFile(i);
+    m = Matrix.readFromFile(i).getMatrix();
     assertEquals(m.getColCount(), 9);
+  }
+
+  public void testImportColumnTitles() throws IOException {
+    Input i = new Input(new File("testdata/complicatedImport.csv"), ';', true, false, 2, 3, false, 1, 5);
+    List<String> columns = Matrix.readFromFile(i).getColumnNames();
+    assertEquals(columns.size(), 2);
+    assertEquals(columns.get(0), "der");
+    assertEquals(columns.get(1), "spaltentitel");
   }
   
   public void testWhitespaceImport() {
     try {
-      Matrix m = Matrix.readFromFile(new File("testdata/whitespaceImport.csv"), ' ', false);
+      Matrix m = Matrix.readFromFile(new File("testdata/whitespaceImport.csv"), ' ', false).getMatrix();
       assertEquals(m.getRowCount(), 3);
       assertEquals(m.getColCount(), 2);
       //normal line

@@ -124,7 +124,7 @@ public class TestDitoConfiguration extends TestCase {
   public void testIndexError() {
     DitoConfiguration config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), new ArrayList<Question>());
     config.getQuestions().add(config.createDefaultQuestion(1, new DVector()));
-    config.setData(Matrix.createDoubleMatrix(new double[][] {{1,2}, {3,4}}));
+    config.setData(new ArrayList<String>(), Matrix.createDoubleMatrix(new double[][] {{1,2}, {3,4}}));
     Question q = config.getQuestion(2);
     assertTrue(q != null);
   }

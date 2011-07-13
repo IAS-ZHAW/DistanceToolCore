@@ -9,10 +9,10 @@ public class DistanceTestCaseHelper {
     
   }
   
-  public static Matrix compareNormalParallel(TestCase tCase, DistanceSpec dist, Matrix m) {
+  public static Matrix compareNormalParallel(DistanceSpec dist, Matrix m) {
     Matrix normal = m.calculateDistance(dist);
     Matrix parallel = m.calculateDistanceParallel(dist, 5);
-    tCase.assertEquals(normal, parallel);
+    TestCase.assertEquals(normal, parallel);
     return normal;
   }
 }

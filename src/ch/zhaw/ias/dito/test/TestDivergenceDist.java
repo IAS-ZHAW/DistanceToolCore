@@ -30,7 +30,7 @@ public class TestDivergenceDist extends TestCase {
     DVector v2 = new DVector(0, 7, 11, Double.NaN);
     
     Matrix m = new Matrix(v1, v2);
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, spec, m);
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(spec, m);
     assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0.0, 0.0025}, {0.0025, 0.0}}));    
   }
 }

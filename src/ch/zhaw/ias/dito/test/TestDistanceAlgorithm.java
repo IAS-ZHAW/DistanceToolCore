@@ -30,7 +30,7 @@ public class TestDistanceAlgorithm extends TestCase {
     config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), questions);
     
     m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, Double.NaN, 1}, {-2, 0, Double.NaN, 2, 1}});
-    config.setData(m);
+    config.setData(new ArrayList<String>(), m);
     algo = new DistanceAlgorithm(config, false);
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
@@ -82,7 +82,7 @@ public class TestDistanceAlgorithm extends TestCase {
     questions.add(q2);
     config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), questions);
     m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, 4, 1}, {-2, 0, 3, 2, 1}});
-    config.setData(m);
+    config.setData(new ArrayList<String>(), m);
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
     config.getQuestionConfig().setEnableQuestionWeight(false);

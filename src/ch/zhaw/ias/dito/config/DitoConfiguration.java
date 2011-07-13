@@ -120,11 +120,15 @@ public final class DitoConfiguration implements PropertyListener {
     return method;
   }
   
-  public Question createDefaultQuestion(int column, DVector data) {
+  public Question createDefaultQuestion(int column, String name, DVector data) {
     //TODO it should be considered to use a calculated default value for the scaling
-    Question q = new Question(column, "Question " + column, data.getDefaultQuestionType(), 1.0, 1.0, 1.0, new double[0]);
+    Question q = new Question(column, name, data.getDefaultQuestionType(), 1.0, 1.0, 1.0, new double[0]);
     q.setData(data);
     return q;
+  }
+  
+  public Question createDefaultQuestion(int column, DVector data) {
+    return createDefaultQuestion(column, "Question " + column, data);
   }
   
   @Override
@@ -142,9 +146,10 @@ public final class DitoConfiguration implements PropertyListener {
   
   public void loadMatrix() throws IOException {
     clearVectorData();
-    Matrix m = Matrix.readFromFile(getInput());
+    ImportWrapper wrap = Matrix.readFromFile(getInput());
+    Matrix m = wrap.getMatrix();
     m = m.transpose();
-    setData(m);
+    setData(wrap.getColumnNames(), m);
   }
   
   private void clearVectorData() {
@@ -186,7 +191,11 @@ public final class DitoConfiguration implements PropertyListener {
     return data;
   }
   
-  public void setData(Matrix data) {
+  /**
+   * not completely sure what to do here. try to match questions or clear them all and create new?
+   * @param data
+   */
+  public void setData(List<String> columnNames, Matrix data) {
     this.data = data;
     for (int i = 0; i < data.getColCount(); i++) {
       Question q = getQuestion(i+1);
@@ -194,7 +203,12 @@ public final class DitoConfiguration implements PropertyListener {
       
       //question doesn't exist yet -> create default
       if (q == null) {
-        q = createDefaultQuestion(i+1, v);
+        if (columnNames.size() > i) {
+          q = createDefaultQuestion(i+1, columnNames.get(i), v);
+        } else {
+          q = createDefaultQuestion(i+1, v);  
+        }
+        
         questions.add(q);
       } else {
         q.setData(v);  

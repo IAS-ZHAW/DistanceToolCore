@@ -9,13 +9,11 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +21,7 @@ import java.util.regex.Pattern;
 
 import net.jcip.annotations.Immutable;
 import au.com.bytecode.opencsv.CSVWriter;
-
+import ch.zhaw.ias.dito.config.ImportWrapper;
 import ch.zhaw.ias.dito.config.Input;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 import ch.zhaw.ias.dito.util.Logger;
@@ -40,11 +38,11 @@ import ch.zhaw.ias.dito.util.Logger.LogLevel;
 public final class Matrix {
 	private final List<DVector> cols;
 		
-  public static Matrix readFromFile(File file, char separator) throws IOException {
+  public static ImportWrapper readFromFile(File file, char separator) throws IOException {
     return readFromFile(file, separator, false);
   }	
   
-  public static Matrix readFromFile(File file, char separator, boolean ignoreFirstLine) throws IOException {
+  public static ImportWrapper readFromFile(File file, char separator, boolean ignoreFirstLine) throws IOException {
     return readFromFile(new Input(file, separator, ignoreFirstLine, true, -1, -2, true, -1, -2));
   }
   
@@ -57,14 +55,27 @@ public final class Matrix {
    * @return
    * @throws IOException
    */
-  public static Matrix readFromFile(Input i) throws IOException {
+  public static ImportWrapper readFromFile(Input i) throws IOException {
     BufferedReader reader = new BufferedReader(new FileReader(i.getFile()));
     Pattern pattern = Pattern.compile(Character.toString(i.getSeparator()));
     String line;
+    List<String> columnNames = new ArrayList<String>();
     List<DVector> vectors = new ArrayList<DVector>();
-    //exclude question titles
+    //read question titles
     if (i.isQuestionTitles() == true) {
-      reader.readLine();
+      line = reader.readLine();
+      Scanner s = new Scanner(line);
+      s.useDelimiter(pattern);
+      int rowCounter = 0;
+      while (s.hasNext()) {
+        rowCounter++;
+        // ignore excluded columns
+        if (i.isAllQuestions() == false && (rowCounter < i.getStartQuestion() || rowCounter > i.getEndQuestion())) {
+          s.next();
+          continue;
+        }
+        columnNames.add(s.next());
+      }
     }
     int lineCounter = 0;
     while ((line = reader.readLine()) != null) {
@@ -94,14 +105,13 @@ public final class Matrix {
       }
       vectors.add(new DVector(values));
     }
-    return new Matrix(vectors.toArray(new DVector[0]));
+    return new ImportWrapper(columnNames, new Matrix(vectors.toArray(new DVector[0])));
   }
   
   public static void writeToFile(Matrix dist, String outputFilename, char separator, int precision) throws IOException {
     Logger.INSTANCE.log("writing results to output-file: " + outputFilename, LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     FileWriter fw = new FileWriter(outputFilename);
-    //BufferedWriter bw = new BufferedWriter(fw, 8192);
     CSVWriter writer = new CSVWriter(fw, separator, CSVWriter.NO_ESCAPE_CHARACTER, CSVWriter.NO_QUOTE_CHARACTER);
     
     NumberFormat nf = NumberFormat.getNumberInstance();
@@ -110,20 +120,13 @@ public final class Matrix {
     nf.setRoundingMode(RoundingMode.HALF_UP);
     for (int i = 0; i < dist.getColCount(); i++) {
       DVector col = dist.col(i);
-      //StringBuffer sb = new StringBuffer(col.length()*10);
       String[] line = new String[col.length()];
       for (int j = 0; j < col.length(); j++) {
         line[j] = nf.format(col.component(j));
-        //sb.append(nf.format(col.component(j)));
-        //nf.format();
-        //bw.write(Double.toString(col.component(j)));
       }
-      //sb.append("\r\n");
-      //bw.write("\r\n");
       writer.writeNext(line);
     }
     Logger.INSTANCE.log("writing output finished after " + (System.currentTimeMillis() - start) + " ms", LogLevel.INFORMATION);
-    //bw.close();
     fw.close();
   }
 	
@@ -416,13 +419,11 @@ public final class Matrix {
     }
     return extremum;
   }
-  
-  public Matrix sortBy(int row) {
-    ArrayList<DVector> sortedList = new ArrayList<DVector>(cols);
-    Collections.sort(sortedList, new VectorComparator(row));
-    return new Matrix(sortedList);
-  }
 
+  /**
+   * The resulting matrix will be a transposed Jama-style copy of this matrix.
+   * @return
+   */
   public Jama.Matrix toJama() {
     double[][] values = new double[getColCount()][getRowCount()];
     for (int i = 0; i < getColCount(); i++) {

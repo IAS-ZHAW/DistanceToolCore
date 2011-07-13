@@ -16,19 +16,19 @@ import ch.zhaw.ias.dito.dist.DistanceMethodEnum;
 public class TestComplexBinaryMatrix extends TestCase {
 	
 	public void testLargeSimple() throws IOException {
-		Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',');
+		Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',').getMatrix();
 		m = m.toBinary();
 		DistanceMethodEnum method = DistanceMethodEnum.get("Simple");
-		Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this,method.getSpec(), m); 
-		assertEquals(dist, Matrix.readFromFile(new File("./testdata/m20x20randBin-simple.csv"), ','));
+		Matrix dist = DistanceTestCaseHelper.compareNormalParallel(method.getSpec(), m); 
+		assertEquals(dist, Matrix.readFromFile(new File("./testdata/m20x20randBin-simple.csv"), ',').getMatrix());
 	}
 	
   public void testLargeJaccard() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',');
+    Matrix m = Matrix.readFromFile(new File("./testdata/m20x20randBin.csv"), ',').getMatrix();
     m = m.toBinary();
     DistanceMethodEnum method = DistanceMethodEnum.get("Jaccard");
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, method.getSpec(), m);
-    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m20x20randBin-jaccard.csv"), ','), 7), true);
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(method.getSpec(), m);
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m20x20randBin-jaccard.csv"), ',').getMatrix(), 7), true);
   }
   
   public void testConfig() {
@@ -38,26 +38,26 @@ public class TestComplexBinaryMatrix extends TestCase {
   }
   
   public void testLargeSimple2() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ').getMatrix();
     //m = m.toBinary();
     DistanceMethodEnum method = DistanceMethodEnum.get("Simple");
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, method.getSpec(), m);
-    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-simple.csv"), ';'), 4), true);
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(method.getSpec(), m);
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-simple.csv"), ';').getMatrix(), 4), true);
   }
 
   public void testLargeCzekanowski() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ').getMatrix();
     //m = m.toBinary();
     DistanceMethodEnum method = DistanceMethodEnum.get("Czekanowski");
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, method.getSpec(), m);
-    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Czekanowski.csv"), ';'), 4), true);
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(method.getSpec(), m);
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Czekanowski.csv"), ';').getMatrix(), 4), true);
   }
   
   public void testLargeOchiai() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ');
+    Matrix m = Matrix.readFromFile(new File("./testdata/m153x166chemical.csv"), ' ').getMatrix();
     //m = m.toBinary();
     DistanceMethodEnum method = DistanceMethodEnum.get("Ochiai");
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, method.getSpec(), m);
-    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Ochiai.csv"), ';'), 4), true);
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(method.getSpec(), m);
+    assertEquals(dist.equalsRounded(Matrix.readFromFile(new File("./testdata/m153x153chemical-Ochiai.csv"), ';').getMatrix(), 4), true);
   }  
 }

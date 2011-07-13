@@ -35,7 +35,7 @@ public class TestBinaryDistanceAlgorithm extends TestCase {
     config = new DitoConfiguration(new Input(), new Output(), new Method(DistanceMethodEnum.get("Czekanowski")), new QuestionConfig(), questions);
     
     m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, Double.NaN, 1}, {-2, 0, Double.NaN, 2, 1}});
-    config.setData(m);
+    config.setData(new ArrayList<String>(), m);
     algo = new DistanceAlgorithm(config, false);
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
@@ -58,7 +58,7 @@ public class TestBinaryDistanceAlgorithm extends TestCase {
     questions.add(q6);
     config = new DitoConfiguration(new Input(), new Output(), new Method(DistanceMethodEnum.get("BinaryTest")), new QuestionConfig(), questions);
     m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 1, 0, 4, 1}, {-2, 0, 3, 2, 1, -1}});
-    config.setData(m.transpose());
+    config.setData(new ArrayList<String>(), m.transpose());
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
     config.getQuestionConfig().setEnableQuestionWeight(false);
@@ -75,7 +75,7 @@ public class TestBinaryDistanceAlgorithm extends TestCase {
       Matrix m = algo.getRescaledOfFiltered();
       m = algo.getRecoded(m);
       
-      Matrix ref = Matrix.readFromFile(new File("./testdata/m10x4mixedData-recoded.csv"), ' ');
+      Matrix ref = Matrix.readFromFile(new File("./testdata/m10x4mixedData-recoded.csv"), ' ').getMatrix();
       assertEquals(m.transpose(), ref);
     } catch (Exception e) {
       fail();

@@ -6,32 +6,29 @@ import ch.zhaw.ias.dito.util.Logger;
 import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 /**
- * Currently it supports 2 and 3 dimensionsal multidimensional scaling.
+ * Currently it supports 2 and 3 dimensionsal principal component analysis.
  * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
  *
  */
-public class MdsDecomposition implements EigenvalueDecomposition {
+public class PcaDecomposition implements EigenvalueDecomposition {
+  private Matrix dataMatrix;
   private double[] sortedEigenvalues;
   private Jama.Matrix relevantEigenValues;
   private Jama.Matrix relevantEigenVectors;
+  //double[][] mdsCoordinates;
   
-  public MdsDecomposition(Matrix m) {
+  public PcaDecomposition(Matrix m) {
+    this.dataMatrix = m;
     Logger.INSTANCE.log("starting mds", LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     final int NUMBER_OF_DIMENSIONS = Math.min(m.getColCount(), 3);
+
+    //calculate covariance
+    m = m.covariance();
     Jama.Matrix jamaM = m.toJama();
     
-    //square matrix
-    jamaM.arrayTimesEquals(jamaM);
-    
-    //get J Matrix
-    Jama.Matrix j = getJMatrix(m.getColCount());
-    //calculate B Matrix
-    Jama.Matrix b = j.times(jamaM).times(j).times(-0.5);
-    
-    //here the decomposition cold be stored. Then the number of dimensions could be switched very fast
-    //the tradeoff would be that the decomposition doubles the amount of needed memory.
-    Jama.EigenvalueDecomposition decomp = b.eig();
+    //decomposition
+    Jama.EigenvalueDecomposition decomp = jamaM.eig();
     double[] ev = decomp.getRealEigenvalues();
     
     //this part changes depending on the number of dimensions
@@ -42,7 +39,6 @@ public class MdsDecomposition implements EigenvalueDecomposition {
     for (int i = 0; i < NUMBER_OF_DIMENSIONS; i++) {
       relevantEigenValues.set(i, i, Math.sqrt(Math.abs(ev[indizes[i]])));
     }
-    //valueMatrix.
     relevantEigenVectors = eigenVectors.getMatrix(0, eigenVectors.getRowDimension() - 1, indizes);
     Logger.INSTANCE.log("finished mds after: " + (System.currentTimeMillis() - start), LogLevel.INFORMATION);
   }
@@ -55,19 +51,22 @@ public class MdsDecomposition implements EigenvalueDecomposition {
     if (dimensions != 2 && dimensions != 3) {
       throw new IllegalArgumentException("currently only 2 or 3 dimensions are supported");
     }
-    Jama.Matrix relevant = relevantEigenVectors.getMatrix(0, relevantEigenVectors.getRowDimension()-1, 0, dimensions-1).times(relevantEigenValues.getMatrix(0, dimensions-1, 0, dimensions-1));    
-    return relevant.getArray();    
+    Matrix noMeans = dataMatrix.removeMeans();
+    Jama.Matrix relevant = relevantEigenVectors.getMatrix(0, relevantEigenVectors.getRowDimension()-1, 0, dimensions-1).transpose().times(noMeans.toJama());    
+    return relevant.transpose().getArray();    
+  }
+  
+  public double[][] getQuestions(int dimensions) {
+    if (dimensions != 2 && dimensions != 3) {
+      throw new IllegalArgumentException("currently only 2 or 3 dimensions are supported");
+    }
+    Jama.Matrix relevant = relevantEigenVectors.getMatrix(0, relevantEigenVectors.getRowDimension()-1, 0, dimensions-1).transpose();    
+    return relevant.transpose().getArray();    
   }
   
   public double[] getSortedEigenvalues() {
     return sortedEigenvalues;
   }  
-  
-  public Jama.Matrix getJMatrix(int size) {
-    Jama.Matrix identity = Jama.Matrix.identity(size, size);
-    Jama.Matrix tempM = new Jama.Matrix(size, size, -1.0/size);
-    return identity.plus(tempM);
-  }
   
   public int[] getIndizesOfLargestEv(int count, double[] ev) {
     if (count > ev.length) {

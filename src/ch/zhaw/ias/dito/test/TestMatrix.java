@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
 import ch.zhaw.ias.dito.DVector;
 import ch.zhaw.ias.dito.Matrix;
 import ch.zhaw.ias.dito.dist.DivergenceDist;
 import ch.zhaw.ias.dito.dist.EuklidianDist;
 import ch.zhaw.ias.dito.dist.WaveHedgesDist;
-import junit.framework.TestCase;
 
 public class TestMatrix extends TestCase {
 	private DVector a;
@@ -107,7 +107,7 @@ public class TestMatrix extends TestCase {
 	
 	public void testCalculateDistance() {
 		m = Matrix.createDoubleMatrix(new double[][]{{1,4},{8,4}});
-		Matrix distance = DistanceTestCaseHelper.compareNormalParallel(this, new EuklidianDist(), m.transpose()); 
+		Matrix distance = DistanceTestCaseHelper.compareNormalParallel(new EuklidianDist(), m.transpose()); 
 		assertEquals(distance, Matrix.createDoubleMatrix(new double[][] {{0,5}, {5,0}}));
 	}
 	
@@ -123,7 +123,7 @@ public class TestMatrix extends TestCase {
 	public void testNaN() {
 		Matrix nanM = Matrix.createDoubleMatrix(new double[][] {{Double.NaN,4}, {Double.NaN,5}, {3,6}});
 		assertEquals(nanM.transpose(), Matrix.createDoubleMatrix(new double[][] {{Double.NaN, Double.NaN, 3}, {4.0, 5, 6}}));
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new EuklidianDist(), nanM.transpose()); 
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(new EuklidianDist(), nanM.transpose()); 
 		assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0.0, 3.0}, {3.0, 0.0}}));
 	}
 	
@@ -143,11 +143,30 @@ public class TestMatrix extends TestCase {
     Matrix m = Matrix.createDoubleMatrix(new double[][] {{1, 20, 3}, {4, -4, 6}, {7, -7, -9}});
     assertEquals(m.covariance(), Matrix.createDoubleMatrix(new double[][] {{109,-53,-44}, {-53,28,10}, {-44,10,76}}));
   }
+
+  public void testCovarianceBig() {
+    try {
+      Matrix m = Matrix.readFromFile(new File("testdata/m150x4irisFlower.csv"), ';').getMatrix();
+      Matrix reference = Matrix.readFromFile(new File("testdata/m4x4-iris-covariances.csv"), ',').getMatrix();
+      assertTrue(m.transpose().covariance().equalsRounded(reference, 3));
+    } catch (IOException e) {
+      fail();
+    }
+  }
   
+  public void testCorrelationCoeffsBig() {
+    try {
+      Matrix m = Matrix.readFromFile(new File("testdata/m150x4irisFlower.csv"), ';').getMatrix();
+      Matrix reference = Matrix.readFromFile(new File("testdata/m4x4-iris-corrcoef.csv"), ',').getMatrix();
+      assertTrue(m.transpose().correlationCoeffs().equalsRounded(reference, 3));
+    } catch (IOException e) {
+      fail();
+    }
+  }
   
   public void testCorrelationCoeffs() {
     Matrix m = Matrix.createDoubleMatrix(new double[][] {{1, 20, 3}, {4, 5, 6}, {7, 8, 9}});
-    assertEquals(m.correlationCoeffs(), Matrix.createDoubleMatrix(new double[][] {{1.0,0.0958,0.0958}, {0.0958,1.0,1.0}, {0.0958,1.0,1.0}}));
+    assertTrue(m.correlationCoeffs().equalsRounded(Matrix.createDoubleMatrix(new double[][] {{1.0,0.0958,0.0958}, {0.0958,1.0,1.0}, {0.0958,1.0,1.0}}), 3));
   }  
 	
 	public void testEqualDimensions() {
@@ -159,9 +178,9 @@ public class TestMatrix extends TestCase {
 	
 	public void testRoundingProblem() {
 	  DVector col2 = new DVector(4,8,16,32,64,128,256,512,1024,2048,4096);
-	  DVector col64 = new DVector(128,256,512,1024,2048,4096,8192,16384,32768,65536,131072);
+	  DVector col64 = new DVector(128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072);
 	  Matrix m = new Matrix(col2, col64);
-	  Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new WaveHedgesDist(), m); 
+	  Matrix dist = DistanceTestCaseHelper.compareNormalParallel(new WaveHedgesDist(), m); 
 	  assertEquals(dist, Matrix.createDoubleMatrix(new double[][]{{0,10.65625}, {10.65625, 0}}));
 	}
 	
@@ -170,7 +189,7 @@ public class TestMatrix extends TestCase {
     assertEquals(m.autoRescale(), Matrix.createDoubleMatrix(new double[][] {{0, 0.5, 1.0}, {0, 0.75, 1.0}}));
   }
   
-  public void testToBianary() {
+  public void testToBinary() {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 1, Double.NaN}, {0.5, 3, -1}});
     assertEquals(m.toBinary(), Matrix.createDoubleMatrix(new double[][] {{0, 1, Double.NaN}, {1, 1, Double.NaN}}));
   }
@@ -183,29 +202,19 @@ public class TestMatrix extends TestCase {
   
   public void testCompareZeroVectors() {
     m = Matrix.createDoubleMatrix(new double[][] {{0, 0}, {Double.NaN, 4}});
-    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(this, new DivergenceDist(), m); 
+    Matrix dist = DistanceTestCaseHelper.compareNormalParallel(new DivergenceDist(), m); 
     assertEquals(dist, Matrix.createDoubleMatrix(new double[][] {{0, 0.5}, {0.5, 0}}));
   }
   
-  public void testMatrixSort() {
-    m = Matrix.createDoubleMatrix(new double[][] {{0, 10, 4.1}, {0.1, 3, 4}});
-    m = m.sortBy(0);
-    assertEquals(m.row(0), new DVector(0, 0.1));
-    m = m.sortBy(1);
-    assertEquals(m.row(0), new DVector(0.1, 0.0));
-    m = m.sortBy(2);
-    assertEquals(m.row(0), new DVector(0.1, 0.0));    
-  }
-  
   public void testToJama() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("testdata/m4x4citiesDenmark-euklid.csv"), ' ');
+    Matrix m = Matrix.readFromFile(new File("testdata/m4x4citiesDenmark-euklid.csv"), ' ').getMatrix();
     Jama.Matrix jamaM = m.toJama();
     Matrix clone = Matrix.createDoubleMatrix(jamaM.getArray());
     assertEquals(m, clone);
   }
   
   public void testRandomSample() throws IOException {
-    Matrix m = Matrix.readFromFile(new File("./testdata/m200x130rand.csv"), ',');
+    Matrix m = Matrix.readFromFile(new File("./testdata/m200x130rand.csv"), ',').getMatrix();
     Matrix sample = m.getRandomSample(10);
     assertEquals(sample.getColCount(), 10);
     assertEquals(sample.getRowCount(), 130);
