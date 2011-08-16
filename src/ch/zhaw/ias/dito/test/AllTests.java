@@ -31,6 +31,8 @@ public class AllTests {
 		suite.addTestSuite(TestUtil.class);
 		suite.addTestSuite(TestImport.class);
 		suite.addTestSuite(TestMds.class);
+		suite.addTestSuite(TestPca.class);
+		
 		//$JUnit-END$
 		return suite;
 	}

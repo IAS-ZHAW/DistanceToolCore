@@ -185,6 +185,7 @@ public class TestDVector extends TestCase {
     
     v1 = new DVector(0, 1, 2, 0, 3, Double.NaN, -1, -2.514);
     assertEquals(v1.toBinary(), new DVector(0, 1, 1, 0, 1, Double.NaN, Double.NaN, Double.NaN));    
+    assertEquals(new DVector(0.0, -0.0).toBinary(), new DVector(0, 0));
   }
   
   public void testImmutableArray() {
@@ -206,4 +207,22 @@ public class TestDVector extends TestCase {
     filtered = v.exclude(-1, 0, 5);
     assertEquals(filtered, new DVector(Double.NaN, Double.NaN, 3, 10, Double.NaN, Double.NaN));    
   }
+  
+  public void testIsConstant() {
+    assertEquals(v3.isConstant(), false);
+    assertEquals(new DVector(1).isConstant(), true);
+    assertEquals(new DVector(1, 1).isConstant(), true);
+    assertEquals(new DVector(1, 1, 1).isConstant(), true);
+    assertEquals(new DVector(1, 1, 2).isConstant(), false);
+  }
+  
+  public void testContainsSpecial() {
+    assertEquals(new DVector(1, 1, 2).containsSpecial(), false);
+    assertEquals(new DVector(0.0/0.0, 1, 2).containsSpecial(), true);
+    assertEquals(new DVector(1, 1.0/0.0, 1, 2).containsSpecial(), true);
+    assertEquals(new DVector(1, Double.NaN, 2).containsSpecial(), true);
+    assertEquals(new DVector(1, Double.POSITIVE_INFINITY, 2).containsSpecial(), true);
+    assertEquals(new DVector(1, 3, 4, Double.POSITIVE_INFINITY).containsSpecial(), true);
+  }
+  
 }

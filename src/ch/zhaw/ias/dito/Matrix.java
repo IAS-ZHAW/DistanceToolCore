@@ -188,37 +188,43 @@ public final class Matrix {
       for (int j = i; j < m.getColCount(); j++) {
         DVector w = m.col(j);
         double covariance = v.scalarProduct(w)/(w.length()-1);
-
+        //covariances are symmetric
         covariances[i][j] = covariance;
         covariances[j][i] = covariance;
       }
     }
     return createDoubleMatrix(covariances);
 	}
+  
+  public Matrix correlationCoeffs() {
+    Matrix m = removeMeans();
+    //calculate variance for each vector
+    double[] variances = new double[getColCount()];
+    for (int i = 0; i < m.getColCount(); i++) {
+      DVector v = m.col(i);
+      variances[i] = v.unscaledVariance();
+    }
+    double[][] coeffs = new double[getColCount()][getColCount()];
+    for (int i = 0; i < m.getColCount(); i++) {
+      DVector v = m.col(i);
+      for (int j = i; j < m.getColCount(); j++) {
+        DVector w = m.col(j);
+        double div = Math.sqrt(variances[i] * variances[j]);
+        double coeff = v.scalarProduct(w) / div;
+        //correlation coefficient is symmetric
+        coeffs[i][j] = coeff;
+        coeffs[j][i] = coeff;
+      }
+    }
+    return createDoubleMatrix(coeffs);
+  }
 	
-	 public Matrix correlationCoeffs() {
-	    Matrix m = removeMeans();
 
-	    double[] variances = new double[getColCount()];
-	    for (int i = 0; i < m.getColCount(); i++) {
-	      DVector v = m.col(i);
-	      variances[i] = v.unscaledVariance();
-	    }
-	    double[][] coeffs = new double[getColCount()][getColCount()];
-	    for (int i = 0; i < m.getColCount(); i++) {
-	      DVector v = m.col(i);
-	      for (int j = i; j < m.getColCount(); j++) {
-	        DVector w = m.col(j);
-	        double div = Math.sqrt(variances[i] * variances[j]);
-	        double coeff = v.scalarProduct(w)/div;
-
-	        coeffs[i][j] = coeff;
-	        coeffs[j][i] = coeff;
-	      }
-	    }
-	    return createDoubleMatrix(coeffs);
-	  }
-	
+  /**
+   * Returns true if all of the passed vectors have the same number of values/the same length. 
+   * @param cols
+   * @return
+   */
 	public static boolean checkLengths(DVector... cols) {
 		int length = 0;
 		for (int i = 0; i < cols.length; i++) {
@@ -377,6 +383,11 @@ public final class Matrix {
     return true;
 	}
 	
+	/**
+	 * Checks wether matrix m and this matrix have the same amount of rows and columns.
+	 * @param m
+	 * @return
+	 */
 	public boolean equalDimensions(Matrix m) {
 	   return (m.getRowCount() == getRowCount() && m.getColCount() == getColCount());
 	}
@@ -399,6 +410,11 @@ public final class Matrix {
     return new Matrix(binary);
   }
   
+  /**
+   * Returns the minimum or the maximum of this matrix
+   * @param max if set to true the maximum will be returned, otherwise the minimums will be returned
+   * @return
+   */
   public double extremum(boolean max) {
     double extremum;
     if (max) {
@@ -465,5 +481,15 @@ public final class Matrix {
       i++;
     }
     return new Matrix(vecs);
+  }
+  
+  public boolean containsSpecial() {
+    for (int i = 0; i < getColCount(); i++) {
+      DVector v = col(i);
+      if (v.containsSpecial()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -94,7 +94,7 @@ public final class Question {
       return getQuestionWeight();
     } else if (col == TableColumn.SCALING) {
       return getScaling();
-    }
+    } 
     throw new IllegalArgumentException("this is the end of the world");
   }
 

@@ -22,7 +22,6 @@ import ch.zhaw.ias.dito.ops.VarianceOp1;
  * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
  * TODO this class could implement some low level concurrency mechanism to improve performance.
  */
-@Immutable
 public final class DVector {
 	private final double[] values;
 	
@@ -363,5 +362,39 @@ public final class DVector {
 
   public DVector exclude(double... values) {
     return map(new FilterOp1(values));
+  }
+
+  /**
+   * Checks whether the vector contains only one constant value or whether it contains different values.
+   * @return
+   */
+  public boolean isConstant() {
+    if (values.length < 2) {
+      return true;
+    }
+    double prev = values[0];
+    for (int i = 1; i < values.length; i++) {
+      if (prev != values[i]) {
+        return false;
+      }
+      prev = values[i];
+    }
+    return true;
+  }
+  
+  /**
+   * Checks whether this vector contains special values.
+   * Special values are NaN, Negative Infinity, Positive Infinity
+   * @return
+   */
+  public boolean containsSpecial() {
+    for (int i = 0; i < values.length; i++) {
+      if (Double.isInfinite(values[i])) {
+        return true;
+      } else if (Double.isNaN(values[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 }

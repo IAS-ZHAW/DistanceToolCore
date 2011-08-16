@@ -6,6 +6,7 @@ import ch.zhaw.ias.dito.util.Logger;
 import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 /**
+ * The Decomposition will not scale the data. It will calculate the covariances directly.
  * Currently it supports 2 and 3 dimensionsal principal component analysis.
  * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
  *
@@ -13,13 +14,14 @@ import ch.zhaw.ias.dito.util.Logger.LogLevel;
 public class PcaDecomposition implements EigenvalueDecomposition {
   private Matrix dataMatrix;
   private double[] sortedEigenvalues;
-  private Jama.Matrix relevantEigenValues;
   private Jama.Matrix relevantEigenVectors;
-  //double[][] mdsCoordinates;
   
   public PcaDecomposition(Matrix m) {
+    if (m.containsSpecial()) {
+      throw new DecompositionException("decomp.ex.specialValue");
+    }
     this.dataMatrix = m;
-    Logger.INSTANCE.log("starting mds", LogLevel.INFORMATION);
+    Logger.INSTANCE.log("starting pca", LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     final int NUMBER_OF_DIMENSIONS = Math.min(m.getColCount(), 3);
 
@@ -35,10 +37,6 @@ public class PcaDecomposition implements EigenvalueDecomposition {
     int[] indizes = getIndizesOfLargestEv(NUMBER_OF_DIMENSIONS, ev);
     Jama.Matrix eigenVectors = decomp.getV();
 
-    relevantEigenValues = new Jama.Matrix(NUMBER_OF_DIMENSIONS, NUMBER_OF_DIMENSIONS, 0);
-    for (int i = 0; i < NUMBER_OF_DIMENSIONS; i++) {
-      relevantEigenValues.set(i, i, Math.sqrt(Math.abs(ev[indizes[i]])));
-    }
     relevantEigenVectors = eigenVectors.getMatrix(0, eigenVectors.getRowDimension() - 1, indizes);
     Logger.INSTANCE.log("finished mds after: " + (System.currentTimeMillis() - start), LogLevel.INFORMATION);
   }

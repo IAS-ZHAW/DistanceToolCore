@@ -234,4 +234,13 @@ public class TestMatrix extends TestCase {
     Matrix sample = m.getRandomSample(2);
     assertEquals(sample.getColCount(), 2);
   }
+  
+  public void testContainsSpecial() {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{1.0,2.0}, {1.0, 2.0}, {1.0, 2.0}});
+    assertEquals(m.containsSpecial(), false);
+    m = Matrix.createDoubleMatrix(new double[][] {{1.0,2.0}, {1.0, 2.0}, {Double.NaN, 2.0}});
+    assertEquals(m.containsSpecial(), true);
+    m = Matrix.createDoubleMatrix(new double[][] {{1.0,2.0}, {Double.NEGATIVE_INFINITY, 2.0}, {1.0, 2.0}});
+    assertEquals(m.containsSpecial(), true);
+  }
 }

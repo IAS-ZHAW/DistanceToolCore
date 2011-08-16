@@ -1,28 +1,18 @@
-setwd("C:/Daten/java-workspace/DistanceToolCore/Daten/wvs")
+setwd("C:/Daten/analysen/wvs")
 library(foreign)
-frame <- read.spss("wvs2005_v20090901a.sav", use.value.labels=F, to.data.frame=T)
-#frame <- data.frame(wvs)
+frame <- read.spss("wvs-family-nmiss1.sav", use.value.labels=F, to.data.frame=T)
 
-colDWf <- c(12:21, 44:45, 50:54, 57, 58, 59, 60:63, 80:89);
-colDWf <- c(colDWf, 104, 105:107, 114, 115, 116:121, 148:151, 152:161);
-colDWf <- c(colDWf, 162, 185, 187, 192, 198:208, 209);
+frame$V41
+table(frame$V2)
+levels(frame$V2)
 
-colIWf <- c(22, 23, 24:33, 34:43, 46, 47, 64:67, 122, 124, 125:130);
-colIWf <- c(colIWf, 131:147, 163, 164, 170:174, 178, 184, 186);
-colIWf <- c(colIWf, 188:191, 193, 221);
- 
-colPP <- c(28, 231, 234);
+attr(frame$V41, "value.labels")
 
-cols <- c(colDWf);
-#, colIWf, colPP);
-stringCols <- c();
-for (col in cols) {
-	s <- paste("V", col, sep="");
-	stringCols <- c(stringCols, s);
-}
+countries <- attr(frame$V2, "value.labels")
 
-countries <- levels(frame$V2)
-for (country in countries) {
-	output=data.matrix(subset(frame, V2==country, stringCols))
-	write.table (output, file=paste("wvs-", country, ".csv", sep=""), quote=F, row.names=F, col.names=F)
+for (i in 1:length(countries)) {
+	country = countries[i]
+	print(country)
+	output=data.matrix(subset(frame, V2==country))
+	write.table (output, file=paste("country-files/wvs-", names(country), ".csv", sep=""), quote=F, row.names=F, col.names=F)
 }

@@ -16,6 +16,9 @@ public class MdsDecomposition implements EigenvalueDecomposition {
   private Jama.Matrix relevantEigenVectors;
   
   public MdsDecomposition(Matrix m) {
+    if (m.containsSpecial()) {
+      throw new DecompositionException("decomp.ex.specialValue");
+    }
     Logger.INSTANCE.log("starting mds", LogLevel.INFORMATION);
     long start = System.currentTimeMillis();
     final int NUMBER_OF_DIMENSIONS = Math.min(m.getColCount(), 3);
