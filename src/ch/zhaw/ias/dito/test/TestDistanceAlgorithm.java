@@ -22,8 +22,8 @@ public class TestDistanceAlgorithm extends TestCase {
   
   @Override
   protected void setUp() throws Exception {
-    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[0]);
-    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[0]);
+    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[0], 0.0);
+    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[0], 0.0);
     List<Question> questions = new ArrayList<Question>();
     questions.add(q1);
     questions.add(q2);
@@ -75,19 +75,25 @@ public class TestDistanceAlgorithm extends TestCase {
   }
   
   public void testExcluded() {
-    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[] {3, 4});
-    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[] {-2});
+    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[] {3, 4}, 0.0);
+    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[] {-2}, 0.0);
     List<Question> questions = new ArrayList<Question>();
     questions.add(q1);
     questions.add(q2);
     config = new DitoConfiguration(new Input(), new Output(), new Method(), new QuestionConfig(), questions);
-    m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, 4, 1}, {-2, 0, 3, 2, 1}});
+    m = Matrix.createDoubleMatrix(new double[][] {{-1, 3, 0, 4, 1}, {-2, 0, 4, 2, 1}});
     config.setData(new ArrayList<String>(), m);
     config.getQuestionConfig().setEnableScale(false);
     config.getQuestionConfig().setEnableAutoScale(false);
     config.getQuestionConfig().setEnableQuestionWeight(false);
     algo = new DistanceAlgorithm(config, false);
     Matrix scaled = algo.getRescaledOfFiltered();
-    assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{-1, Double.NaN, 0, Double.NaN, 1}, {Double.NaN, 0, 3, 2, 1}}));
+    assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{-1, Double.NaN, 0, Double.NaN, 1}, {Double.NaN, 0, 4, 2, 1}}));
+    config.getQuestionConfig().setEnableScale(true);
+    scaled = algo.getRescaledOfFiltered();
+    assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{-.5, Double.NaN, 0, Double.NaN, 0.5}, {Double.NaN, 0, 4, 2, 1}}));
+    config.getQuestionConfig().setEnableAutoScale(true);
+    scaled = algo.getRescaledOfFiltered();
+    assertEquals(scaled, Matrix.createDoubleMatrix(new double[][] {{0, Double.NaN, 0.5, Double.NaN, 1.0}, {Double.NaN, 0, 1.0, 0.5, 0.25}}));
   }
 }

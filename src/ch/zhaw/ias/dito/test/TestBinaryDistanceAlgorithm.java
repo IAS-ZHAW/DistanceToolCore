@@ -27,8 +27,8 @@ public class TestBinaryDistanceAlgorithm extends TestCase {
   
   @Override
   protected void setUp() throws Exception {
-    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[0]);
-    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[0]);
+    Question q1 = new Question(1, "1", QuestionType.ORDINAL, 2.0, 1.0, 1.0, new double[0], 0.0);
+    Question q2 = new Question(2, "2", QuestionType.ORDINAL, 1.0, 3.0, 1.0, new double[0], 0.0);
     List<Question> questions = new ArrayList<Question>();
     questions.add(q1);
     questions.add(q2);
@@ -43,12 +43,12 @@ public class TestBinaryDistanceAlgorithm extends TestCase {
   }
 
   public void testExcluded() {
-    Question q1 = new Question(1, "1", QuestionType.BINARY, 2.0, 1.0, 1.0, new double[] {});
-    Question q2 = new Question(2, "2", QuestionType.BINARY, 1.0, 3.0, 10.0, new double[] {3});
-    Question q3 = new Question(3, "3", QuestionType.BINARY, 10.0, 3.0, 1.0, new double[] {});
-    Question q4 = new Question(4, "4", QuestionType.BINARY, 2.0, 3.0, 5.0, new double[] {});
-    Question q5 = new Question(5, "5", QuestionType.BINARY, 1.0, 3.0, 1.0, new double[] {4});
-    Question q6 = new Question(6, "6", QuestionType.BINARY, 4.0, 3.0, 3.0, new double[] {});
+    Question q1 = new Question(1, "1", QuestionType.BINARY, 2.0, 1.0, 1.0, new double[] {}, 0.0);
+    Question q2 = new Question(2, "2", QuestionType.BINARY, 1.0, 3.0, 10.0, new double[] {3}, 0.0);
+    Question q3 = new Question(3, "3", QuestionType.BINARY, 10.0, 3.0, 1.0, new double[] {}, 0.0);
+    Question q4 = new Question(4, "4", QuestionType.BINARY, 2.0, 3.0, 5.0, new double[] {}, 0.0);
+    Question q5 = new Question(5, "5", QuestionType.BINARY, 1.0, 3.0, 1.0, new double[] {4}, 0.0);
+    Question q6 = new Question(6, "6", QuestionType.BINARY, 4.0, 3.0, 3.0, new double[] {}, 0.0);
     List<Question> questions = new ArrayList<Question>();
     questions.add(q1);
     questions.add(q2);

@@ -13,7 +13,8 @@ public enum TableColumn {
   TYPE(6, false),
   DISTANCE_WEIGHT(7, true),
   QUESTION_WEIGHT(8, true),
-  SCALING(9, true);
+  SCALING(9, true),
+  OFFSET(10, true);
   
   public static TableColumn getById(int id) {
     for (TableColumn c : values()) {

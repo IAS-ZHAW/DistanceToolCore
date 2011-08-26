@@ -21,7 +21,7 @@ import ch.zhaw.ias.dito.Utils;
  * @author Thomas Niederberger (nith) - institute of applied simulation (IAS)
  */
 @NotThreadSafe
-@XmlType(propOrder={"column", "name" , "questionType", "enabled", "scaling", "questionWeight", "distanceWeight", "exclude"})
+@XmlType(propOrder={"column", "name" , "questionType", "enabled", "scaling", "questionWeight", "distanceWeight", "exclude", "offset"})
 public final class Question {
 	private int column;
 	private String name;
@@ -33,15 +33,16 @@ public final class Question {
   @XmlElementWrapper(name = "excludeValues") 
   @XmlElement(name = "value")
   private double[] exclude;
+  private Double offset;
 
   private DVector data;
 	
   public Question() {
-    this(-1, "", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0]);
+    this(-1, "", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0], 0.0);
   }
 	
 	public Question(Integer column, String name, QuestionType questionType, Double scaling, Double questionWeight,
-      Double distanceWeight, double[] exclude) {
+      Double distanceWeight, double[] exclude, Double offset) {
     this.column = column;
     this.name = name;
     this.scaling = scaling;
@@ -50,6 +51,7 @@ public final class Question {
     this.questionType = questionType;
     this.enabled = true;
     this.exclude = exclude;
+    this.offset = offset;
   }
 
   @Override
@@ -64,7 +66,8 @@ public final class Question {
       && questionWeight.equals(q.questionWeight)
       && distanceWeight.equals(q.distanceWeight)
       && enabled.equals(q.enabled)
-      && Arrays.equals(exclude, q.exclude);
+      && Arrays.equals(exclude, q.exclude)
+      && offset.equals(q.offset);
   }
 
   public Object getDistinctValues() {
@@ -94,6 +97,8 @@ public final class Question {
       return getQuestionWeight();
     } else if (col == TableColumn.SCALING) {
       return getScaling();
+    } else if (col == TableColumn.OFFSET) {
+      return getOffset();
     } 
     throw new IllegalArgumentException("this is the end of the world");
   }
@@ -111,6 +116,8 @@ public final class Question {
       scaling = Double.parseDouble(value.toString());
     } else if (col == TableColumn.TYPE) {
       questionType = (QuestionType) value;
+    } else if (col == TableColumn.OFFSET) {
+      offset = Double.parseDouble(value.toString());
     } else {
       throw new IllegalArgumentException("column " + col + " is not editable");
     }
@@ -224,5 +231,13 @@ public final class Question {
   
   public DVector getExcludedVector() {
     return data.exclude(exclude);
+  }
+  
+  public Double getOffset() {
+    return offset;
+  }
+  
+  public void setOffset(Double offset) {
+    this.offset = offset;
   }
 }

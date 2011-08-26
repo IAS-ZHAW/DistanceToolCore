@@ -1,12 +1,12 @@
 setwd("C:/Daten/analysen/wvs")
 library(foreign)
-frame <- read.spss("wvs-family-nmiss1.sav", use.value.labels=F, to.data.frame=T)
+frame <- read.spss("wvs-foreigner-nmiss1.sav", use.value.labels=F, to.data.frame=T)
 
-frame$V41
+#frame$V41
 table(frame$V2)
 levels(frame$V2)
 
-attr(frame$V41, "value.labels")
+#attr(frame$V41, "value.labels")
 
 countries <- attr(frame$V2, "value.labels")
 

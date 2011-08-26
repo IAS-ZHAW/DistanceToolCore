@@ -122,7 +122,7 @@ public final class DitoConfiguration implements PropertyListener {
   
   public Question createDefaultQuestion(int column, String name, DVector data) {
     //TODO it should be considered to use a calculated default value for the scaling
-    Question q = new Question(column, name, data.getDefaultQuestionType(), 1.0, 1.0, 1.0, new double[0]);
+    Question q = new Question(column, name, data.getDefaultQuestionType(), 1.0, 1.0, 1.0, new double[0], 0.0);
     q.setData(data);
     return q;
   }

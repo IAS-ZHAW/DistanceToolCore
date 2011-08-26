@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 public class TestQuestion extends TestCase {
 	public void testRecodeBinaryQuestion() {
-	  Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0]);
+	  Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0], 0.0);
 	  q.setData(new DVector(1, 0, 0, 1, 0, 0, Double.NaN));
 	  
 	  DVector[] values = q.recode(Coding.BINARY);
@@ -22,7 +22,7 @@ public class TestQuestion extends TestCase {
 	}
 	
 	public void testRecodeNominal() {
-	  Question q = new Question(1, "test", QuestionType.NOMINAL, 1.0, 1.0, 1.0, new double[0]);
+	  Question q = new Question(1, "test", QuestionType.NOMINAL, 1.0, 1.0, 1.0, new double[0], 0.0);
     q.setData(new DVector(5, 1, 2, 4, 1, 5, Double.NaN));
     assertEquals(q.getQuestionType(), QuestionType.NOMINAL);
     EnumSet<Coding> set = EnumSet.of(Coding.BINARY, Coding.REAL);
@@ -38,7 +38,7 @@ public class TestQuestion extends TestCase {
 	}
 	
 	public void testRecodeOrdinal() {
-	  Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0]);
+	  Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0], 0.0);
 	  q.setData(new DVector(5, 1, 2, 4, 1, -1, Double.NaN));
     assertEquals(q.getQuestionType(), QuestionType.ORDINAL);
     
@@ -57,7 +57,7 @@ public class TestQuestion extends TestCase {
 	}
   
 	public void testRecodeMetric() {
-    Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0]);
+    Question q = new Question(1, "test", QuestionType.ORDINAL, 1.0, 1.0, 1.0, new double[0], 0.0);
     q.setData(new DVector(5, 1, 2.4, 4.2, 1.25, 0, Double.NaN, 1.001));
     assertEquals(q.getQuestionType(), QuestionType.METRIC);
     DVector[] values = q.recode(Coding.REAL);
@@ -79,21 +79,21 @@ public class TestQuestion extends TestCase {
 	}
 	
   public void testQuestionEquals() {
-    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0]);
+    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0], 0.0);
     assertEquals(q.equals(null), false);
     assertEquals(q.equals("asfd"), false);
     assertEquals(q, q);
-    assertEquals(q, new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0]));
+    assertEquals(q, new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0], 0.0));
   }
   
   public void testTypeChange() {
-    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0]);
+    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[0], 0.0);
     q.setData(new DVector(1, 0, 1));
     assertEquals(q.getQuestionType(), QuestionType.BINARY);
   }
   
   public void testGetExcludedVector() {
-    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[] {1, 0});
+    Question q = new Question(3, "test", QuestionType.ORDINAL, 2.0, 3.0, 4.0, new double[] {1, 0}, 0.0);
     q.setData(new DVector(1, 0, 1));
     assertEquals(q.getExcludedVector(), new DVector(Double.NaN, Double.NaN, Double.NaN));
     q.setData(new DVector(1, 0, 2));

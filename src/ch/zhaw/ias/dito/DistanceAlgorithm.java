@@ -38,8 +38,9 @@ public class DistanceAlgorithm {
         if (qc.isEnableAutoScale()) {
           rescaled[i] = v.autoRescale();
         } else {
-          double multiplier = 1/q.getScaling();        
-          rescaled[i] = v.rescale(multiplier, 0);
+          double multiplier = 1/q.getScaling();
+          double offset = q.getOffset();
+          rescaled[i] = v.rescale(multiplier, offset);
         }
       } else {
         rescaled[i] = v;
