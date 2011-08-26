@@ -43,6 +43,7 @@
                 <value>2.2</value>
                 <value>1.0</value>
             </excludeValues>
+            <offset>0.0</offset>
         </question>
     </questions>
 </ns2:ditoConfiguration>
