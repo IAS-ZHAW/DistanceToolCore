@@ -25,6 +25,7 @@ import ch.zhaw.ias.dito.config.ImportWrapper;
 import ch.zhaw.ias.dito.config.Input;
 import ch.zhaw.ias.dito.dist.DistanceSpec;
 import ch.zhaw.ias.dito.util.Logger;
+import ch.zhaw.ias.dito.util.NoiseGenerator;
 import ch.zhaw.ias.dito.util.Logger.LogLevel;
 
 /**
@@ -409,10 +410,23 @@ public final class Matrix {
     }
     return new Matrix(binary);
   }
+
+  public double getMinExcludingZero() {
+    double min = Double.MAX_VALUE;
+    for (int i = 0; i < getColCount(); i++) {
+      for (int j = 0; j < getRowCount(); j++) {
+        double value = col(i).component(j);
+        if (value != 0.0 && value < min) {
+          min = value;
+        }
+      }
+    }
+    return min;
+  }
   
   /**
    * Returns the minimum or the maximum of this matrix
-   * @param max if set to true the maximum will be returned, otherwise the minimums will be returned
+   * @param max if set to true the maximum will be returned, otherwise the minimum will be returned
    * @return
    */
   public double extremum(boolean max) {
@@ -430,7 +444,7 @@ public final class Matrix {
         extremum = Math.max(extremum, value);
       } else {
         value = v.min();
-        extremum = Math.min(extremum, value);
+        extremum = Math.min(extremum, value);  
       }
     }
     return extremum;
@@ -491,5 +505,20 @@ public final class Matrix {
       }
     }
     return false;
+  }
+  
+  public Matrix addSymmetricRandomNoise() {
+    if (isSquare() == false) {
+      throw new IllegalStateException("matrix must be square to add symmetric noise");
+    }
+    double minValue = getMinExcludingZero() / 10.0;
+    double[][] values = NoiseGenerator.generateSymmetricNoiseMatrix(getColCount(), minValue);
+    Matrix noiseMatrix = Matrix.createDoubleMatrix(values);
+    DVector[] vecs = new DVector[getColCount()];
+    for (int i = 0; i < getColCount(); i++) {
+      DVector v = col(i);
+      vecs[i] = v.add(noiseMatrix.col(i));
+    }
+    return new Matrix(vecs);
   }
 }

@@ -16,6 +16,7 @@ public class DistanceMethodEnum {
 	  METHODS.add(new DistanceMethodEnum("Euklid", new EuklidianDist(), "\\sqrt{ \\sum_{i}(x_{ri}-x_{si})^{2}}"));
 	  METHODS.add(new DistanceMethodEnum("Mean-Euklid", new MeanEuklidianDist(), ""));
 		METHODS.add(new DistanceMethodEnum("Manhattan", new ManhattanDist(), "\\sum_{i} |x_{ri}-x_{si}|"));
+		METHODS.add(new DistanceMethodEnum("Mean-Manhattan", new MeanManhattanDist(), ""));
 		METHODS.add(new DistanceMethodEnum("Soergel", new SoergelDist(), "{1 \\over p} {\\sum_i |x_{ri}-x_{si}| \\over \\sum_i max(x_{ri}, x_{si})}"));
 		METHODS.add(new DistanceMethodEnum("WaveHedges", new WaveHedgesDist(), "\\sum_i(1-{min(x_{ri},x_{si}) \\over max(x_{ri},x_{si})})"));
 		METHODS.add(new DistanceMethodEnum("Ott-Niederberger", new OttNiederbergerDist(), "100(1-{\\sum_i min(x_{ri}, x_{si}) \\over \\sum_i (x_{ri}+x_{si}) - \\sum_i min(x_{ri}-x_{si})})"));

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class CountryFileSplitter {
 
   public static void main(String[] args) throws IOException {
-    String filename = "C:/Daten/analysen/wvs/wvs-family-nmiss1.csv";
+    String filename = "C:/Daten/analysen/wvs/wvs-religion-nmiss1.csv";
     BufferedReader reader = new BufferedReader(new FileReader(filename));
     BufferedWriter writer = null;
     Pattern pattern = Pattern.compile("[ ]\\s*");

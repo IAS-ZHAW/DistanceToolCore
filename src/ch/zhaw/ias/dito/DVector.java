@@ -3,6 +3,7 @@ package ch.zhaw.ias.dito;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.jcip.annotations.Immutable;
 
@@ -24,6 +25,21 @@ import ch.zhaw.ias.dito.ops.VarianceOp1;
  */
 public final class DVector {
 	private final double[] values;
+	
+	/**
+	 * Creates a random noise vector of length n. The noise has uniform distribution ranging from 0 to maxNoise
+	 * @param len
+	 * @param maxNoise
+	 * @return
+	 */
+	public static DVector generateRandomVector(int len, double maxNoise) {
+    Random r = new Random();
+    double[] values = new double[len];
+	  for (int i = 0; i < len; i++) {
+      values[i] = r.nextDouble() * maxNoise;
+    }
+	  return new DVector(values);
+	}
 	
 	public DVector(double... values) {
 	  //values must be copied to new array to ensure immutability.

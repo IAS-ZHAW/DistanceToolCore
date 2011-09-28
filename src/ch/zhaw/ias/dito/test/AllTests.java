@@ -32,6 +32,7 @@ public class AllTests {
 		suite.addTestSuite(TestImport.class);
 		suite.addTestSuite(TestMds.class);
 		suite.addTestSuite(TestPca.class);
+		suite.addTestSuite(TestNoiseGenerator.class);
 		
 		//$JUnit-END$
 		return suite;

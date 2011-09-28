@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class GenerateTagMatrix {
 
   public static int MIN_COUNT = 3;
-  public static int PROJECT_ID = 128;
+  public static int PROJECT_ID = 14;
   /**
    * @param args
    * @throws IOException 
@@ -36,10 +36,14 @@ public class GenerateTagMatrix {
     //Collections.addAll(tagStopContainer.get(128), "nicht", "zu", "mit", "fuer", "bade", "bad", "spiegel");
     // Project 638
     tagStopContainer.put(638, new ArrayList<String>());
-    Collections.addAll(tagStopContainer.get(638), "konfi", "konfituere", "marmelade", "confiture");
+    Collections.addAll(tagStopContainer.get(638), "konfituere", "konfitüre", "konfi", "marmelade", "confiture");
     // Project 804
     tagStopContainer.put(804, new ArrayList<String>());
     Collections.addAll(tagStopContainer.get(804), "mit", "fuer");
+    // Project 810
+    tagStopContainer.put(810, new ArrayList<String>());
+    
+    tagStopContainer.put(14, new ArrayList<String>());
     
     List<String> tagStopList = tagStopContainer.get(PROJECT_ID);
     
@@ -111,13 +115,13 @@ public class GenerateTagMatrix {
   }
   
   private static String standardsizeTag(String tag, List<String> tagStopList) {
-    String[][] replacements = {{"ß", "ä", "ö", "ü", "é", "è", "à"}, {"ss", "ae", "oe", "ue", "e", "e", "a"}};
-    /*for (int i = 0; i < replacements[0].length; i++) {
+    /*String[][] replacements = {{"ß", "ä", "ö", "ü", "é", "è", "à"}, {"ss", "ae", "oe", "ue", "e", "e", "a"}};
+    for (int i = 0; i < replacements[0].length; i++) {
       tag = tag.replace(replacements[0][i], replacements[1][i]);
-    }
+    }*/
     for (int i = 0; i < tagStopList.size(); i++) {
       tag = tag.replace(tagStopList.get(i), "");
-    }*/
+    }
     return tag;
   }
 

@@ -243,4 +243,32 @@ public class TestMatrix extends TestCase {
     m = Matrix.createDoubleMatrix(new double[][] {{1.0,2.0}, {Double.NEGATIVE_INFINITY, 2.0}, {1.0, 2.0}});
     assertEquals(m.containsSpecial(), true);
   }
+  
+  public void testGetMinExcludingZero() {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{0.0, 1.0, 0.0}, {3.0, 0.0, 0.0}, {0.0, 0.0, 4.0}});
+    assertEquals(m.getMinExcludingZero(), 1.0);
+  }
+  
+  
+  public void testAddSymmetricRandomNoise() throws IOException {
+    Matrix m = Matrix.createDoubleMatrix(new double[][] {{1.0, 2.0, 0.0}, {2.0, 3.0, 1.0}, {0.0, 1.0, 4.0}});
+    Matrix noised = m.addSymmetricRandomNoise();
+    assertTrue(noised.col(2).component(0) > 0.0);
+    
+    m = Matrix.readFromFile(new File("testdata/m119x119cities-euklid.csv"), ';').getMatrix();
+    noised = m.addSymmetricRandomNoise();
+    double min = m.getMinExcludingZero();
+    assertEquals(m.getColCount(), 119);
+    assertEquals(m.getRowCount(), 119);
+    assertTrue(noised.extremum(false) - m.extremum(false) < min / 10.0);
+    assertTrue(noised.extremum(true) - m.extremum(true) < min / 10.0);
+    assertEquals(m.transpose(), m);
+    m = Matrix.readFromFile(new File("testdata/m150x4irisFlower.csv"), ',').getMatrix();
+    try {
+      m.addSymmetricRandomNoise();
+      fail();
+    } catch (IllegalStateException e) {
+      assertTrue(true);
+    }
+  }
 }

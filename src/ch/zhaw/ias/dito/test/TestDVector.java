@@ -224,5 +224,13 @@ public class TestDVector extends TestCase {
     assertEquals(new DVector(1, Double.POSITIVE_INFINITY, 2).containsSpecial(), true);
     assertEquals(new DVector(1, 3, 4, Double.POSITIVE_INFINITY).containsSpecial(), true);
   }
-  
+
+  public void testRandomNoiseVector() {
+    DVector random = DVector.generateRandomVector(10, 0.5);
+    assertEquals(random.length(), 10);
+    assertTrue(random.max() <= 0.5);
+    assertTrue(random.min() >= 0.0);
+    DVector random2 = DVector.generateRandomVector(10, 0.5);
+    assertFalse(random.equals(random2)); //could fail in some cases but with very low probability
+  }
 }
