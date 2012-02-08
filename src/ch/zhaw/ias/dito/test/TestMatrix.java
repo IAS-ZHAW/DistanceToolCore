@@ -260,8 +260,10 @@ public class TestMatrix extends TestCase {
     double min = m.getMinExcludingZero();
     assertEquals(m.getColCount(), 119);
     assertEquals(m.getRowCount(), 119);
-    assertTrue(noised.extremum(false) - m.extremum(false) < min / 10.0);
-    assertTrue(noised.extremum(true) - m.extremum(true) < min / 10.0);
+    assertTrue(noised.getMinExcludingZero() - m.getMinExcludingZero() < min / 100.0);
+    assertTrue(noised.extremum(true) - m.extremum(true) < min / 100.0);
+    //assertFalse(noised.getMinExcludingZero() - m.getMinExcludingZero() < min / 200.0);
+    //assertFalse(noised.extremum(true) - m.extremum(true) < min / 200.0);
     assertEquals(m.transpose(), m);
     m = Matrix.readFromFile(new File("testdata/m150x4irisFlower.csv"), ',').getMatrix();
     try {

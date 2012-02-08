@@ -20,4 +20,11 @@ public class TestNoiseGenerator extends TestCase {
       assertEquals(m.col(i).component(i), 0.0);
     }
   }
+  
+  public void testGenerateSymmetricNoiseMatrixMinimum() {
+    double[][] noise = NoiseGenerator.generateSymmetricNoiseMatrix(10, 0.1, 0.5);
+    Matrix m = Matrix.createDoubleMatrix(noise);
+    assertTrue(m.extremum(true) <= 0.5);
+    assertTrue(m.getMinExcludingZero() >= 0.1);
+  }
 }

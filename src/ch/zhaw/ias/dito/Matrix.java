@@ -511,8 +511,10 @@ public final class Matrix {
     if (isSquare() == false) {
       throw new IllegalStateException("matrix must be square to add symmetric noise");
     }
-    double minValue = getMinExcludingZero() / 10.0;
-    double[][] values = NoiseGenerator.generateSymmetricNoiseMatrix(getColCount(), minValue);
+    double min = getMinExcludingZero();
+    double minAmp = min / 1000.0;
+    double maxAmp = min / 500.0;
+    double[][] values = NoiseGenerator.generateSymmetricNoiseMatrix(getColCount(), minAmp, maxAmp);
     Matrix noiseMatrix = Matrix.createDoubleMatrix(values);
     DVector[] vecs = new DVector[getColCount()];
     for (int i = 0; i < getColCount(); i++) {

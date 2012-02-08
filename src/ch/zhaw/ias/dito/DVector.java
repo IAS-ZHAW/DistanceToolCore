@@ -59,7 +59,7 @@ public final class DVector {
 	
   public double mean() {
     //maybe better use filtered length?
-    return foldl1(new AddOp2())/values.length;
+    return foldl1(new AddOp2())/filteredLength();
   }
   
   /**

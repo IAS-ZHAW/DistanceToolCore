@@ -45,7 +45,7 @@ public class TestDVector extends TestCase {
     assertEquals(v1.mean(), 2.0);
     assertEquals(v2.mean(), 5.0);
     assertEquals(new DVector(-2, 2).mean(), 0.0);
-    assertEquals(new DVector(2, Double.NaN).mean(), 1.0);
+    assertEquals(new DVector(2, Double.NaN).mean(), 2.0);
   }
   
   public void testVariance() {
@@ -61,7 +61,7 @@ public class TestDVector extends TestCase {
   public void testRemoveMean() {
     assertEquals(v1.removeMean(), new DVector(-1.0, 0.0, 1.0));
     assertEquals(v2.removeMean(), new DVector(-1.0, 0.0, 1.0));
-    assertEquals(new DVector(2, Double.NaN).removeMean(), new DVector(1.0, Double.NaN));
+    assertEquals(new DVector(2, Double.NaN).removeMean(), new DVector(0.0, Double.NaN));
   }  
 	
 	public void testLength() {
